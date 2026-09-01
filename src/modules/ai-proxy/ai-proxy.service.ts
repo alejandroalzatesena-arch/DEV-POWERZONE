@@ -94,7 +94,12 @@ export class AiProxyService {
     daysPerWeek: number;
     difficulty?: number;
   }): Promise<{ title: string; description: string; exercises: any[] }> {
-    return this.post('/routines/generate', payload);
+    return this.post('/routines/generate', {
+      user_id: payload.userId,
+      objective: payload.objective,
+      days_per_week: payload.daysPerWeek,
+      difficulty: payload.difficulty,
+    });
   }
 
   async recommendWorkout(userId: string, context?: Record<string, any>): Promise<any> {
