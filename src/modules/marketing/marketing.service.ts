@@ -97,7 +97,7 @@ export class MarketingService {
       .createQueryBuilder('u')
       .where('u.gym_id = :gymId', { gymId: campaign.gymId })
       .andWhere('u.role IN (:...roles)', { roles })
-      .andWhere('u.is_active = true');
+      .andWhere('u."isActive" = true');
 
     if (audience.activeMembership === true) {
       qb.andWhere(`EXISTS (
@@ -112,7 +112,7 @@ export class MarketingService {
       )`, { goal: audience.goal });
     }
     if (audience.search) {
-      qb.andWhere('(u.first_name ILIKE :search OR u.last_name ILIKE :search)', {
+      qb.andWhere('(u."firstName" ILIKE :search OR u."lastName" ILIKE :search)', {
         search: `%${audience.search}%`,
       });
     }

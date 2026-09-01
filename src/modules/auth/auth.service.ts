@@ -71,9 +71,11 @@ export class AuthService {
   }
 
   async login(dto: LoginDto, userAgent?: string, ip?: string): Promise<LoginResponseDto> {
-    const user = await this.usersRepo.findOne({
-      where: { email: dto.email.toLowerCase() },
-    });
+    const user = await this.usersRepo
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.email = :email', { email: dto.email.toLowerCase() })
+      .getOne();
     if (!user) {
       throw new UnauthorizedException('Credenciales inválidas.');
     }
@@ -145,7 +147,11 @@ export class AuthService {
   }
 
   async changePassword(userId: string, dto: ChangePasswordDto): Promise<void> {
-    const user = await this.usersRepo.findOne({ where: { id: userId } });
+    const user = await this.usersRepo
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.id = :userId', { userId })
+      .getOne();
     if (!user) {
       throw new UnauthorizedException('Usuario no encontrado.');
     }

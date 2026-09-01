@@ -79,7 +79,7 @@ export class RoutinesService {
   }
 
   async findAll(query: QueryRoutinesDto, actor: JwtPayload): Promise<PaginatedResult<Routine>> {
-    const { page, limit, sortBy, sortOrder, objective, status, isTemplate, mine } = query;
+    const { page = 1, limit = 20, sortBy, sortOrder, objective, status, isTemplate, mine } = query;
 
     const qb = this.routinesRepo
       .createQueryBuilder('r')
