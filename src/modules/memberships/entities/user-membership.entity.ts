@@ -54,6 +54,6 @@ export class UserMembership extends TenantBaseEntity {
   price: number;
 
   @ApiPropertyOptional({ description: 'Notas internas' })
-  @Column({ length: 500, nullable: true })
+  @Column({ type: 'varchar', length: 500, nullable: true })
   notes: string | null;
 }

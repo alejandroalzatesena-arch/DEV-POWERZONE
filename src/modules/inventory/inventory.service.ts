@@ -92,6 +92,7 @@ export class InventoryService {
 
     const maintenance = this.maintenanceRepo.create({
       itemId: item.id,
+      item,
       description: dto.description,
       scheduledAt: dto.scheduledAt,
       cost: dto.cost,
@@ -100,8 +101,10 @@ export class InventoryService {
     });
     const saved = await this.maintenanceRepo.save(maintenance);
 
-    item.status = InventoryStatus.MAINTENANCE;
-    await this.itemsRepo.save(item);
+    // `findById` carga también los mantenimientos. Guardar de nuevo toda la
+    // entidad hace que TypeORM sincronice ese arreglo desactualizado e intente
+    // desvincular el mantenimiento recién creado (item_id = NULL).
+    await this.itemsRepo.update(item.id, { status: InventoryStatus.MAINTENANCE });
 
     return saved;
   }

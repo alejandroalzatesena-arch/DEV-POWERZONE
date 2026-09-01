@@ -71,7 +71,7 @@ export class PaymentsService {
   }
 
   async findAll(query: QueryPaymentsDto, actor: JwtPayload): Promise<PaginatedResult<Payment>> {
-    const { page, limit, sortBy, sortOrder, status, userId } = query;
+    const { page = 1, limit = 20, sortBy, sortOrder, status, userId } = query;
     const where: Record<string, any> = this.tenantWhere(actor);
     if (status) where.status = status;
     if (userId) where.userId = userId;

@@ -149,6 +149,7 @@ export class QueryInventoryDto extends PaginationDto {
 
 export class CreateMaintenanceDto {
   @ApiProperty({ description: 'ID del equipo' })
+  @IsOptional()
   @IsUUID()
   itemId?: string;
 

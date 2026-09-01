@@ -66,6 +66,7 @@ async function bootstrap(): Promise<void> {
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, document, {
+    useGlobalPrefix: true,
     swaggerOptions: { persistAuthorization: true, docExpansion: 'none' },
   });
 

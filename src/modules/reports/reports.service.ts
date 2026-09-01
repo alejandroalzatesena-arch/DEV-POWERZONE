@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, MoreThanOrEqual, Repository } from 'typeorm';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
 import { AttendanceType, MembershipStatus, PaymentStatus, UserRole } from '../../common/enums';
 import { Gym } from '../gyms/entities/gym.entity';
@@ -51,7 +51,7 @@ export class ReportsService {
     const { from, to } = this.dateRange(query);
 
     const payments = await this.paymentsRepo.find({
-      where: { gymId, paidAt: { $gte: from, $lte: to } as any },
+      where: { gymId, paidAt: Between(from, to) },
     });
 
     const succeeded = payments.filter(p => p.status === PaymentStatus.SUCCEEDED);
@@ -217,7 +217,7 @@ export class ReportsService {
     last30Days.setDate(last30Days.getDate() - 30);
 
     const checkIns = await this.attendanceRepo.count({
-      where: { userId, type: AttendanceType.CHECK_IN, timestamp: { $gte: last30Days } as any },
+      where: { userId, type: AttendanceType.CHECK_IN, timestamp: MoreThanOrEqual(last30Days) },
     });
 
     const classesAttended = await this.bookingsRepo.count({
