@@ -1,0 +1,60 @@
+<div class="pz-page pz-fade">
+  <pz-page-header
+    eyebrow="Centro de mensajes"
+    title="Notificaciones"
+    [subtitle]="unread() > 0 ? 'Tenés ' + unread() + ' sin leer.' : 'Estás al día. Sin notificaciones pendientes.'">
+    <button mat-stroked-button class="pz-btn-ghost" [disabled]="unread() === 0" (click)="markAll()">
+      <mat-icon>done_all</mat-icon> Marcar todas como leídas
+    </button>
+  </pz-page-header>
+
+  <div class="chips">
+    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === ''" (click)="applyFilter('')">Todas</button>
+    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === 'false'" (click)="applyFilter('false')">
+      No leídas ({{ unread() }})
+    </button>
+    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === 'true'" (click)="applyFilter('true')">Leídas</button>
+  </div>
+
+  <div class="notif-list">
+    @for (n of rows(); track n.id) {
+      <mat-card class="notif" [class.unread]="!n.isRead" (click)="markRead(n)">
+        <mat-card-content>
+          <span class="n-icon" [class]="notificationType(n.type).color">
+            <mat-icon>{{ notificationType(n.type).icon }}</mat-icon>
+          </span>
+          <div class="n-body">
+            <div class="n-title">
+              {{ n.title }}
+              @if (!n.isRead) {
+                <span class="dot"></span>
+              }
+            </div>
+            <div class="n-type">{{ notificationType(n.type).label }}</div>
+            @if (n.body) {
+              <div class="n-text">{{ n.body }}</div>
+            }
+            <div class="n-time">{{ formatDateTime(n.createdAt) }}</div>
+          </div>
+          <button mat-icon-button class="n-close" (click)="$event.stopPropagation(); remove(n)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-card-content>
+      </mat-card>
+    } @empty {
+      @if (!loading()) {
+        <pz-empty icon="notifications_off" title="Sin notificaciones" message="Cuando haya novedades, te avisamos acá." />
+      }
+    }
+  </div>
+
+  <mat-paginator
+    class="pag"
+    [length]="total()"
+    [pageSize]="limit"
+    [pageIndex]="page"
+    [pageSizeOptions]="[20, 50]"
+    (page)="onPage($event)"
+    showFirstLastButtons>
+  </mat-paginator>
+</div>

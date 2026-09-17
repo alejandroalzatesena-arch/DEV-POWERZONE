@@ -1,0 +1,95 @@
+<div class="pz-page pz-fade">
+  <pz-page-header
+    eyebrow="Equipo y socios"
+    title="Usuarios"
+    subtitle="Personal del gimnasio, entrenadores y socios.">
+    <button mat-raised-button class="pz-btn-volt" (click)="openUser()">
+      <mat-icon>add</mat-icon> Nuevo usuario
+    </button>
+  </pz-page-header>
+
+  <div class="chips">
+    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="roleFilter() === ''" (click)="applyFilter('')">Todos</button>
+    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="roleFilter() === 'admin'" (click)="applyFilter('admin')">Admins</button>
+    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="roleFilter() === 'trainer'" (click)="applyFilter('trainer')">Entrenadores</button>
+    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="roleFilter() === 'receptionist'" (click)="applyFilter('receptionist')">Recepción</button>
+    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="roleFilter() === 'client'" (click)="applyFilter('client')">Socios</button>
+  </div>
+
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="filters">
+        <mat-form-field appearance="outline">
+          <mat-label>Buscar por nombre o email</mat-label>
+          <input matInput [value]="search()" (input)="search.set($any($event.target).value)" (keyup.enter)="applyFilter()" />
+        </mat-form-field>
+        <button mat-raised-button class="pz-btn-volt" (click)="applyFilter()"><mat-icon>search</mat-icon> Buscar</button>
+      </div>
+
+      <div class="table-wrap">
+        <table mat-table [dataSource]="rows()">
+          <ng-container matColumnDef="user">
+            <th mat-header-cell *matHeaderCellDef>Usuario</th>
+            <td mat-cell *matCellDef="let u">
+              <div class="user-cell">
+                <div class="avatar">{{ initials(u.firstName, u.lastName) }}</div>
+                <div>
+                  <div style="color:var(--pz-white);font-weight:600;font-size:13.5px">
+                    {{ u.fullName || u.firstName + ' ' + u.lastName }}
+                  </div>
+                  <div style="color:var(--pz-muted);font-size:12px">{{ u.email }}</div>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef>Rol</th>
+            <td mat-cell *matCellDef="let u">
+              <span class="pz-badge" [class]="roleBadge(u.role)">{{ roleLabel(u.role) }}</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="gym">
+            <th mat-header-cell *matHeaderCellDef>Gimnasio</th>
+            <td mat-cell *matCellDef="let u">{{ u.gym?.name || '—' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let u">
+              <span class="pz-badge" [class]="u.isActive === false ? 'badge-danger' : 'badge-success'">
+                {{ u.isActive === false ? 'Inactivo' : 'Activo' }}
+              </span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="lastLogin">
+            <th mat-header-cell *matHeaderCellDef>Último acceso</th>
+            <td mat-cell *matCellDef="let u">{{ formatDate(u.lastLoginAt) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let u">
+              <div class="row-actions">
+                <button mat-icon-button matTooltip="Activar/Desactivar" (click)="toggleActive(u)">
+                  <mat-icon>{{ u.isActive === false ? 'check_circle' : 'pause_circle' }}</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Editar" (click)="openUser(u)"><mat-icon>edit</mat-icon></button>
+                <button mat-icon-button matTooltip="Eliminar" class="danger" (click)="remove(u)"><mat-icon>delete</mat-icon></button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns"></tr>
+        </table>
+
+        <mat-paginator
+          [length]="total()"
+          [pageSize]="limit"
+          [pageIndex]="page"
+          [pageSizeOptions]="[10, 20, 50]"
+          (page)="onPage($event)"
+          showFirstLastButtons>
+        </mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,385 @@
+@use '@angular/material' as mat;
+
+// ============================================================
+// PowerZone — Diseño fitness: tema oscuro + volt (verde neón)
+// ============================================================
+
+$pz-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: mat.$chartreuse-palette,
+      tertiary: mat.$orange-palette,
+    ),
+    typography: (
+      plain-family: 'Inter',
+      brand-family: 'Oswald',
+      bold-weight: 700,
+      medium-weight: 500,
+      regular-weight: 400,
+    ),
+    density: (
+      scale: -1,
+    ),
+  )
+);
+
+html {
+  height: 100%;
+  @include mat.all-component-themes($pz-theme);
+  @include mat.system-level-colors($pz-theme);
+  @include mat.system-level-typography($pz-theme);
+}
+
+// ---------- Paleta de marca ----------
+:root {
+  --pz-bg: #0e1116;
+  --pz-surface: #161a21;
+  --pz-surface-2: #1c212b;
+  --pz-surface-3: #232a36;
+  --pz-border: #2a3240;
+  --pz-volt: #c8ff3d;
+  --pz-volt-dark: #a4d62c;
+  --pz-volt-glow: rgba(200, 255, 61, 0.35);
+  --pz-orange: #ff8a2a;
+  --pz-white: #f4f6f8;
+  --pz-muted: #9aa4b2;
+  --pz-muted-2: #6b7480;
+  --pz-danger: #ff4d5e;
+  --pz-info: #38c6ff;
+  --pz-success: #35d07f;
+  --pz-warn: #ffb020;
+  --pz-radius: 14px;
+  --pz-grad: linear-gradient(135deg, #c8ff3d 0%, #7cf92e 60%, #2ce58a 100%);
+  --pz-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+// ---------- Reset ----------
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color-scheme: dark;
+  background-color: var(--pz-bg);
+  color: var(--pz-white);
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  background-image: radial-gradient(1200px 600px at 85% -10%, rgba(200, 255, 61, 0.06), transparent 60%),
+    radial-gradient(900px 500px at -10% 30%, rgba(56, 198, 255, 0.05), transparent 55%);
+  background-attachment: fixed;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Oswald', 'Anton', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+  color: var(--pz-white);
+}
+
+a {
+  color: var(--pz-volt);
+  text-decoration: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--pz-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--pz-surface-3);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2f3744;
+}
+
+// ---------- Utilidades ----------
+.pz-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+.pz-page {
+  padding: 28px 24px 64px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.pz-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+
+  &.pz-grid-lg {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+
+.pz-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pz-spacer {
+  flex: 1 1 auto;
+}
+
+.pz-muted {
+  color: var(--pz-muted);
+}
+
+.pz-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pz-olbar {
+  height: 4px;
+  border-radius: 99px;
+  background: var(--pz-surface-3);
+  overflow: hidden;
+
+  > span {
+    display: block;
+    height: 100%;
+    border-radius: 99px;
+    background: var(--pz-grad);
+    transition: width 0.4s ease;
+  }
+}
+
+// ---------- Texto de display ----------
+.pz-display {
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 0.95;
+}
+
+// ---------- Botones ----------
+.pz-btn-volt {
+  background: var(--pz-volt);
+  color: #10130a;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  border-radius: 999px;
+  &:hover {
+    background: var(--pz-volt-dark);
+  }
+}
+
+.pz-btn-ghost {
+  border: 1px solid var(--pz-border) !important;
+  color: var(--pz-white) !important;
+  background: transparent !important;
+  &:hover {
+    background: var(--pz-surface-2) !important;
+  }
+}
+
+// ---------- Toolbar interna de página ----------
+.pz-page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+
+  .pz-eyebrow {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--pz-volt);
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    font-size: 30px;
+    font-weight: 600;
+  }
+
+  p {
+    color: var(--pz-muted);
+    margin: 4px 0 0;
+    max-width: 560px;
+  }
+}
+
+// ---------- Material overrides ----------
+.mat-mdc-card {
+  background: var(--pz-surface) !important;
+  border: 1px solid var(--pz-border);
+  border-radius: var(--pz-radius) !important;
+}
+
+.mat-mdc-card.mdc-card--outlined {
+  box-shadow: none;
+}
+
+.mat-mdc-form-field .mat-mdc-text-field-wrapper {
+  border-radius: 10px;
+  background-color: var(--pz-surface-2) !important;
+}
+
+.mat-mdc-tooltip {
+  font-size: 12px;
+}
+
+.mat-drawer-container {
+  background: transparent !important;
+}
+
+.mat-mdc-snack-bar-container {
+  &.pz-snack-error .mdc-snackbar__surface {
+    background: #3a1418;
+    border: 1px solid var(--pz-danger);
+  }
+  &.pz-snack-success .mdc-snackbar__surface {
+    background: #12331f;
+    border: 1px solid var(--pz-success);
+  }
+}
+
+// ---------- Badges ----------
+.pz-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-family: 'Oswald', sans-serif;
+
+  &.badge-volt {
+    background: rgba(200, 255, 61, 0.14);
+    color: var(--pz-volt);
+    border: 1px solid rgba(200, 255, 61, 0.35);
+  }
+  &.badge-orange {
+    background: rgba(255, 138, 42, 0.14);
+    color: var(--pz-orange);
+    border: 1px solid rgba(255, 138, 42, 0.35);
+  }
+  &.badge-danger {
+    background: rgba(255, 77, 94, 0.14);
+    color: var(--pz-danger);
+    border: 1px solid rgba(255, 77, 94, 0.35);
+  }
+  &.badge-info {
+    background: rgba(56, 198, 255, 0.14);
+    color: var(--pz-info);
+    border: 1px solid rgba(56, 198, 255, 0.35);
+  }
+  &.badge-success {
+    background: rgba(53, 208, 127, 0.14);
+    color: var(--pz-success);
+    border: 1px solid rgba(53, 208, 127, 0.35);
+  }
+  &.badge-muted {
+    background: rgba(154, 164, 178, 0.12);
+    color: var(--pz-muted);
+    border: 1px solid var(--pz-border);
+  }
+}
+
+// ---------- Tablas ----------
+.mat-mdc-table {
+  background: transparent !important;
+}
+
+.mat-mdc-header-row {
+  background: var(--pz-surface-2) !important;
+}
+
+.mat-mdc-header-cell {
+  color: var(--pz-muted) !important;
+  font-family: 'Oswald', sans-serif !important;
+  font-size: 12px !important;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom-color: var(--pz-border) !important;
+}
+
+.mat-mdc-cell {
+  border-bottom-color: var(--pz-border) !important;
+  color: var(--pz-white) !important;
+}
+
+// ---------- Estados vacíos ----------
+.pz-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--pz-muted);
+
+  .pz-empty-icon {
+    font-size: 52px;
+    color: var(--pz-muted-2);
+    margin-bottom: 12px;
+  }
+  h3 {
+    color: var(--pz-white);
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+}
+
+// ---------- Diálogos ----------
+.mat-mdc-dialog-surface {
+  background: var(--pz-surface) !important;
+  border: 1px solid var(--pz-border);
+  border-radius: var(--pz-radius) !important;
+}
+
+// ---------- Tab / select ----------
+.mat-mdc-tab-header {
+  border-bottom: 1px solid var(--pz-border);
+}
+
+.mat-mdc-select-panel {
+  background: var(--pz-surface-2) !important;
+}
+
+// ---------- Animación de entrada ----------
+@keyframes pzFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pz-fade {
+  animation: pzFadeUp 0.35s ease both;
+}

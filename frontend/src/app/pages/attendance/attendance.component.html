@@ -1,0 +1,150 @@
+<div class="pz-page pz-fade">
+  <pz-page-header
+    eyebrow="Control de acceso"
+    title="Asistencia"
+    subtitle="Registrá ingresos y salidas, y consultá la ocupación en tiempo real." />
+
+  <div class="top-grid">
+    <!-- Ocupación -->
+    <mat-card class="occ-card">
+      <mat-card-header>
+        <mat-card-title>Ocupación en vivo</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @if (occupancy(); as o) {
+          <div class="occ-big pz-display">{{ o.current }}<span class="occ-total">/{{ o.maxCapacity }}</span></div>
+          <div class="occ-labels">
+            <span>Personas dentro</span>
+            <span>{{ o.isFull ? '¡Sala completa!' : 'Hay lugar disponible' }}</span>
+          </div>
+          <div class="pz-olbar"><span [style.width.%]="occupancyPct()"></span></div>
+        } @else {
+          <p style="color:var(--pz-muted)">Sin datos de ocupación.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Acciones de check-in/out -->
+    @if (isStaff()) {
+      <mat-card class="check-card">
+        <mat-card-header>
+          <mat-card-title>Registrar asistencia</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field appearance="outline" style="width:100%">
+            <mat-label>Miembro</mat-label>
+            <mat-select [value]="filterForm.getRawValue().userId" (selectionChange)="filterForm.patchValue({ userId: $event.value }); applyFilter()">
+              @for (m of members(); track m.id) {
+                <mat-option [value]="m.id">{{ m.fullName }} ({{ m.email }})</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <div class="check-actions">
+            <button mat-raised-button class="pz-btn-volt" (click)="checkIn(filterForm.value.userId!)" [disabled]="!filterForm.value.userId">
+              <mat-icon>login</mat-icon> Check-in
+            </button>
+            <button mat-stroked-button class="pz-btn-ghost" (click)="checkOut(filterForm.value.userId!)" [disabled]="!filterForm.value.userId">
+              <mat-icon>logout</mat-icon> Check-out
+            </button>
+            <button mat-button class="dim" (click)="checkIn(myId)">Registrarme yo</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    } @else {
+      <mat-card class="check-card mine">
+        <mat-card-content>
+          <div class="mine-avatar">{{ initials(auth.user()?.firstName, auth.user()?.lastName) }}</div>
+          <div class="mine-info">
+            <div class="mine-name">Hola, {{ auth.user()?.firstName }}!</div>
+            <div class="mine-sub">Registrá tu ingreso o salida del gimnasio</div>
+          </div>
+          <div class="check-actions">
+            <button mat-raised-button class="pz-btn-volt" (click)="checkIn(myId)">
+              <mat-icon>login</mat-icon> Check-in
+            </button>
+            <button mat-stroked-button class="pz-btn-ghost" (click)="checkOut(myId)">
+              <mat-icon>logout</mat-icon> Check-out
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+
+  <!-- Tabla -->
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>{{ isStaff() ? 'Historial de asistencia' : 'Mis registros' }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="filterForm" class="filters" (ngSubmit)="applyFilter()">
+        @if (isStaff()) {
+          <mat-form-field appearance="outline">
+            <mat-label>Filtrar miembro</mat-label>
+            <mat-select formControlName="userId">
+              <mat-option value="">Todos</mat-option>
+              @for (m of members(); track m.id) {
+                <mat-option [value]="m.id">{{ m.fullName }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+        <mat-form-field appearance="outline">
+          <mat-label>Desde</mat-label>
+          <input matInput type="date" formControlName="from" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Hasta</mat-label>
+          <input matInput type="date" formControlName="to" />
+        </mat-form-field>
+        <button mat-raised-button class="pz-btn-volt" type="submit"><mat-icon>filter_alt</mat-icon> Filtrar</button>
+      </form>
+
+      <div class="table-wrap">
+        <table mat-table [dataSource]="rows()">
+          @if (isStaff()) {
+            <ng-container matColumnDef="member">
+              <th mat-header-cell *matHeaderCellDef>Miembro</th>
+              <td mat-cell *matCellDef="let a">
+                <div class="member-cell">
+                  <div class="mini-avatar">{{ initials(a.user?.firstName, a.user?.lastName) }}</div>
+                  <span>{{ a.user?.fullName || a.user?.email }}</span>
+                </div>
+              </td>
+            </ng-container>
+          }
+          <ng-container matColumnDef="time">
+            <th mat-header-cell *matHeaderCellDef>Fecha y hora</th>
+            <td mat-cell *matCellDef="let a">{{ formatDateTime(a.timestamp) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Tipo</th>
+            <td mat-cell *matCellDef="let a">
+              <span class="pz-badge" [class]="'badge-' + attendanceType(a.type).color">{{ attendanceType(a.type).label }}</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="method">
+            <th mat-header-cell *matHeaderCellDef>Método</th>
+            <td mat-cell *matCellDef="let a">{{ methodLabel(a.method) }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns"></tr>
+        </table>
+
+        @if (rows().length === 0 && !loading()) {
+          <pz-empty icon="how_to_reg" title="Sin registros" message="Aún no hay movimientos de asistencia." />
+        }
+
+        <mat-paginator
+          [length]="total()"
+          [pageSize]="limit"
+          [pageIndex]="page"
+          [pageSizeOptions]="[10, 20, 50]"
+          (page)="onPage($event)"
+          showFirstLastButtons>
+        </mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

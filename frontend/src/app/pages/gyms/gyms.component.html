@@ -1,0 +1,56 @@
+<div class="pz-page pz-fade">
+  <pz-page-header
+    eyebrow="Sedes"
+    title="Gimnasios"
+    subtitle="Administrá las sedes y sus datos de contacto.">
+    <button mat-raised-button class="pz-btn-volt" (click)="open()">
+      <mat-icon>add</mat-icon> Nuevo gimnasio
+    </button>
+  </pz-page-header>
+
+  <div class="gyms-grid">
+    @for (g of rows(); track g.id) {
+      <mat-card class="gym-card">
+        <mat-card-content>
+          <div class="gym-top">
+            <div class="gym-logo">{{ g.name.charAt(0).toUpperCase() }}</div>
+            <div class="gym-actions">
+              <button mat-icon-button (click)="open(g)"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button class="danger" (click)="remove(g)"><mat-icon>delete</mat-icon></button>
+            </div>
+          </div>
+          <div class="gym-name">{{ g.name }}</div>
+          @if (g.description) {
+            <div class="gym-desc">{{ g.description }}</div>
+          }
+          <div class="gym-meta">
+            @if (g.address || g.city) {
+              <div class="m-item"><mat-icon>place</mat-icon> {{ address(g) }}</div>
+            }
+            @if (g.phone) {
+              <div class="m-item"><mat-icon>phone</mat-icon> {{ g.phone }}</div>
+            }
+            @if (g.contactEmail) {
+              <div class="m-item"><mat-icon>email</mat-icon> {{ g.contactEmail }}</div>
+            }
+            @if (g.maxCapacity) {
+              <div class="m-item"><mat-icon>groups</mat-icon> Capacidad: {{ g.maxCapacity }}</div>
+            }
+            @if (g.openingHour && g.closingHour) {
+              <div class="m-item"><mat-icon>schedule</mat-icon> {{ g.openingHour }} – {{ g.closingHour }}</div>
+            }
+          </div>
+          @if (g.createdAt) {
+            <div class="gym-created">Desde {{ formatDate(g.createdAt) }}</div>
+          }
+        </mat-card-content>
+      </mat-card>
+    } @empty {
+      @if (!loading()) {
+        <div style="grid-column:1/-1">
+          <pz-empty icon="fitness_center" title="Sin gimnasios" message="Creá tu primer gimnasio para comenzar." />
+        </div>
+      }
+    }
+  </div>
+</div>

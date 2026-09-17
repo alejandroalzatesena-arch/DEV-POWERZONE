@@ -1,0 +1,142 @@
+.toolbar {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+
+  .status {
+    width: 200px;
+  }
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  .chip {
+    min-height: 0;
+    height: 40px;
+    border-radius: 999px;
+    &.on {
+      background: var(--pz-volt) !important;
+      color: #10130a !important;
+      border-color: var(--pz-volt) !important;
+    }
+  }
+}
+
+.r-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: var(--pz-volt);
+  }
+
+  mat-card-content {
+    padding: 20px;
+  }
+}
+
+.r-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.r-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(255, 138, 42, 0.2), rgba(255, 138, 42, 0.05));
+  mat-icon {
+    color: var(--pz-orange);
+  }
+}
+
+.r-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--pz-white);
+}
+
+.r-desc {
+  color: var(--pz-muted);
+  font-size: 13px;
+  margin-top: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 38px;
+}
+
+.r-meta {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--pz-surface-2);
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--pz-muted);
+    font-size: 12.5px;
+
+    mat-icon {
+      font-size: 15px;
+      width: 15px;
+      height: 15px;
+      color: var(--pz-info);
+    }
+  }
+}
+
+.r-days {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+
+  &::before {
+    content: '';
+  }
+}
+
+.r-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  border-top: 1px solid var(--pz-border);
+  padding-top: 12px;
+
+  .by {
+    font-size: 12px;
+    color: var(--pz-muted-2);
+  }
+
+  .mini {
+    height: 34px;
+    font-size: 12px;
+  }
+}
+
+.pag {
+  margin-top: 20px;
+  background: transparent;
+}

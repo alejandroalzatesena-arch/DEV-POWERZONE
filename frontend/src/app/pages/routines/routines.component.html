@@ -1,0 +1,104 @@
+<div class="pz-page pz-fade">
+  <pz-page-header
+    eyebrow="Entrenamiento"
+    [title]="isClient() ? 'Mis rutinas' : 'Rutinas'"
+    subtitle="Planes de entrenamiento con ejercicios agrupados por día de la semana.">
+    @if (canEdit()) {
+      <button mat-raised-button class="pz-btn-volt" (click)="goNew()">
+        <mat-icon>add</mat-icon> Nueva rutina
+      </button>
+    }
+  </pz-page-header>
+
+  <div class="toolbar">
+    <div class="chips">
+      <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="objectiveFilter() === ''" (click)="setObjective('')">Todos</button>
+      @for (o of objectives; track o.value) {
+        <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="objectiveFilter() === o.value" (click)="setObjective(o.value)">
+          {{ o.label }}
+        </button>
+      }
+    </div>
+    @if (!isClient()) {
+      <mat-form-field appearance="outline" class="status">
+        <mat-label>Estado</mat-label>
+        <mat-select [value]="statusFilter()" (selectionChange)="setStatus($event.value)">
+          <mat-option value="">Todos</mat-option>
+          <mat-option value="draft">Borrador</mat-option>
+          <mat-option value="active">Activa</mat-option>
+          <mat-option value="archived">Archivada</mat-option>
+        </mat-select>
+      </mat-form-field>
+    }
+  </div>
+
+  <div class="pz-grid pz-grid-lg">
+    @for (r of rows(); track r.id) {
+      <mat-card class="r-card" (click)="router.navigate(['/routines', r.id])">
+        <mat-card-content>
+          <div class="r-head">
+            <div class="r-icon"><mat-icon>fitness_center</mat-icon></div>
+            <span class="pz-badge" [class]="'badge-' + routineStatus(r.status).color">{{ routineStatus(r.status).label }}</span>
+          </div>
+          <div class="r-title">{{ r.title }}</div>
+          <div class="r-desc">{{ r.description || 'Sin descripción' }}</div>
+
+          <div class="r-meta">
+            <div class="meta-item">
+              <mat-icon>track_changes</mat-icon>
+              <span>{{ objectiveLabel(r.objective) }}</span>
+            </div>
+            <div class="meta-item">
+              <mat-icon>calendar_month</mat-icon>
+              <span>{{ r.daysPerWeek }} días/sem · {{ r.durationWeeks ?? '—' }} sem</span>
+            </div>
+            <div class="meta-item">
+              <mat-icon>replay</mat-icon>
+              <span>{{ r.exercises?.length ?? 0 }} ejercicios</span>
+            </div>
+            @if (r.assignee) {
+              <div class="meta-item">
+                <mat-icon>person</mat-icon>
+                <span>{{ r.assignee.fullName }}</span>
+              </div>
+            }
+          </div>
+
+          <div class="r-days">{{ daysSummary(r) }}</div>
+
+          <div class="r-footer">
+            @if (r.createdBy) {
+              <span class="by">{{ initials(r.createdBy.firstName, r.createdBy.lastName) }} {{ r.createdBy.fullName }}</span>
+            }
+            <div class="pz-spacer"></div>
+            @if (canEdit() && r.status !== 'active') {
+              <button mat-button class="pz-btn-ghost mini" (click)="assign(r); $event.stopPropagation()">Asignar</button>
+            }
+            <button mat-icon-button (click)="router.navigate(['/routines', r.id]); $event.stopPropagation()">
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    } @empty {
+      @if (!loading()) {
+        <div style="grid-column:1/-1">
+          <pz-empty
+            [icon]="canEdit() ? 'fitness_center' : 'event_busy'"
+            [title]="canEdit() ? 'Sin rutinas' : 'Aún no tienes rutinas'"
+            message="Las rutinas asignadas aparecerán acá." />
+        </div>
+      }
+    }
+  </div>
+
+  <mat-paginator
+    class="pag"
+    [length]="total()"
+    [pageSize]="limit"
+    [pageIndex]="page"
+    [pageSizeOptions]="[10, 20, 50]"
+    (page)="onPage($event)"
+    showFirstLastButtons>
+  </mat-paginator>
+</div>

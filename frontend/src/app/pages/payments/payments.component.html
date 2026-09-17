@@ -1,0 +1,100 @@
+<div class="pz-page pz-fade">
+  <pz-page-header
+    eyebrow="Facturación"
+    title="Pagos"
+    subtitle="Historial de cobros del gimnasio, registrados manualmente o vía Stripe.">
+    @if (canRegister()) {
+      <button mat-raised-button class="pz-btn-volt" (click)="createPayment()">
+        <mat-icon>add</mat-icon> Registrar pago
+      </button>
+    }
+  </pz-page-header>
+
+  <div class="summary">
+    <span class="sum-item">
+      <mat-icon>paid</mat-icon>
+      <span>Cobrado (esta página)</span>
+      <strong>{{ formatMoney(totals.amount) }}</strong>
+    </span>
+    <span class="sum-item">
+      <mat-icon>done_all</mat-icon>
+      <span>Pagos exitosos</span>
+      <strong>{{ totals.count }}</strong>
+    </span>
+  </div>
+
+  <div class="toolbar">
+    <mat-form-field appearance="outline" class="search">
+      <mat-label>Buscar cliente</mat-label>
+      <input matInput (input)="onSearch(searchInput.value)" #searchInput placeholder="Nombre o email…" />
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+
+    <div class="chips">
+      <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="statusFilter() === ''" (click)="setStatus('')">Todas</button>
+      <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="statusFilter() === 'succeeded'" (click)="setStatus('succeeded')">Pagadas</button>
+      <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="statusFilter() === 'pending'" (click)="setStatus('pending')">Pendientes</button>
+      <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="statusFilter() === 'failed'" (click)="setStatus('failed')">Fallidas</button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table mat-table [dataSource]="rows()">
+      <ng-container matColumnDef="client">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let p">
+          <div class="member-cell">
+            <div class="mini-avatar">{{ initials(p.user?.firstName, p.user?.lastName) }}</div>
+            <div>
+              <div class="cell-title">{{ p.user?.fullName || p.user?.email }}</div>
+              <div class="cell-sub">{{ p.user?.email }}</div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="concept">
+        <th mat-header-cell *matHeaderCellDef>Concepto</th>
+        <td mat-cell *matCellDef="let p">{{ p.membershipType?.name ?? 'Pago manual' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Monto</th>
+        <td mat-cell *matCellDef="let p" class="amount">{{ formatMoney(p.amount, p.currency) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="method">
+        <th mat-header-cell *matHeaderCellDef>Método</th>
+        <td mat-cell *matCellDef="let p">{{ paymentMethodLabel(p.paymentMethod) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let p">
+          <span class="pz-badge" [class]="'badge-' + paymentStatus(p.status).color">{{ paymentStatus(p.status).label }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Fecha</th>
+        <td mat-cell *matCellDef="let p" class="cell-sub">{{ formatDate(p.paidAt ?? p.createdAt, true) }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+    </table>
+
+    @if (rows().length === 0 && !loading()) {
+      <pz-empty icon="receipt_long" title="Sin pagos" message="No se encontraron cobros con esos filtros." />
+    }
+
+    <mat-paginator
+      [length]="total()"
+      [pageSize]="limit"
+      [pageIndex]="page"
+      [pageSizeOptions]="[10, 15, 25]"
+      (page)="onPage($event)"
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>

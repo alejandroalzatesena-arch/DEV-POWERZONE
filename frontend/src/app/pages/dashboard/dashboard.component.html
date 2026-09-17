@@ -1,0 +1,239 @@
+<div class="pz-page pz-fade">
+  <!-- Hero de bienvenida -->
+  <div class="hero">
+    <div>
+      <div class="pz-eyebrow">Panel de control</div>
+      <h1 class="pz-display">Hola, {{ user()?.firstName }}</h1>
+      <div class="hero-sub">
+        <span class="pz-badge" [class]="'badge-' + roleColor()">{{ roleLabel(user()?.role) }}</span>
+        @if (occupancy() && user()?.gymId) {
+          <span class="occupancy-line">
+            <mat-icon>local_fire_department</mat-icon>
+            {{ occupancy()?.current }} / {{ occupancy()?.maxCapacity }} personas ahora
+          </span>
+        }
+      </div>
+    </div>
+    <span class="today">{{ today }}</span>
+  </div>
+
+  <!-- Stats -->
+  @if (!loading()) {
+    <div class="pz-grid pz-grid-lg stat-grid">
+      @if (isClient()) {
+        <a [routerLink]="'/memberships/my'" class="stat-link">
+          <pz-stat-card label="Mi membresía" [value]="membership() ? membershipStatus(membership()?.status).label : 'Sin membresía'" icon="card_membership">
+            @if (membership()?.membershipType) {
+              <div class="stat-extra">{{ membership()?.membershipType?.name }}</div>
+              <div class="stat-extra muted">Vence {{ formatDate(membership()?.endDate) }}</div>
+            }
+          </pz-stat-card>
+        </a>
+        <a [routerLink]="'/routines'" class="stat-link">
+          <pz-stat-card label="Mis rutinas" [value]="myRoutines().length" icon="fitness_center" iconBg="var(--pz-orange)">
+            <div class="stat-extra muted">{{ myRoutines().length }} rutina{{ myRoutines().length === 1 ? '' : 's' }} asignada{{ myRoutines().length === 1 ? '' : 's' }}</div>
+          </pz-stat-card>
+        </a>
+        <a [routerLink]="'/nutrition'" class="stat-link">
+          <pz-stat-card label="Calorías hoy" [value]="nutritionToday()?.totals?.calories ?? 0" icon="local_fire_department" iconBg="var(--pz-danger)">
+            <div class="stat-extra muted">P {{ nutritionToday()?.totals?.protein ?? 0 }}g · C {{ nutritionToday()?.totals?.carbs ?? 0 }}g · G {{ nutritionToday()?.totals?.fats ?? 0 }}g</div>
+          </pz-stat-card>
+        </a>
+        <a [routerLink]="'/classes/my'" class="stat-link">
+          <pz-stat-card label="Pases a clases" [value]="myBookings().length" icon="event_available" iconBg="var(--pz-info)">
+            <div class="stat-extra muted">Próximas reservas activas</div>
+          </pz-stat-card>
+        </a>
+      } @else {
+        <pz-stat-card label="Ocupación actual" [value]="occupancyPct() + '%'" icon="groups" [progress]="occupancyPct()">
+          <div class="stat-extra muted">{{ occupancy()?.current ?? 0 }} personas en sala de {{ occupancy()?.maxCapacity ?? '—' }}</div>
+        </pz-stat-card>
+        <pz-stat-card label="Check-ins de hoy" [value]="todayCheckins()" icon="how_to_reg" iconBg="var(--pz-info)">
+          <div class="stat-extra muted">Asistentes registrados hoy</div>
+        </pz-stat-card>
+        <a [routerLink]="'/classes'" class="stat-link">
+          <pz-stat-card label="Clases próximas" [value]="upcomingClasses().length" icon="event" iconBg="var(--pz-volt)">
+            <div class="stat-extra muted">Disponibles para reservar</div>
+          </pz-stat-card>
+        </a>
+        @if (canSeePayments()) {
+          <a [routerLink]="'/payments'" class="stat-link">
+            <pz-stat-card label="Membresías activas" [value]="activeMemberships()" icon="card_membership" iconBg="var(--pz-orange)">
+              <div class="stat-extra muted">Total de membresías registradas</div>
+            </pz-stat-card>
+          </a>
+        }
+      }
+    </div>
+  }
+
+  <div class="dash-grid">
+    <!-- Columna principal -->
+    <div class="col-main">
+      @if (isClient()) {
+        <!-- Mi membresía -->
+        <mat-card class="block">
+          <mat-card-header>
+            <mat-card-title>Estado de mi membresía</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (membership()) {
+              <div class="membership-banner">
+                <div class="mb-left">
+                  <div class="mb-type">{{ membership()?.membershipType?.name }}</div>
+                  <div class="mb-dates">
+                    {{ formatDate(membership()?.startDate) }} → {{ formatDate(membership()?.endDate) }}
+                  </div>
+                </div>
+                <div>
+                  @if (membership()?.autoRenew) {
+                    <span class="pz-badge badge-info">Renovación automática</span>
+                  }
+                  <span class="pz-badge" [class]="'badge-' + membershipStatus(membership()?.status).color">
+                    {{ membershipStatus(membership()?.status).label }}
+                  </span>
+                </div>
+              </div>
+              <div class="pz-olbar" style="margin-top:16px">
+                <span [style.width.%]="membershipProgress()"></span>
+              </div>
+              <div class="progress-hint">{{ daysLeft }} día{{ daysLeft === 1 ? '' : 's' }} restantes</div>
+            } @else {
+              <pz-empty
+                icon="card_membership"
+                title="Sin membresía activa"
+                message="Contactá con la recepción para asociarte al gimnasio." />
+            }
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Mis rutinas -->
+        <mat-card class="block">
+          <mat-card-header>
+            <mat-card-title>Mis rutinas</mat-card-title>
+            <span class="pz-spacer"></span>
+            <a mat-stroked-button class="pz-btn-ghost" routerLink="/routines" mat-button>Ver todas</a>
+          </mat-card-header>
+          <mat-card-content>
+            @if (myRoutines().length === 0) {
+              <pz-empty icon="fitness_center" title="Aún no tenés rutinas" message="Tu entrenador puede asignarte una rutina personalizada." [actionText]="'Ver catálogo'" [action]="goRoutines" />
+            } @else {
+              @for (r of myRoutines(); track r.id) {
+                <a class="routine-item" [routerLink]="['/routines', r.id]">
+                  <div class="ri-icon"><mat-icon>fitness_center</mat-icon></div>
+                  <div class="ri-main">
+                    <div class="ri-title">{{ r.title }}</div>
+                    <div class="ri-meta">{{ r.exercises?.length ?? 0 }} ejercicios · {{ r.daysPerWeek }} días · {{ routineDays(r) }}</div>
+                  </div>
+                  <span class="pz-badge" [class]="'badge-' + routineStatus(r.status).color">{{ routineStatus(r.status).label }}</span>
+                </a>
+              }
+            }
+          </mat-card-content>
+        </mat-card>
+      } @else {
+        <!-- Clases próximas (staff) -->
+        <mat-card class="block">
+          <mat-card-header>
+            <mat-card-title>Clases próximas</mat-card-title>
+            <span class="pz-spacer"></span>
+            <a mat-button class="pz-btn-ghost" routerLink="/classes">Gestionar clases</a>
+          </mat-card-header>
+          <mat-card-content>
+            @if (upcomingClasses().length === 0) {
+              <pz-empty icon="event" title="Sin clases próximas" message="Cuando se carguen clases aparecerán acá." />
+            } @else {
+              @for (c of upcomingClasses(); track c.id) {
+                <a class="routine-item" [routerLink]="['/classes']">
+                  <div class="ri-icon" [style.background]="c.color || '#232a36'">
+                    <mat-icon [style.color]="c.color ? '#10130a' : 'var(--pz-volt)'">event</mat-icon>
+                  </div>
+                  <div class="ri-main">
+                    <div class="ri-title">{{ c.name }}</div>
+                    <div class="ri-meta">
+                      {{ formatDate(c.startTime) }} · {{ timeOnly(c.startTime) }}
+                      @if (c.instructor) { · {{ c.instructor.fullName }} }
+                    </div>
+                  </div>
+                  <span class="pz-badge" [class]="availableClassBadge(c)">{{ availableClassText(c) }}</span>
+                </a>
+              }
+            }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+
+    <!-- Columna lateral -->
+    <div class="col-side">
+      @if (isClient()) {
+        <mat-card class="block">
+          <mat-card-header>
+            <mat-card-title>Mis próximas clases</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (myBookings().length === 0) {
+              <pz-empty icon="event_available" title="Sin reservas" message="Reservá tu lugar en la próxima clase." [actionText]="'Ver clases'" [action]="goClasses" />
+            } @else {
+              @for (c of myBookings(); track c.id) {
+                <a class="routine-item" [routerLink]="['/classes']">
+                  <div class="ri-icon"><mat-icon>event</mat-icon></div>
+                  <div class="ri-main">
+                    <div class="ri-title">{{ c.name }}</div>
+                    <div class="ri-meta">{{ formatDate(c.startTime) }} · {{ timeOnly(c.startTime) }}</div>
+                  </div>
+                </a>
+              }
+            }
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="block">
+          <mat-card-header>
+            <mat-card-title>Nutrición de hoy</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (macros().length === 0) {
+              <pz-empty icon="restaurant" title="Sin registros" message="Loguea tus comidas para ver tus macros." [actionText]="'Registrar comida'" [action]="goNutrition" />
+            } @else {
+              @for (m of macros(); track m.name) {
+                <div class="macro-row">
+                  <span class="pz-badge badge-volt"><mat-icon>bolt</mat-icon> {{ m.icon }}</span>
+                  <div class="macro-main">
+                    <div>{{ m.name }}</div>
+                    <div class="pz-olbar"><span [style.width.%]="m.pct"></span></div>
+                  </div>
+                  <strong>{{ m.value }}</strong>
+                </div>
+              }
+            }
+          </mat-card-content>
+        </mat-card>
+      } @else if (canSeePayments()) {
+        <mat-card class="block">
+          <mat-card-header>
+            <mat-card-title>Últimos pagos</mat-card-title>
+            <span class="pz-spacer"></span>
+            <a mat-button class="pz-btn-ghost" routerLink="/payments">Ver todos</a>
+          </mat-card-header>
+          <mat-card-content>
+            @if (recentPayments().length === 0) {
+              <pz-empty icon="receipt_long" title="Sin pagos recientes" message="Los cobros se mostrarán acá." />
+            } @else {
+              @for (p of recentPayments(); track p.id) {
+                <div class="routine-item">
+                  <div class="ri-icon"><mat-icon>payments</mat-icon></div>
+                  <div class="ri-main">
+                    <div class="ri-title">{{ p.user?.fullName || 'Cliente' }}</div>
+                    <div class="ri-meta">{{ formatMoney(p.amount, p.currency) }} · {{ paymentMethodLabel(p.paymentMethod) }}</div>
+                  </div>
+                  <span class="pz-badge" [class]="'badge-' + paymentStatus(p.status).color">{{ paymentStatus(p.status).label }}</span>
+                </div>
+              }
+            }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  </div>
+</div>

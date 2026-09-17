@@ -1,0 +1,47 @@
+<div class="pz-page pz-fade">
+  <pz-page-header
+    eyebrow="Mi cuenta"
+    title="Mis pagos"
+    subtitle="Historial de tus pagos en el gimnasio." />
+
+  <div class="table-wrap">
+    <table mat-table [dataSource]="rows()">
+      <ng-container matColumnDef="concept">
+        <th mat-header-cell *matHeaderCellDef>Concepto</th>
+        <td mat-cell *matCellDef="let p">{{ p.membershipType?.name ?? 'Pago manual' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Monto</th>
+        <td mat-cell *matCellDef="let p" class="amount">{{ formatMoney(p.amount, p.currency) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="method">
+        <th mat-header-cell *matHeaderCellDef>Método</th>
+        <td mat-cell *matCellDef="let p">{{ paymentMethodLabel(p.paymentMethod) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let p">
+          <span class="pz-badge" [class]="'badge-' + paymentStatus(p.status).color">{{ paymentStatus(p.status).label }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Fecha</th>
+        <td mat-cell *matCellDef="let p" class="cell-sub">{{ formatDate(p.paidAt ?? p.createdAt, true) }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+    </table>
+
+    @if (rows().length === 0 && !loading()) {
+      <pz-empty icon="receipt_long" title="Sin pagos" message="Aún no realizaste pagos." />
+    }
+
+    <mat-paginator [length]="total()" [pageSize]="limit" [pageIndex]="page" [pageSizeOptions]="[10, 25]" (page)="onPage($event)" showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>
