@@ -1,0 +1,118 @@
+<div class="pz-page pz-fade">
+  <pz-page-header
+    eyebrow="Nutrición"
+    title="Nutrición"
+    subtitle="Registrá tu ingesta diaria y consultá el catálogo de alimentos." />
+
+  <mat-tab-group class="pz-tabs">
+    <!-- Resumen diario -->
+    <mat-tab label="Resumen diario">
+      <div class="tab-body">
+        <div class="day-bar">
+          <mat-form-field appearance="outline" style="min-width:200px">
+            <mat-label>Fecha</mat-label>
+            <input matInput type="date" [value]="date()" (input)="setDate($any($event.target).value)" />
+          </mat-form-field>
+          <button mat-raised-button class="pz-btn-volt" (click)="openAddLog()"><mat-icon>add</mat-icon> Agregar alimento</button>
+        </div>
+
+        @if (summary(); as s) {
+          <div class="summary-grid">
+            <mat-card class="kcal-card">
+              <mat-card-content>
+                <div class="kcal-label">Calorías del día</div>
+                <div class="kcal-big pz-display">{{ s.totals.calories }}<span> kcal</span></div>
+                <div class="macros">
+                  <div class="macro"><span class="m-dot p"></span><div class="m-name">Proteína</div><div class="m-val">{{ s.totals.protein }}g</div></div>
+                  <div class="macro"><span class="m-dot c"></span><div class="m-name">Carbos</div><div class="m-val">{{ s.totals.carbs }}g</div></div>
+                  <div class="macro"><span class="m-dot f"></span><div class="m-name">Grasas</div><div class="m-val">{{ s.totals.fats }}g</div></div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="logs-card">
+              <mat-card-header>
+                <mat-card-title>Registros ({{ logs().length }})</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                @for (l of logs(); track l.id) {
+                  <div class="log-row">
+                    <span class="meal-icon" [matTooltip]="mealTypeLabel(l.mealType)">
+                      <mat-icon>{{ mealIcon(l.mealType) }}</mat-icon>
+                    </span>
+                    <div class="log-info">
+                      <div class="log-name">{{ l.food?.name }}</div>
+                      <div class="log-sub">{{ mealTypeLabel(l.mealType) }} · {{ l.quantityG }}g</div>
+                    </div>
+                    <div class="log-cal">{{ l.calculatedCalories }} kcal</div>
+                    <button mat-icon-button class="danger" (click)="removeLog(l)"><mat-icon>close</mat-icon></button>
+                  </div>
+                } @empty {
+                  <pz-empty icon="restaurant" title="Sin registros" message="No hay alimentos registrados en esta fecha." />
+                }
+              </mat-card-content>
+            </mat-card>
+          </div>
+        } @else {
+          <p style="color:var(--pz-muted)">Cargando resumen…</p>
+        }
+      </div>
+    </mat-tab>
+
+    <!-- Catálogo de alimentos -->
+    <mat-tab label="Alimentos">
+      <div class="tab-body">
+        <div class="day-bar">
+          <mat-form-field appearance="outline" style="min-width:260px">
+            <mat-label>Buscar alimento</mat-label>
+            <input matInput [value]="search()" (keyup.enter)="searchFoods()" (input)="search.set($any($event.target).value)" placeholder="pollo, arroz, banana…" />
+          </mat-form-field>
+          <button mat-stroked-button class="pz-btn-ghost" (click)="searchFoods()"><mat-icon>search</mat-icon> Buscar</button>
+          @if (canManage) {
+            <button mat-raised-button class="pz-btn-volt" (click)="openAddFood()"><mat-icon>add</mat-icon> Nuevo alimento</button>
+          }
+        </div>
+
+        <div class="foods-grid">
+          @for (f of foods(); track f.id) {
+            <mat-card class="food-card">
+              <mat-card-content>
+                <div class="food-top">
+                  <span class="pz-badge badge-info">{{ foodCategoryLabel(f.category) }}</span>
+                  @if (canManage) {
+                    <span class="food-actions">
+                      <button mat-icon-button (click)="editFood(f)"><mat-icon>edit</mat-icon></button>
+                      <button mat-icon-button class="danger" (click)="removeFood(f)"><mat-icon>delete</mat-icon></button>
+                    </span>
+                  }
+                </div>
+                <div class="food-name">{{ f.name }}</div>
+                <div class="food-serve">Porción de {{ f.servingSizeG }}g</div>
+                <div class="food-cal pz-display">{{ f.calories }}<span> kcal</span></div>
+                <div class="food-macros">
+                  <span>P {{ f.protein }}g</span><span>C {{ f.carbs }}g</span><span>G {{ f.fats }}g</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          } @empty {
+            @if (!foodsLoading()) {
+              <div style="grid-column:1/-1">
+                <pz-empty icon="nutrition" title="Sin alimentos" message="No se encontraron alimentos en el catálogo." />
+              </div>
+            }
+          }
+        </div>
+
+        <mat-paginator
+          class="pag"
+          [length]="foodsTotal()"
+          [pageSize]="foodsLimit"
+          [pageIndex]="foodsPage"
+          [pageSizeOptions]="[12, 24, 48]"
+          (page)="onFoodsPage($event)"
+          showFirstLastButtons>
+        </mat-paginator>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

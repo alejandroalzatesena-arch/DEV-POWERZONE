@@ -1,0 +1,50 @@
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.table-card {
+  mat-card-content { padding: 18px; }
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-bottom: 6px;
+
+  mat-form-field { min-width: 180px; }
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.item-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.item-dot {
+  width: 10px;
+  height: 34px;
+  border-radius: 5px;
+  background: linear-gradient(180deg, var(--pz-volt), var(--pz-orange));
+}
+
+.low {
+  color: var(--pz-orange);
+  font-weight: 600;
+}
+
+.row-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2px;
+
+  .danger { color: var(--pz-danger); }
+}

@@ -1,0 +1,87 @@
+<div class="auth-wrap">
+  <!-- Panel de marca -->
+  <div class="brand-panel">
+    <div class="brand-inner">
+      <div class="brand-top">
+        <div class="brand-mark"></div>
+        <span class="brand-text">Power<span class="volt-dk">Zone</span></span>
+      </div>
+
+      <div class="pz-display hero-title">
+        <span>Entrena.</span>
+        <span class="outline">Compite.</span>
+        <span class="volt-txt">Domina.</span>
+      </div>
+      <p class="hero-sub">
+        Plataforma integral para gestionar miembros, clases, pagos, rutinas y más de tu gimnasio,
+        en un solo lugar.
+      </p>
+
+      <div class="hero-features">
+        <div class="hf"><mat-icon>fitness_center</mat-icon> Rutinas y progreso</div>
+        <div class="hf"><mat-icon>event</mat-icon> Clases en tiempo real</div>
+        <div class="hf"><mat-icon>payments</mat-icon> Cobros y membresías</div>
+        <div class="hf"><mat-icon>monitoring</mat-icon> Reportes de gestión</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel de login -->
+  <div class="form-panel">
+    <mat-card class="login-card pz-fade">
+      <mat-card-content>
+        <div class="form-head">
+          <div class="pz-eyebrow">Acceso</div>
+          <h1>Ingresar</h1>
+          <p>Usá tus credenciales para entrar al sistema.</p>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="tu@email.com" autocomplete="email" />
+            <mat-icon matPrefix>mail</mat-icon>
+            @if (form.controls.email.hasError('email')) {
+              <mat-error>Ingresá un email válido</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" placeholder="••••••••" autocomplete="current-password" />
+            <mat-icon matPrefix>lock</mat-icon>
+            <button matIconSuffix type="button" mat-icon-button (click)="hidePassword.set(!hidePassword())">
+              <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <button mat-raised-button class="pz-btn-volt submit" type="submit" [disabled]="loading()">
+            @if (loading()) {
+              <mat-icon class="spin">autorenew</mat-icon>
+            } @else {
+              <mat-icon>bolt</mat-icon>
+            }
+            {{ loading() ? 'Ingresando…' : 'Entrar' }}
+          </button>
+        </form>
+
+        <div class="divider"><span>Cuentas de demostración</span></div>
+
+        <div class="demo-grid">
+          @for (acc of demoAccounts; track acc.email) {
+            <button type="button" class="demo-btn" (click)="useDemo(acc.email)">
+              <mat-icon>{{ acc.icon }}</mat-icon>
+              <span>{{ acc.label }}</span>
+            </button>
+          }
+        </div>
+
+        <p class="register-link">
+          ¿Sos cliente nuevo?
+          <a routerLink="/auth/register">Registrate</a>
+          <span class="hint">(contraseña: PowerZone2024!)</span>
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

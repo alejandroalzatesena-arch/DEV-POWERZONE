@@ -1,0 +1,154 @@
+.plans-grid {
+  margin-top: 20px;
+}
+
+.plan-card {
+  position: relative;
+  overflow: hidden;
+
+  &.inactive {
+    opacity: 0.55;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--pz-grad);
+  }
+
+  mat-card-content {
+    padding: 20px;
+  }
+}
+
+.plan-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.plan-name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--pz-white);
+}
+
+.plan-dur {
+  color: var(--pz-muted);
+  font-size: 12.5px;
+  margin-top: 2px;
+}
+
+.plan-price {
+  margin: 18px 0 6px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+
+  .pz-display {
+    font-size: 34px;
+    color: var(--pz-volt);
+  }
+  .price-note {
+    color: var(--pz-muted);
+    font-size: 13px;
+  }
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0;
+  display: grid;
+  gap: 8px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--pz-muted);
+    font-size: 13px;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: var(--pz-success);
+    }
+  }
+}
+
+.toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  .filter {
+    width: 260px;
+  }
+}
+
+.table-wrap {
+  background: var(--pz-surface);
+  border: 1px solid var(--pz-border);
+  border-radius: var(--pz-radius);
+  overflow: hidden;
+}
+
+.pz-table {
+  width: 100%;
+}
+
+.member-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mini-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pz-volt), #2ce58a);
+  color: #10130a;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-family: 'Oswald', sans-serif;
+  flex-shrink: 0;
+}
+
+.cell-title {
+  font-weight: 600;
+  color: var(--pz-white);
+  white-space: nowrap;
+}
+
+.cell-sub {
+  font-size: 12px;
+  color: var(--pz-muted);
+}
+
+.cell-actions {
+  text-align: right;
+
+  .danger-icon {
+    color: var(--pz-danger);
+  }
+}
+
+.logout {
+  color: var(--pz-danger) !important;
+}
+
+mat-paginator {
+  background: transparent;
+}

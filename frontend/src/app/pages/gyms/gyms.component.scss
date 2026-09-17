@@ -1,0 +1,75 @@
+.gyms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.gym-card {
+  transition: all 0.2s ease;
+  &:hover { transform: translateY(-3px); }
+
+  mat-card-content { padding: 20px; }
+}
+
+.gym-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.gym-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--pz-volt), var(--pz-orange));
+  color: #10130a;
+  font-family: 'Anton', sans-serif;
+  font-size: 26px;
+  display: grid;
+  place-items: center;
+}
+
+.gym-actions {
+  display: flex;
+  .danger { color: var(--pz-danger); }
+}
+
+.gym-name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 21px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--pz-white);
+  margin-top: 12px;
+}
+
+.gym-desc {
+  color: var(--pz-muted);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.gym-meta {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  border-top: 1px solid var(--pz-border);
+  padding-top: 14px;
+
+  .m-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--pz-muted);
+    font-size: 13px;
+
+    mat-icon { font-size: 15px; width: 15px; height: 15px; color: var(--pz-volt); }
+  }
+}
+
+.gym-created {
+  color: var(--pz-muted-2);
+  font-size: 12px;
+  margin-top: 12px;
+}

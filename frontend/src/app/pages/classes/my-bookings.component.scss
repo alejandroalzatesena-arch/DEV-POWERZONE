@@ -1,0 +1,95 @@
+.bookings {
+  display: grid;
+  gap: 14px;
+}
+
+.b-card {
+  mat-card-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 18px;
+    flex-wrap: wrap;
+  }
+}
+
+.b-main {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex: 1;
+  min-width: 260px;
+}
+
+.b-date {
+  width: 84px;
+  text-align: center;
+  padding: 10px 8px;
+  border-radius: 12px;
+  background: var(--pz-surface-2);
+  border: 1px solid var(--pz-border);
+
+  .b-day {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--pz-volt);
+  }
+  .b-num {
+    font-size: 22px;
+    color: var(--pz-white);
+    margin-top: 4px;
+  }
+}
+
+.b-info {
+  .b-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--pz-white);
+  }
+  .b-sub {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--pz-muted);
+    font-size: 13px;
+    margin-top: 4px;
+
+    mat-icon {
+      font-size: 15px;
+      width: 15px;
+      height: 15px;
+    }
+  }
+}
+
+.mini-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pz-volt), #2ce58a);
+  color: #10130a;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  font-family: 'Oswald', sans-serif;
+}
+
+.b-side {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pag {
+  margin-top: 20px;
+  background: transparent;
+}

@@ -1,0 +1,39 @@
+.pz-tabs {
+  margin-top: 6px;
+}
+
+.tab-body {
+  padding: 20px 0;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+
+  mat-form-field {
+    min-width: 170px;
+  }
+}
+
+.mini-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pz-volt), #2ce58a);
+  color: #10130a;
+  font-weight: 800;
+  display: inline-grid;
+  place-items: center;
+  font-size: 10px;
+  font-family: 'Oswald', sans-serif;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.opt {
+  display: flex;
+  align-items: center;
+}
