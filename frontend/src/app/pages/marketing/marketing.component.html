@@ -1,0 +1,80 @@
+<div class="pz-page pz-fade">
+  <pz-page-header
+    eyebrow="Comunicación"
+    title="Marketing"
+    subtitle="Campañas para socios y prospectos del gimnasio.">
+    <button mat-raised-button class="pz-btn-volt" (click)="openCampaign()">
+      <mat-icon>add</mat-icon> Nueva campaña
+    </button>
+  </pz-page-header>
+
+  <div class="chips">
+    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === ''" (click)="applyFilter('')">Todas</button>
+    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === 'draft'" (click)="applyFilter('draft')">Borradores</button>
+    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === 'scheduled'" (click)="applyFilter('scheduled')">Programadas</button>
+    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === 'sending'" (click)="applyFilter('sending')">Enviando</button>
+    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === 'sent'" (click)="applyFilter('sent')">Enviadas</button>
+  </div>
+
+  <div class="campaigns">
+    @for (c of rows(); track c.id) {
+      <mat-card class="campaign">
+        <mat-card-content>
+          <div class="c-top">
+            <span class="pz-badge" [class]="'badge-' + campaignStatus(c.status).color">{{ campaignStatus(c.status).label }}</span>
+            <span class="c-type">
+              <mat-icon>{{ campaignType(c.type).icon }}</mat-icon> {{ campaignType(c.type).label }}
+            </span>
+          </div>
+          <div class="c-name">{{ c.name }}</div>
+          @if (c.subject) {
+            <div class="c-subject">Asunto: {{ c.subject }}</div>
+          }
+          @if (c.content) {
+            <div class="c-content">{{ c.content }}</div>
+          }
+          <div class="c-meta">
+            @if (c.scheduledAt) {
+              <span>Programado: {{ formatDateTime(c.scheduledAt) }}</span>
+            }
+            @if (c.sentAt) {
+              <span>Enviado: {{ formatDateTime(c.sentAt) }}</span>
+            }
+          </div>
+          @if (c.stats && statsText(c)) {
+            <div class="c-stats">{{ statsText(c) }}</div>
+          }
+          <div class="c-actions">
+            @if (c.status === 'draft' || c.status === 'scheduled') {
+              <button mat-raised-button class="pz-btn-volt small" (click)="send(c)"><mat-icon>send</mat-icon> Enviar</button>
+            }
+            @if (c.status === 'scheduled') {
+              <button mat-stroked-button class="pz-btn-ghost small" (click)="cancel(c)"><mat-icon>close</mat-icon> Cancelar</button>
+            }
+            @if (c.status === 'draft') {
+              <button mat-stroked-button class="pz-btn-ghost small" (click)="openCampaign(c)"><mat-icon>edit</mat-icon> Editar</button>
+            }
+            <button mat-icon-button class="danger" (click)="remove(c)"><mat-icon>delete</mat-icon></button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    } @empty {
+      @if (!loading()) {
+        <pz-empty
+          icon="campaign"
+          title="Sin campañas"
+          message="Creá tu primera campaña para comunicar novedades a tus socios." />
+      }
+    }
+  </div>
+
+  <mat-paginator
+    class="pag"
+    [length]="total()"
+    [pageSize]="limit"
+    [pageIndex]="page"
+    [pageSizeOptions]="[10, 25]"
+    (page)="onPage($event)"
+    showFirstLastButtons>
+  </mat-paginator>
+</div>

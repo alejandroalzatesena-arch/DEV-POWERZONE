@@ -1,0 +1,58 @@
+<div class="pz-page pz-fade">
+  <pz-page-header
+    eyebrow="Mi agenda"
+    title="Mis reservas"
+    subtitle="Clases que reservaste en el gimnasio." />
+
+  <div class="bookings">
+    @for (b of rows(); track b.id) {
+      <mat-card class="b-card">
+        <mat-card-content>
+          <div class="b-main">
+            <div class="b-date">
+              <div class="b-day">{{ formatDate(b.class?.startTime) | date: 'EEE' }}</div>
+              <div class="b-num pz-display">{{ timeOnly(b.class?.startTime) }}</div>
+            </div>
+            <div class="b-info">
+              <div class="b-name">{{ b.class?.name }}</div>
+              @if (b.class?.instructor) {
+                <div class="b-sub">
+                  <div class="mini-avatar">{{ initials(b.class?.instructor.firstName, b.class?.instructor.lastName) }}</div>
+                  {{ b.class?.instructor.fullName }}
+                </div>
+              }
+              @if (b.class?.room) {
+                <div class="b-sub"><mat-icon>place</mat-icon> Sala {{ b.class?.room }}</div>
+              }
+            </div>
+          </div>
+          <div class="b-side">
+            <span class="pz-badge" [class]="'badge-' + bookingStatus(b.status).color">{{ bookingStatus(b.status).label }}</span>
+            @if (isUpcoming(b) && b.status === 'confirmed') {
+              <button mat-stroked-button class="pz-btn-ghost" (click)="cancel(b)">
+                <mat-icon>event_busy</mat-icon> Cancelar
+              </button>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    } @empty {
+      @if (!loading()) {
+        <pz-empty
+          icon="event_available"
+          title="Sin reservas"
+          message="Reservá tu lugar en las próximas clases desde la sección Clases." />
+      }
+    }
+  </div>
+
+  <mat-paginator
+    class="pag"
+    [length]="total()"
+    [pageSize]="limit"
+    [pageIndex]="page"
+    [pageSizeOptions]="[10, 20]"
+    (page)="onPage($event)"
+    showFirstLastButtons>
+  </mat-paginator>
+</div>

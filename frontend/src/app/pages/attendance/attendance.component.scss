@@ -1,0 +1,141 @@
+.top-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 20px;
+  margin-bottom: 24px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.occ-card, .check-card {
+  mat-card-title {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+  }
+  mat-card-content {
+    padding-top: 8px;
+  }
+}
+
+.occ-big {
+  font-size: 56px;
+  color: var(--pz-volt);
+  line-height: 1;
+
+  .occ-total {
+    color: var(--pz-muted);
+    font-size: 28px;
+  }
+}
+
+.occ-labels {
+  display: flex;
+  justify-content: space-between;
+  color: var(--pz-muted);
+  font-size: 12.5px;
+  margin: 10px 0 12px;
+}
+
+.check-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dim {
+    color: var(--pz-muted);
+  }
+}
+
+.mine {
+  mat-card-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px;
+  }
+}
+
+.mine-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pz-volt), #2ce58a);
+  color: #10130a;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-family: 'Oswald', sans-serif;
+  flex-shrink: 0;
+}
+
+.mine-info {
+  flex: 1;
+  .mine-name {
+    color: var(--pz-white);
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .mine-sub {
+    color: var(--pz-muted);
+    font-size: 13px;
+    margin-top: 2px;
+  }
+}
+
+.table-card {
+  mat-card-title {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+  }
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-bottom: 6px;
+
+  mat-form-field {
+    min-width: 170px;
+  }
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.mini-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pz-volt), #2ce58a);
+  color: #10130a;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-family: 'Oswald', sans-serif;
+  flex-shrink: 0;
+}
+
+.member-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+}

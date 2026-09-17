@@ -1,0 +1,145 @@
+<div class="pz-page pz-fade">
+  <pz-page-header
+    eyebrow="Entrenamiento"
+    [title]="editing ? 'Editar rutina' : 'Nueva rutina'"
+    subtitle="Completá los datos del plan y agregá los ejercicios por día de la semana.">
+    <button mat-stroked-button class="pz-btn-ghost" (click)="cancel()"><mat-icon>arrow_back</mat-icon> Volver</button>
+  </pz-page-header>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="form-grid">
+      <mat-card class="form-card">
+        <mat-card-header>
+          <mat-card-title>Datos del plan</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Título</mat-label>
+            <input matInput formControlName="title" placeholder="Ej: Push Pull Legs" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput formControlName="description" rows="2"></textarea>
+          </mat-form-field>
+
+          <div class="row2">
+            <mat-form-field appearance="outline">
+              <mat-label>Objetivo</mat-label>
+              <mat-select formControlName="objective">
+                @for (o of objectives; track o.value) {
+                  <mat-option [value]="o.value">{{ o.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Dificultad (1-5)</mat-label>
+              <mat-select formControlName="difficulty">
+                <mat-option [value]="1">1 · Principiante</mat-option>
+                <mat-option [value]="2">2</mat-option>
+                <mat-option [value]="3">3 · Intermedio</mat-option>
+                <mat-option [value]="4">4</mat-option>
+                <mat-option [value]="5">5 · Avanzado</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="row2">
+            <mat-form-field appearance="outline">
+              <mat-label>Días por semana</mat-label>
+              <input matInput type="number" min="1" max="7" formControlName="daysPerWeek" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Duración (semanas)</mat-label>
+              <input matInput type="number" formControlName="durationWeeks" />
+            </mat-form-field>
+          </div>
+
+          <mat-checkbox formControlName="isTemplate">Guardar como plantilla</mat-checkbox>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="form-card exercises-card">
+        <mat-card-header>
+          <mat-card-title>Ejercicios</mat-card-title>
+          <span class="pz-spacer"></span>
+          <button mat-stroked-button class="pz-btn-ghost" type="button" (click)="addRow()">
+            <mat-icon>add</mat-icon> Agregar
+          </button>
+        </mat-card-header>
+        <mat-card-content>
+          @for (row of exerciseRows.controls; track row; let i = $index) {
+            <div class="ex-row" [formGroup]="$any(row)" [class.editing]="i === exerciseRows.length - 1">
+              <div class="ex-num">{{ i + 1 }}</div>
+              <div class="ex-fields">
+                <mat-form-field appearance="outline" class="ex-select">
+                  <mat-label>Ejercicio</mat-label>
+                  <mat-select formControlName="exerciseId">
+                    @for (e of exercisesList; track e.id) {
+                      <mat-option [value]="e.id">{{ e.name }} · {{ e.muscleGroup }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="day-select">
+                  <mat-label>Día</mat-label>
+                  <mat-select formControlName="dayOfWeek">
+                    @for (d of [1,2,3,4,5,6,7]; track d) {
+                      <mat-option [value]="d">{{ DAY_NAMES[d] }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="num">
+                  <mat-label>Series</mat-label>
+                  <input matInput type="number" formControlName="sets" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="num">
+                  <mat-label>Reps</mat-label>
+                  <input matInput type="number" formControlName="reps" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="num">
+                  <mat-label>Desc (s)</mat-label>
+                  <input matInput type="number" formControlName="restSeconds" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="num">
+                  <mat-label>Peso (kg)</mat-label>
+                  <input matInput type="number" formControlName="weight" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="notes">
+                  <mat-label>Notas</mat-label>
+                  <input matInput formControlName="notes" />
+                </mat-form-field>
+              </div>
+              <div class="ex-actions">
+                @if (row.value.dayOfWeek && row.value.exerciseId) {
+                  <button mat-icon-button type="button" class="up" (click)="moveEx(i, -1)" [disabled]="i === 0">
+                    <mat-icon>keyboard_arrow_up</mat-icon>
+                  </button>
+                  <button mat-icon-button type="button" (click)="moveEx(i, 1)" [disabled]="i === exerciseRows.length - 1">
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                  </button>
+                }
+                <button mat-icon-button type="button" class="danger" (click)="removeRow(i)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          }
+
+          @if (exerciseRows.length === 0) {
+            <div class="no-rows" (click)="addRow()">
+              <mat-icon>playlist_add</mat-icon>
+              <span>Agregá el primer ejercicio</span>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="actions-bar">
+      <button mat-stroked-button class="pz-btn-ghost" type="button" (click)="cancel()">Cancelar</button>
+      <button mat-raised-button class="pz-btn-volt" type="submit" [disabled]="form.invalid">
+        <mat-icon>save</mat-icon> {{ editing ? 'Guardar cambios' : 'Crear rutina' }}
+      </button>
+    </div>
+  </form>
+</div>

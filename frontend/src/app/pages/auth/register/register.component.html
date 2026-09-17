@@ -1,0 +1,91 @@
+<div class="reg-wrap">
+  <mat-card class="reg-card pz-fade">
+    <mat-card-content>
+      <div class="brand-top">
+        <div class="brand-mark"></div>
+        <span class="brand-text">Power<span class="volt">Zone</span></span>
+      </div>
+
+      <div class="form-head">
+        <div class="pz-eyebrow">Comunidad</div>
+        <h1>Crear cuenta</h1>
+        <p>Registrate como miembro del gimnasio. Completá los datos para comenzar.</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+        <div class="two-col">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="firstName" />
+            <mat-icon matPrefix>badge</mat-icon>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Apellido</mat-label>
+            <input matInput formControlName="lastName" />
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" />
+          <mat-icon matPrefix>mail</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Contraseña</mat-label>
+          <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button matIconSuffix type="button" mat-icon-button (click)="hidePassword.set(!hidePassword())">
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (form.controls.password.hasError('minlength')) {
+            <mat-error>Mínimo 8 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Teléfono (opcional)</mat-label>
+          <input matInput formControlName="phone" />
+          <mat-icon matPrefix>phone</mat-icon>
+        </mat-form-field>
+
+        @if (manualGym()) {
+          <mat-form-field appearance="outline">
+            <mat-label>ID de la sucursal (UUID)</mat-label>
+            <input matInput formControlName="gymId" placeholder="00000000-0000-0000-0000-000000000000" />
+            <mat-icon matPrefix>storefront</mat-icon>
+            <mat-hint>Solicitalo a la recepción del gimnasio</mat-hint>
+          </mat-form-field>
+        } @else {
+          <mat-form-field appearance="outline">
+            <mat-label>Sucursal</mat-label>
+            <mat-select formControlName="gymId">
+              @for (g of gymsAvailable(); track g.id) {
+                <mat-option [value]="g.id">{{ g.name }}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matPrefix>storefront</mat-icon>
+          </mat-form-field>
+        }
+
+        <button mat-raised-button class="pz-btn-volt submit" type="submit" [disabled]="loading()">
+          @if (loading()) {
+            <mat-icon class="spin">autorenew</mat-icon>
+          } @else {
+            <mat-icon>fitness_center</mat-icon>
+          }
+          {{ loading() ? 'Creando cuenta…' : 'Crear cuenta' }}
+        </button>
+      </form>
+
+      @if (loading()) {
+        <mat-progress-bar mode="indeterminate" class="bar"></mat-progress-bar>
+      }
+
+      <p class="register-link">
+        ¿Ya tenés cuenta?
+        <a routerLink="/auth/login">Iniciá sesión</a>
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>

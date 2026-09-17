@@ -1,0 +1,90 @@
+<div class="pz-page pz-fade">
+  <pz-page-header
+    eyebrow="Catálogo"
+    title="Ejercicios"
+    subtitle="Base de datos de movimientos con instrucciones y grupo muscular.">
+    @if (canEdit()) {
+      <button mat-raised-button class="pz-btn-volt" (click)="create()">
+        <mat-icon>add</mat-icon> Nuevo ejercicio
+      </button>
+    }
+  </pz-page-header>
+
+  <div class="toolbar">
+    <mat-form-field appearance="outline" class="search">
+      <mat-label>Buscar</mat-label>
+      <input matInput (input)="onSearch(searchInput.value)" #searchInput placeholder="Nombre o músculo…" />
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+
+    <div class="chips">
+      <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="categoryFilter() === ''" (click)="setCategory('')">Todos</button>
+      @for (c of categories; track c.value) {
+        <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="categoryFilter() === c.value" (click)="setCategory(c.value)">
+          {{ c.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="pz-grid pz-grid-lg">
+    @for (e of rows(); track e.id) {
+      <mat-card class="ex-card">
+        <mat-card-content>
+          <div class="ex-head">
+            <div class="ex-icon">
+              <mat-icon>{{ categoryIcon(e.category) }}</mat-icon>
+            </div>
+            <span class="pz-badge badge-volt">{{ categoryLabel(e.category) }}</span>
+          </div>
+          <div class="ex-title">{{ e.name }}</div>
+          <div class="ex-muscle">
+            <mat-icon>accessibility_new</mat-icon> {{ e.muscleGroup }}
+            @if (e.equipmentNeeded) {
+              <span class="dot">·</span> <mat-icon>construction</mat-icon> {{ e.equipmentNeeded }}
+            }
+          </div>
+          @if (e.difficulty) {
+            <div class="ex-diff">
+              @for (i of [1, 2, 3, 4, 5]; track i) {
+                <span [class.on]="i <= (e.difficulty ?? 0)"></span>
+              }
+            </div>
+          }
+          @if (e.instructions?.length) {
+            <details class="ex-instructions">
+              <summary>Ver instrucciones</summary>
+              <ol>
+                @for (s of e.instructions; track s) {
+                  <li>{{ s }}</li>
+                }
+              </ol>
+            </details>
+          }
+          @if (canEdit()) {
+            <div class="ex-actions">
+              <button mat-icon-button matTooltip="Editar" (click)="edit(e)"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button matTooltip="Eliminar" class="danger" (click)="remove(e)"><mat-icon>delete</mat-icon></button>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    } @empty {
+      @if (!loading()) {
+        <div style="grid-column:1/-1">
+          <pz-empty icon="fitness_center" title="Sin ejercicios" message="No se encontraron ejercicios con esos filtros." />
+        </div>
+      }
+    }
+  </div>
+
+  <mat-paginator
+    class="pag"
+    [length]="total()"
+    [pageSize]="limit"
+    [pageIndex]="page"
+    [pageSizeOptions]="[12, 24, 48]"
+    (page)="onPage($event)"
+    showFirstLastButtons>
+  </mat-paginator>
+</div>

@@ -1,0 +1,171 @@
+.pz-tabs {
+  margin-top: 6px;
+}
+
+.tab-body {
+  padding: 20px 0;
+}
+
+.day-bar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 20px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kcal-card {
+  mat-card-content {
+    padding: 22px;
+  }
+}
+
+.kcal-label {
+  color: var(--pz-muted);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.kcal-big {
+  font-size: 46px;
+  color: var(--pz-volt);
+  margin: 8px 0 18px;
+
+  span {
+    color: var(--pz-muted);
+    font-size: 18px;
+  }
+}
+
+.macros {
+  display: grid;
+  gap: 10px;
+}
+
+.macro {
+  display: grid;
+  grid-template-columns: 10px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+
+  .m-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    &.p { background: var(--pz-volt); }
+    &.c { background: var(--pz-orange); }
+    &.f { background: var(--pz-danger); }
+  }
+  .m-name { color: var(--pz-muted); }
+  .m-val { color: var(--pz-white); font-weight: 600; }
+}
+
+.logs-card {
+  mat-card-title {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+  }
+}
+
+.log-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--pz-surface-2);
+  border: 1px solid var(--pz-border);
+  margin-bottom: 8px;
+
+  &:last-child { margin-bottom: 0; }
+}
+
+.meal-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--pz-surface-3);
+  color: var(--pz-volt);
+  display: grid;
+  place-items: center;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+
+.log-name { color: var(--pz-white); font-size: 14px; font-weight: 600; }
+.log-sub { color: var(--pz-muted); font-size: 12px; }
+.log-cal { color: var(--pz-volt); font-size: 14px; font-weight: 700; }
+
+.danger { color: var(--pz-danger); }
+
+.foods-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 18px;
+}
+
+.food-card {
+  transition: all 0.2s ease;
+  &:hover { transform: translateY(-3px); }
+
+  mat-card-content { padding: 18px; }
+}
+
+.food-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.food-actions {
+  display: flex;
+  .danger { color: var(--pz-danger); }
+}
+
+.food-name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--pz-white);
+  margin-top: 10px;
+}
+
+.food-serve { color: var(--pz-muted); font-size: 12.5px; }
+
+.food-cal {
+  font-size: 28px;
+  color: var(--pz-volt);
+  margin: 6px 0;
+
+  span { color: var(--pz-muted); font-size: 14px; }
+}
+
+.food-macros {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--pz-muted);
+  border-top: 1px solid var(--pz-border);
+  padding-top: 10px;
+}
+
+.pag {
+  margin-top: 20px;
+  background: transparent;
+}
