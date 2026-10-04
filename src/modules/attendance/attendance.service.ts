@@ -166,7 +166,15 @@ export class AttendanceService {
       qb.andWhere('a.timestamp <= :to', { to: new Date(to) });
     }
 
-    qb.orderBy(`a.${sortBy || 'timestamp'}`, sortOrder || 'DESC');
+    const sortable: Record<string, string> = {
+      id: 'a.id',
+      timestamp: 'a.timestamp',
+      type: 'a.type',
+      method: 'a.method',
+      userId: 'a.user_id',
+    };
+    const orderColumn = (sortBy && sortable[sortBy]) || 'a.timestamp';
+    qb.orderBy(orderColumn, sortOrder || 'DESC').addOrderBy('a.id', 'DESC');
     qb.skip((page - 1) * limit).take(limit);
 
     const [items, total] = await qb.getManyAndCount();

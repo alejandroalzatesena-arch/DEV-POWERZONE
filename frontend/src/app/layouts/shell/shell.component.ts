@@ -20,6 +20,7 @@ import { UpperCasePipe } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationsService } from '../../core/services/notifications.service';
 import { SocketService } from '../../core/services/socket.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { AppNotification } from '../../core/models/models';
 import { initials, formatDateTime } from '../../shared/utils/labels';
 
@@ -54,6 +55,7 @@ export interface NavGroup {
 })
 export class ShellComponent implements OnDestroy {
   readonly auth = inject(AuthService);
+  readonly theme = inject(ThemeService);
   readonly notificationsService = inject(NotificationsService);
   readonly socket = inject(SocketService);
   readonly router = inject(Router);

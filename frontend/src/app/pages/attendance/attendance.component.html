@@ -64,6 +64,26 @@
             </button>
             <button mat-button class="dim" (click)="checkIn(myId)">Registrarme yo</button>
           </div>
+          <div class="qr-divider"></div>
+          <form [formGroup]="qrForm" class="qr-row" (ngSubmit)="checkInByCode()">
+            <mat-form-field appearance="outline" class="qr-input">
+              <mat-label>Código QR del socio</mat-label>
+              <input
+                matInput
+                formControlName="code"
+                placeholder="Pegá el código escaneado"
+                autocomplete="off"
+              />
+            </mat-form-field>
+            <button
+              mat-stroked-button
+              class="pz-btn-ghost"
+              type="submit"
+              [disabled]="!qrForm.controls.code.value"
+            >
+              <mat-icon>qr_code_2</mat-icon> Check-in QR
+            </button>
+          </form>
         </mat-card-content>
       </mat-card>
     } @else {
@@ -83,6 +103,18 @@
             <button mat-stroked-button class="pz-btn-ghost" (click)="checkOut(myId)">
               <mat-icon>logout</mat-icon> Check-out
             </button>
+          </div>
+          <div class="mine-qr">
+            @if (qrDataUrl(); as src) {
+              <img [src]="src" alt="Tu código QR de ingreso" width="128" height="128" />
+            } @else {
+              <div class="pz-skeleton pz-skeleton-circle" style="width: 128px; height: 128px"></div>
+            }
+            @if (qrCheckedIn()) {
+              <span class="pz-badge badge-success">Check-in de hoy registrado</span>
+            } @else {
+              <div class="mine-qr-hint">Mostrá este QR en recepción para registrarte</div>
+            }
           </div>
         </mat-card-content>
       </mat-card>

@@ -17,9 +17,11 @@ import { LogoutDto } from './dto/logout.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterDto } from './dto/register.dto';
 import { AuthUserDto, LoginResponseDto, TokenPairDto } from './dto/auth-response.dto';
+import { LoginFailuresTracker } from './login-failures';
 
 @Injectable()
 export class AuthService {
+  private readonly loginFailures = new LoginFailuresTracker(5, 15 * 60 * 1000, 15 * 60 * 1000);
   constructor(
     @InjectRepository(User) private readonly usersRepo: Repository<User>,
     @InjectRepository(UserProfile) private readonly profilesRepo: Repository<UserProfile>,
@@ -67,24 +69,37 @@ export class AuthService {
   }
 
   async login(dto: LoginDto, userAgent?: string, ip?: string): Promise<LoginResponseDto> {
+    const email = dto.email.toLowerCase();
+    const lockedSeconds = this.loginFailures.isLocked(email);
+    if (lockedSeconds > 0) {
+      const minutes = Math.ceil(lockedSeconds / 60);
+      throw new UnauthorizedException(
+        `Demasiados intentos fallidos. Intentá de nuevo en ${minutes} min.`,
+      );
+    }
+
     const user = await this.usersRepo
       .createQueryBuilder('user')
       .addSelect('user.password')
-      .where('user.email = :email', { email: dto.email.toLowerCase() })
+      .where('user.email = :email', { email })
       .getOne();
     if (!user) {
+      this.loginFailures.recordFailure(email);
       throw new UnauthorizedException('Credenciales inválidas.');
     }
 
     const passwordValid = await bcrypt.compare(dto.password, user.password);
     if (!passwordValid) {
+      this.loginFailures.recordFailure(email);
       throw new UnauthorizedException('Credenciales inválidas.');
     }
 
     if (!user.isActive) {
+      this.loginFailures.recordFailure(email);
       throw new UnauthorizedException('La cuenta está desactivada. Contacta al administrador.');
     }
 
+    this.loginFailures.reset(email);
     user.lastLoginAt = new Date();
     await this.usersRepo.save(user);
 

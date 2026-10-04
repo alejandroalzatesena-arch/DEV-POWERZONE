@@ -19,22 +19,67 @@
           <button mat-raised-button class="pz-btn-volt" type="submit">
             <mat-icon>refresh</mat-icon> Actualizar
           </button>
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="exportCsv(financial(), 'reporte-financiero')"
+          >
+            <mat-icon>download</mat-icon> CSV
+          </button>
         </form>
-        <pz-node-tree [nodes]="financial()" />
+        @if (loading()) {
+          <div class="pz-tree-skeleton">
+            <div class="pz-skeleton pz-skeleton-text"></div>
+            <div class="pz-skeleton pz-skeleton-text"></div>
+            <div class="pz-skeleton pz-skeleton-text"></div>
+          </div>
+        } @else {
+          <pz-node-tree [nodes]="financial()" />
+        }
       </div>
     </mat-tab>
 
     <!-- Operativo -->
     <mat-tab label="Operativo">
       <div class="tab-body">
-        <pz-node-tree [nodes]="operational()" />
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="exportCsv(operational(), 'reporte-operativo')"
+        >
+          <mat-icon>download</mat-icon> CSV
+        </button>
+        @if (loading()) {
+          <div class="pz-tree-skeleton">
+            <div class="pz-skeleton pz-skeleton-text"></div>
+            <div class="pz-skeleton pz-skeleton-text"></div>
+            <div class="pz-skeleton pz-skeleton-text"></div>
+          </div>
+        } @else {
+          <pz-node-tree [nodes]="operational()" />
+        }
       </div>
     </mat-tab>
 
     <!-- Membresías -->
     <mat-tab label="Membresías">
       <div class="tab-body">
-        <pz-node-tree [nodes]="memberships()" />
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="exportCsv(memberships(), 'reporte-membresias')"
+        >
+          <mat-icon>download</mat-icon> CSV
+        </button>
+        @if (loading()) {
+          <div class="pz-tree-skeleton">
+            <div class="pz-skeleton pz-skeleton-text"></div>
+            <div class="pz-skeleton pz-skeleton-text"></div>
+            <div class="pz-skeleton pz-skeleton-text"></div>
+          </div>
+        } @else {
+          <pz-node-tree [nodes]="memberships()" />
+        }
       </div>
     </mat-tab>
 
@@ -51,8 +96,23 @@
           <button mat-raised-button class="pz-btn-volt" type="submit">
             <mat-icon>refresh</mat-icon> Actualizar
           </button>
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="exportCsv(attendance(), 'reporte-asistencia')"
+          >
+            <mat-icon>download</mat-icon> CSV
+          </button>
         </form>
-        <pz-node-tree [nodes]="attendance()" />
+        @if (loading()) {
+          <div class="pz-tree-skeleton">
+            <div class="pz-skeleton pz-skeleton-text"></div>
+            <div class="pz-skeleton pz-skeleton-text"></div>
+            <div class="pz-skeleton pz-skeleton-text"></div>
+          </div>
+        } @else {
+          <pz-node-tree [nodes]="attendance()" />
+        }
       </div>
     </mat-tab>
 
@@ -82,7 +142,22 @@
             <mat-icon>query_stats</mat-icon> Ver progreso
           </button>
         </form>
-        <pz-node-tree [nodes]="progress()" />
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="exportCsv(progress(), 'reporte-progreso')"
+        >
+          <mat-icon>download</mat-icon> CSV
+        </button>
+        @if (loading()) {
+          <div class="pz-tree-skeleton">
+            <div class="pz-skeleton pz-skeleton-text"></div>
+            <div class="pz-skeleton pz-skeleton-text"></div>
+            <div class="pz-skeleton pz-skeleton-text"></div>
+          </div>
+        } @else {
+          <pz-node-tree [nodes]="progress()" />
+        }
       </div>
     </mat-tab>
   </mat-tab-group>

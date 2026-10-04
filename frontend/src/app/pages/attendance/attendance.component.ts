@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import QRCode from 'qrcode';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -56,6 +57,8 @@ export class AttendanceComponent implements OnInit {
   readonly loading = signal(true);
   readonly members = signal<User[]>([]);
   readonly isStaff = signal(false);
+  readonly qrDataUrl = signal('');
+  readonly qrCheckedIn = signal(false);
 
   page = 0;
   limit = 15;
@@ -65,6 +68,10 @@ export class AttendanceComponent implements OnInit {
     userId: [''],
     from: [''],
     to: [''],
+  });
+
+  qrForm = this.fb.nonNullable.group({
+    code: [''],
   });
 
   get myId(): string {
@@ -95,7 +102,48 @@ export class AttendanceComponent implements OnInit {
       this.refreshOccupancy();
     }
 
+    if (!this.isStaff()) {
+      this.buildQr();
+    }
+
     this.load();
+  }
+
+  private buildQr(): void {
+    const user = this.auth.user();
+    if (!user) return;
+    const payload = JSON.stringify({ type: 'CHECKIN', userId: user.id, gymId: user.gymId });
+    QRCode.toDataURL(payload, {
+      width: 220,
+      margin: 1,
+      errorCorrectionLevel: 'M',
+      color: { dark: '#0e1116', light: '#ffffff' },
+    })
+      .then((url) => this.qrDataUrl.set(url))
+      .catch(() => undefined);
+  }
+
+  checkInByCode(): void {
+    const raw = this.qrForm.getRawValue().code.trim();
+    if (!raw) return;
+    let userId = raw;
+    try {
+      const parsed = JSON.parse(raw) as { type?: string; userId?: unknown };
+      if (parsed && parsed.type === 'CHECKIN' && typeof parsed.userId === 'string') {
+        userId = parsed.userId;
+      }
+    } catch {
+      // código plano: se usa tal cual
+    }
+    this.attendance.checkIn(userId, 'qr_code').subscribe({
+      next: () => {
+        this.toast.success('Check-in QR registrado');
+        this.qrForm.controls.code.setValue('');
+        this.refreshOccupancy();
+        this.load();
+      },
+      error: () => this.toast.error('Código no válido'),
+    });
   }
 
   refreshOccupancy(): void {
@@ -150,6 +198,7 @@ export class AttendanceComponent implements OnInit {
   checkIn(userId: string): void {
     this.attendance.checkIn(userId, 'member_card').subscribe({
       next: () => {
+        if (userId === this.myId) this.qrCheckedIn.set(true);
         this.toast.success('Check-in registrado');
         this.refreshOccupancy();
         this.load();
