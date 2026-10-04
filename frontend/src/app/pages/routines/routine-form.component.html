@@ -2,8 +2,11 @@
   <pz-page-header
     eyebrow="Entrenamiento"
     [title]="editing ? 'Editar rutina' : 'Nueva rutina'"
-    subtitle="Completá los datos del plan y agregá los ejercicios por día de la semana.">
-    <button mat-stroked-button class="pz-btn-ghost" (click)="cancel()"><mat-icon>arrow_back</mat-icon> Volver</button>
+    subtitle="Completá los datos del plan y agregá los ejercicios por día de la semana."
+  >
+    <button mat-stroked-button class="pz-btn-ghost" (click)="cancel()">
+      <mat-icon>arrow_back</mat-icon> Volver
+    </button>
   </pz-page-header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -69,7 +72,11 @@
         </mat-card-header>
         <mat-card-content>
           @for (row of exerciseRows.controls; track row; let i = $index) {
-            <div class="ex-row" [formGroup]="$any(row)" [class.editing]="i === exerciseRows.length - 1">
+            <div
+              class="ex-row"
+              [formGroup]="$any(row)"
+              [class.editing]="i === exerciseRows.length - 1"
+            >
               <div class="ex-num">{{ i + 1 }}</div>
               <div class="ex-fields">
                 <mat-form-field appearance="outline" class="ex-select">
@@ -83,7 +90,7 @@
                 <mat-form-field appearance="outline" class="day-select">
                   <mat-label>Día</mat-label>
                   <mat-select formControlName="dayOfWeek">
-                    @for (d of [1,2,3,4,5,6,7]; track d) {
+                    @for (d of [1, 2, 3, 4, 5, 6, 7]; track d) {
                       <mat-option [value]="d">{{ DAY_NAMES[d] }}</mat-option>
                     }
                   </mat-select>
@@ -111,10 +118,21 @@
               </div>
               <div class="ex-actions">
                 @if (row.value.dayOfWeek && row.value.exerciseId) {
-                  <button mat-icon-button type="button" class="up" (click)="moveEx(i, -1)" [disabled]="i === 0">
+                  <button
+                    mat-icon-button
+                    type="button"
+                    class="up"
+                    (click)="moveEx(i, -1)"
+                    [disabled]="i === 0"
+                  >
                     <mat-icon>keyboard_arrow_up</mat-icon>
                   </button>
-                  <button mat-icon-button type="button" (click)="moveEx(i, 1)" [disabled]="i === exerciseRows.length - 1">
+                  <button
+                    mat-icon-button
+                    type="button"
+                    (click)="moveEx(i, 1)"
+                    [disabled]="i === exerciseRows.length - 1"
+                  >
                     <mat-icon>keyboard_arrow_down</mat-icon>
                   </button>
                 }
@@ -136,7 +154,9 @@
     </div>
 
     <div class="actions-bar">
-      <button mat-stroked-button class="pz-btn-ghost" type="button" (click)="cancel()">Cancelar</button>
+      <button mat-stroked-button class="pz-btn-ghost" type="button" (click)="cancel()">
+        Cancelar
+      </button>
       <button mat-raised-button class="pz-btn-volt" type="submit" [disabled]="form.invalid">
         <mat-icon>save</mat-icon> {{ editing ? 'Guardar cambios' : 'Crear rutina' }}
       </button>

@@ -32,7 +32,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       await this.client.connect();
       this.logger.log('Conexión a Redis establecida');
     } catch (error) {
-      this.logger.warn('No se pudo conectar a Redis al inicio, se reintentará. ' + (error as Error).message);
+      this.logger.warn(
+        'No se pudo conectar a Redis al inicio, se reintentará. ' + (error as Error).message,
+      );
     }
   }
 

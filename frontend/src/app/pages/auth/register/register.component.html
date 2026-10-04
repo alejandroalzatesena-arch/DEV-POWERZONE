@@ -33,9 +33,18 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Contraseña</mat-label>
-          <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" />
+          <input
+            matInput
+            [type]="hidePassword() ? 'password' : 'text'"
+            formControlName="password"
+          />
           <mat-icon matPrefix>lock</mat-icon>
-          <button matIconSuffix type="button" mat-icon-button (click)="hidePassword.set(!hidePassword())">
+          <button
+            matIconSuffix
+            type="button"
+            mat-icon-button
+            (click)="hidePassword.set(!hidePassword())"
+          >
             <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
           @if (form.controls.password.hasError('minlength')) {
@@ -52,7 +61,11 @@
         @if (manualGym()) {
           <mat-form-field appearance="outline">
             <mat-label>ID de la sucursal (UUID)</mat-label>
-            <input matInput formControlName="gymId" placeholder="00000000-0000-0000-0000-000000000000" />
+            <input
+              matInput
+              formControlName="gymId"
+              placeholder="00000000-0000-0000-0000-000000000000"
+            />
             <mat-icon matPrefix>storefront</mat-icon>
             <mat-hint>Solicitalo a la recepción del gimnasio</mat-hint>
           </mat-form-field>

@@ -36,7 +36,10 @@ export class InventoryController {
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Registrar equipo/artículo (admin)' })
   @ApiResponse({ status: 201, description: 'Equipo registrado', type: InventoryItem })
-  create(@Body() dto: CreateInventoryItemDto, @CurrentUser() actor: JwtPayload): Promise<InventoryItem> {
+  create(
+    @Body() dto: CreateInventoryItemDto,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<InventoryItem> {
     return this.inventoryService.create(dto, actor);
   }
 
@@ -83,7 +86,11 @@ export class InventoryController {
     summary: 'Actualizar mantenimiento (admin)',
     description: 'Al marcar como "completed" el equipo vuelve a estar disponible.',
   })
-  @ApiResponse({ status: 200, description: 'Mantenimiento actualizado', type: InventoryMaintenance })
+  @ApiResponse({
+    status: 200,
+    description: 'Mantenimiento actualizado',
+    type: InventoryMaintenance,
+  })
   updateMaintenance(
     @Param('maintenanceId', ParseUUIDPipe) maintenanceId: string,
     @Body() dto: UpdateMaintenanceDto,
@@ -108,7 +115,10 @@ export class InventoryController {
   @Roles(UserRole.ADMIN, UserRole.TRAINER, UserRole.RECEPTIONIST)
   @ApiOperation({ summary: 'Obtener equipo por ID' })
   @ApiResponse({ status: 200, description: 'Detalle del equipo', type: InventoryItem })
-  findOne(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<InventoryItem> {
+  findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<InventoryItem> {
     return this.inventoryService.findById(id, actor);
   }
 
@@ -128,7 +138,10 @@ export class InventoryController {
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Eliminar equipo (soft delete, admin)' })
   @ApiResponse({ status: 200, description: 'Equipo eliminado' })
-  async remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<{ message: string }> {
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<{ message: string }> {
     await this.inventoryService.remove(id, actor);
     return { message: 'Equipo eliminado.' };
   }

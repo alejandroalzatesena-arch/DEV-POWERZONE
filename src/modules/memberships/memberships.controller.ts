@@ -36,7 +36,10 @@ export class MembershipsController {
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Crear tipo de membresía (admin)' })
   @ApiResponse({ status: 201, description: 'Tipo creado', type: MembershipType })
-  createType(@Body() dto: CreateMembershipTypeDto, @CurrentUser() actor: JwtPayload): Promise<MembershipType> {
+  createType(
+    @Body() dto: CreateMembershipTypeDto,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<MembershipType> {
     return this.membershipsService.createType(dto, actor);
   }
 
@@ -77,10 +80,14 @@ export class MembershipsController {
   @Roles(UserRole.ADMIN, UserRole.RECEPTIONIST)
   @ApiOperation({
     summary: 'Asignar membresía a un cliente',
-    description: 'Crea la membresía activa del cliente y registra un pago en efectivo/transferencia.',
+    description:
+      'Crea la membresía activa del cliente y registra un pago en efectivo/transferencia.',
   })
   @ApiResponse({ status: 201, description: 'Membresía asignada', type: UserMembership })
-  assign(@Body() dto: AssignMembershipDto, @CurrentUser() actor: JwtPayload): Promise<UserMembership> {
+  assign(
+    @Body() dto: AssignMembershipDto,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<UserMembership> {
     return this.membershipsService.assign(dto, actor);
   }
 
@@ -97,7 +104,11 @@ export class MembershipsController {
 
   @Get('my')
   @ApiOperation({ summary: 'Mi membresía activa (cliente)' })
-  @ApiResponse({ status: 200, description: 'Membresía activa del cliente autenticado', type: UserMembership })
+  @ApiResponse({
+    status: 200,
+    description: 'Membresía activa del cliente autenticado',
+    type: UserMembership,
+  })
   myMembership(@CurrentUser() actor: JwtPayload): Promise<UserMembership | null> {
     return this.membershipsService.findActiveForUser(actor.sub, actor);
   }
@@ -106,7 +117,10 @@ export class MembershipsController {
   @Roles(UserRole.ADMIN, UserRole.RECEPTIONIST)
   @ApiOperation({ summary: 'Renovar membresía (admin/recepcionista)' })
   @ApiResponse({ status: 200, description: 'Membresía renovada', type: UserMembership })
-  renew(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<UserMembership> {
+  renew(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<UserMembership> {
     return this.membershipsService.renew(id, actor);
   }
 
@@ -114,7 +128,10 @@ export class MembershipsController {
   @Roles(UserRole.ADMIN, UserRole.RECEPTIONIST)
   @ApiOperation({ summary: 'Cancelar membresía (admin/recepcionista)' })
   @ApiResponse({ status: 200, description: 'Membresía cancelada', type: UserMembership })
-  cancel(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<UserMembership> {
+  cancel(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<UserMembership> {
     return this.membershipsService.cancel(id, actor);
   }
 }

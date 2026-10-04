@@ -51,10 +51,14 @@ export class MarketingController {
   @Roles(UserRole.ADMIN)
   @ApiOperation({
     summary: 'Enviar campaña (admin)',
-    description: 'Segmenta la audiencia y envía notificaciones. Programa si scheduledAt está en el futuro.',
+    description:
+      'Segmenta la audiencia y envía notificaciones. Programa si scheduledAt está en el futuro.',
   })
   @ApiResponse({ status: 200, description: 'Campaña procesada', type: Campaign })
-  send(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<Campaign> {
+  send(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<Campaign> {
     return this.marketingService.send(id, actor, true);
   }
 
@@ -63,7 +67,10 @@ export class MarketingController {
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Cancelar campaña programada (admin)' })
   @ApiResponse({ status: 200, description: 'Campaña cancelada', type: Campaign })
-  cancel(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<Campaign> {
+  cancel(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<Campaign> {
     return this.marketingService.cancelScheduled(id, actor);
   }
 
@@ -71,7 +78,10 @@ export class MarketingController {
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Obtener campaña por ID' })
   @ApiResponse({ status: 200, description: 'Detalle de la campaña', type: Campaign })
-  findOne(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<Campaign> {
+  findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<Campaign> {
     return this.marketingService.findById(id, actor);
   }
 
@@ -91,7 +101,10 @@ export class MarketingController {
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Eliminar campaña (soft delete, admin)' })
   @ApiResponse({ status: 200, description: 'Campaña eliminada' })
-  async remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<{ message: string }> {
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<{ message: string }> {
     await this.marketingService.remove(id, actor);
     return { message: 'Campaña eliminada.' };
   }

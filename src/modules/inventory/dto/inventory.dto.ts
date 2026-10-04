@@ -12,7 +12,12 @@ import {
   MinLength,
 } from 'class-validator';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
-import { InventoryCategory, InventoryCondition, InventoryStatus, MaintenanceStatus } from '../../../common/enums';
+import {
+  InventoryCategory,
+  InventoryCondition,
+  InventoryStatus,
+  MaintenanceStatus,
+} from '../../../common/enums';
 
 export class CreateInventoryItemDto {
   @ApiProperty({ description: 'Nombre del equipo/artículo', example: 'Banco de press' })

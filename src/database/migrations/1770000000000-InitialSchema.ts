@@ -30,7 +30,9 @@ export class InitialSchema1770000000000 implements MigrationInterface {
         CONSTRAINT "PK_gyms_id" PRIMARY KEY ("id")
       );
     `);
-    await queryRunner.query(`CREATE UNIQUE INDEX "IDX_gyms_name" ON "gyms" ("name") WHERE "deleted_at" IS NULL;`);
+    await queryRunner.query(
+      `CREATE UNIQUE INDEX "IDX_gyms_name" ON "gyms" ("name") WHERE "deleted_at" IS NULL;`,
+    );
 
     // ---------------------------------------------------------------------
     // users
@@ -57,10 +59,14 @@ export class InitialSchema1770000000000 implements MigrationInterface {
         CONSTRAINT "PK_users_id" PRIMARY KEY ("id")
       );
     `);
-    await queryRunner.query(`CREATE UNIQUE INDEX "IDX_users_email" ON "users" ("email") WHERE "deleted_at" IS NULL;`);
+    await queryRunner.query(
+      `CREATE UNIQUE INDEX "IDX_users_email" ON "users" ("email") WHERE "deleted_at" IS NULL;`,
+    );
     await queryRunner.query(`CREATE INDEX "IDX_users_gym_id" ON "users" ("gym_id");`);
     await queryRunner.query(`CREATE INDEX "IDX_users_role" ON "users" ("role");`);
-    await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "FK_users_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE SET NULL;`);
+    await queryRunner.query(
+      `ALTER TABLE "users" ADD CONSTRAINT "FK_users_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE SET NULL;`,
+    );
 
     // ---------------------------------------------------------------------
     // user_profiles
@@ -84,8 +90,12 @@ export class InitialSchema1770000000000 implements MigrationInterface {
         CONSTRAINT "UQ_user_profiles_user_id" UNIQUE ("user_id")
       );
     `);
-    await queryRunner.query(`CREATE INDEX "IDX_user_profiles_user_id" ON "user_profiles" ("user_id");`);
-    await queryRunner.query(`ALTER TABLE "user_profiles" ADD CONSTRAINT "FK_user_profiles_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_user_profiles_user_id" ON "user_profiles" ("user_id");`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "user_profiles" ADD CONSTRAINT "FK_user_profiles_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`,
+    );
 
     // ---------------------------------------------------------------------
     // refresh_tokens
@@ -105,9 +115,15 @@ export class InitialSchema1770000000000 implements MigrationInterface {
         CONSTRAINT "PK_refresh_tokens_id" PRIMARY KEY ("id")
       );
     `);
-    await queryRunner.query(`CREATE INDEX "IDX_refresh_tokens_user_id" ON "refresh_tokens" ("user_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_refresh_tokens_token_hash" ON "refresh_tokens" ("token_hash");`);
-    await queryRunner.query(`ALTER TABLE "refresh_tokens" ADD CONSTRAINT "FK_refresh_tokens_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_refresh_tokens_user_id" ON "refresh_tokens" ("user_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_refresh_tokens_token_hash" ON "refresh_tokens" ("token_hash");`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "refresh_tokens" ADD CONSTRAINT "FK_refresh_tokens_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`,
+    );
 
     // ---------------------------------------------------------------------
     // membership_types
@@ -131,8 +147,12 @@ export class InitialSchema1770000000000 implements MigrationInterface {
         CONSTRAINT "PK_membership_types_id" PRIMARY KEY ("id")
       );
     `);
-    await queryRunner.query(`CREATE INDEX "IDX_membership_types_gym_id" ON "membership_types" ("gym_id");`);
-    await queryRunner.query(`ALTER TABLE "membership_types" ADD CONSTRAINT "FK_membership_types_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_membership_types_gym_id" ON "membership_types" ("gym_id");`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "membership_types" ADD CONSTRAINT "FK_membership_types_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`,
+    );
 
     // ---------------------------------------------------------------------
     // user_memberships
@@ -155,12 +175,24 @@ export class InitialSchema1770000000000 implements MigrationInterface {
         CONSTRAINT "PK_user_memberships_id" PRIMARY KEY ("id")
       );
     `);
-    await queryRunner.query(`CREATE INDEX "IDX_user_memberships_gym_id" ON "user_memberships" ("gym_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_user_memberships_user_id" ON "user_memberships" ("user_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_user_memberships_status" ON "user_memberships" ("status");`);
-    await queryRunner.query(`ALTER TABLE "user_memberships" ADD CONSTRAINT "FK_um_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`);
-    await queryRunner.query(`ALTER TABLE "user_memberships" ADD CONSTRAINT "FK_um_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`);
-    await queryRunner.query(`ALTER TABLE "user_memberships" ADD CONSTRAINT "FK_um_membership_type" FOREIGN KEY ("membership_type_id") REFERENCES "membership_types"("id") ON DELETE RESTRICT;`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_user_memberships_gym_id" ON "user_memberships" ("gym_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_user_memberships_user_id" ON "user_memberships" ("user_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_user_memberships_status" ON "user_memberships" ("status");`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "user_memberships" ADD CONSTRAINT "FK_um_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "user_memberships" ADD CONSTRAINT "FK_um_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "user_memberships" ADD CONSTRAINT "FK_um_membership_type" FOREIGN KEY ("membership_type_id") REFERENCES "membership_types"("id") ON DELETE RESTRICT;`,
+    );
 
     // ---------------------------------------------------------------------
     // payments
@@ -190,9 +222,15 @@ export class InitialSchema1770000000000 implements MigrationInterface {
     await queryRunner.query(`CREATE INDEX "IDX_payments_user_id" ON "payments" ("user_id");`);
     await queryRunner.query(`CREATE INDEX "IDX_payments_status" ON "payments" ("status");`);
     await queryRunner.query(`CREATE INDEX "IDX_payments_paid_at" ON "payments" ("paid_at");`);
-    await queryRunner.query(`ALTER TABLE "payments" ADD CONSTRAINT "FK_payments_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`);
-    await queryRunner.query(`ALTER TABLE "payments" ADD CONSTRAINT "FK_payments_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT;`);
-    await queryRunner.query(`ALTER TABLE "payments" ADD CONSTRAINT "FK_payments_membership_type" FOREIGN KEY ("membership_type_id") REFERENCES "membership_types"("id") ON DELETE SET NULL;`);
+    await queryRunner.query(
+      `ALTER TABLE "payments" ADD CONSTRAINT "FK_payments_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "payments" ADD CONSTRAINT "FK_payments_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "payments" ADD CONSTRAINT "FK_payments_membership_type" FOREIGN KEY ("membership_type_id") REFERENCES "membership_types"("id") ON DELETE SET NULL;`,
+    );
 
     // ---------------------------------------------------------------------
     // exercises
@@ -243,11 +281,19 @@ export class InitialSchema1770000000000 implements MigrationInterface {
       );
     `);
     await queryRunner.query(`CREATE INDEX "IDX_routines_gym_id" ON "routines" ("gym_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_routines_assignee_id" ON "routines" ("assignee_id");`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_routines_assignee_id" ON "routines" ("assignee_id");`,
+    );
     await queryRunner.query(`CREATE INDEX "IDX_routines_status" ON "routines" ("status");`);
-    await queryRunner.query(`ALTER TABLE "routines" ADD CONSTRAINT "FK_routines_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`);
-    await queryRunner.query(`ALTER TABLE "routines" ADD CONSTRAINT "FK_routines_assignee" FOREIGN KEY ("assignee_id") REFERENCES "users"("id") ON DELETE SET NULL;`);
-    await queryRunner.query(`ALTER TABLE "routines" ADD CONSTRAINT "FK_routines_created_by" FOREIGN KEY ("created_by_id") REFERENCES "users"("id") ON DELETE RESTRICT;`);
+    await queryRunner.query(
+      `ALTER TABLE "routines" ADD CONSTRAINT "FK_routines_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "routines" ADD CONSTRAINT "FK_routines_assignee" FOREIGN KEY ("assignee_id") REFERENCES "users"("id") ON DELETE SET NULL;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "routines" ADD CONSTRAINT "FK_routines_created_by" FOREIGN KEY ("created_by_id") REFERENCES "users"("id") ON DELETE RESTRICT;`,
+    );
 
     // ---------------------------------------------------------------------
     // routine_exercises
@@ -270,10 +316,18 @@ export class InitialSchema1770000000000 implements MigrationInterface {
         CONSTRAINT "PK_routine_exercises_id" PRIMARY KEY ("id")
       );
     `);
-    await queryRunner.query(`CREATE INDEX "IDX_routine_exercises_routine_id" ON "routine_exercises" ("routine_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_routine_exercises_exercise_id" ON "routine_exercises" ("exercise_id");`);
-    await queryRunner.query(`ALTER TABLE "routine_exercises" ADD CONSTRAINT "FK_re_routine" FOREIGN KEY ("routine_id") REFERENCES "routines"("id") ON DELETE CASCADE;`);
-    await queryRunner.query(`ALTER TABLE "routine_exercises" ADD CONSTRAINT "FK_re_exercise" FOREIGN KEY ("exercise_id") REFERENCES "exercises"("id") ON DELETE RESTRICT;`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_routine_exercises_routine_id" ON "routine_exercises" ("routine_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_routine_exercises_exercise_id" ON "routine_exercises" ("exercise_id");`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "routine_exercises" ADD CONSTRAINT "FK_re_routine" FOREIGN KEY ("routine_id") REFERENCES "routines"("id") ON DELETE CASCADE;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "routine_exercises" ADD CONSTRAINT "FK_re_exercise" FOREIGN KEY ("exercise_id") REFERENCES "exercises"("id") ON DELETE RESTRICT;`,
+    );
 
     // ---------------------------------------------------------------------
     // gym_classes
@@ -300,10 +354,18 @@ export class InitialSchema1770000000000 implements MigrationInterface {
       );
     `);
     await queryRunner.query(`CREATE INDEX "IDX_gym_classes_gym_id" ON "gym_classes" ("gym_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_gym_classes_instructor_id" ON "gym_classes" ("instructor_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_gym_classes_start_time" ON "gym_classes" ("start_time");`);
-    await queryRunner.query(`ALTER TABLE "gym_classes" ADD CONSTRAINT "FK_gym_classes_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`);
-    await queryRunner.query(`ALTER TABLE "gym_classes" ADD CONSTRAINT "FK_gym_classes_instructor" FOREIGN KEY ("instructor_id") REFERENCES "users"("id") ON DELETE RESTRICT;`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_gym_classes_instructor_id" ON "gym_classes" ("instructor_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_gym_classes_start_time" ON "gym_classes" ("start_time");`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "gym_classes" ADD CONSTRAINT "FK_gym_classes_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "gym_classes" ADD CONSTRAINT "FK_gym_classes_instructor" FOREIGN KEY ("instructor_id") REFERENCES "users"("id") ON DELETE RESTRICT;`,
+    );
 
     // ---------------------------------------------------------------------
     // class_bookings
@@ -323,13 +385,27 @@ export class InitialSchema1770000000000 implements MigrationInterface {
         CONSTRAINT "PK_class_bookings_id" PRIMARY KEY ("id")
       );
     `);
-    await queryRunner.query(`CREATE INDEX "IDX_class_bookings_gym_id" ON "class_bookings" ("gym_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_class_bookings_class_id" ON "class_bookings" ("class_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_class_bookings_user_id" ON "class_bookings" ("user_id");`);
-    await queryRunner.query(`CREATE UNIQUE INDEX "IDX_class_bookings_class_user" ON "class_bookings" ("class_id","user_id") WHERE "deleted_at" IS NULL;`);
-    await queryRunner.query(`ALTER TABLE "class_bookings" ADD CONSTRAINT "FK_cb_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`);
-    await queryRunner.query(`ALTER TABLE "class_bookings" ADD CONSTRAINT "FK_cb_class" FOREIGN KEY ("class_id") REFERENCES "gym_classes"("id") ON DELETE CASCADE;`);
-    await queryRunner.query(`ALTER TABLE "class_bookings" ADD CONSTRAINT "FK_cb_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_class_bookings_gym_id" ON "class_bookings" ("gym_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_class_bookings_class_id" ON "class_bookings" ("class_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_class_bookings_user_id" ON "class_bookings" ("user_id");`,
+    );
+    await queryRunner.query(
+      `CREATE UNIQUE INDEX "IDX_class_bookings_class_user" ON "class_bookings" ("class_id","user_id") WHERE "deleted_at" IS NULL;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "class_bookings" ADD CONSTRAINT "FK_cb_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "class_bookings" ADD CONSTRAINT "FK_cb_class" FOREIGN KEY ("class_id") REFERENCES "gym_classes"("id") ON DELETE CASCADE;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "class_bookings" ADD CONSTRAINT "FK_cb_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`,
+    );
 
     // ---------------------------------------------------------------------
     // attendance_records
@@ -349,12 +425,24 @@ export class InitialSchema1770000000000 implements MigrationInterface {
         CONSTRAINT "PK_attendance_records_id" PRIMARY KEY ("id")
       );
     `);
-    await queryRunner.query(`CREATE INDEX "IDX_attendance_gym_id" ON "attendance_records" ("gym_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_attendance_user_id" ON "attendance_records" ("user_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_attendance_timestamp" ON "attendance_records" ("timestamp");`);
-    await queryRunner.query(`ALTER TABLE "attendance_records" ADD CONSTRAINT "FK_att_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`);
-    await queryRunner.query(`ALTER TABLE "attendance_records" ADD CONSTRAINT "FK_att_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`);
-    await queryRunner.query(`ALTER TABLE "attendance_records" ADD CONSTRAINT "FK_att_class" FOREIGN KEY ("class_id") REFERENCES "gym_classes"("id") ON DELETE SET NULL;`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_attendance_gym_id" ON "attendance_records" ("gym_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_attendance_user_id" ON "attendance_records" ("user_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_attendance_timestamp" ON "attendance_records" ("timestamp");`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "attendance_records" ADD CONSTRAINT "FK_att_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "attendance_records" ADD CONSTRAINT "FK_att_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "attendance_records" ADD CONSTRAINT "FK_att_class" FOREIGN KEY ("class_id") REFERENCES "gym_classes"("id") ON DELETE SET NULL;`,
+    );
 
     // ---------------------------------------------------------------------
     // inventory_items
@@ -381,9 +469,13 @@ export class InitialSchema1770000000000 implements MigrationInterface {
       );
     `);
     await queryRunner.query(`CREATE INDEX "IDX_inventory_gym_id" ON "inventory_items" ("gym_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_inventory_category" ON "inventory_items" ("category");`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_inventory_category" ON "inventory_items" ("category");`,
+    );
     await queryRunner.query(`CREATE INDEX "IDX_inventory_status" ON "inventory_items" ("status");`);
-    await queryRunner.query(`ALTER TABLE "inventory_items" ADD CONSTRAINT "FK_inventory_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`);
+    await queryRunner.query(
+      `ALTER TABLE "inventory_items" ADD CONSTRAINT "FK_inventory_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`,
+    );
 
     // ---------------------------------------------------------------------
     // inventory_maintenances
@@ -404,9 +496,15 @@ export class InitialSchema1770000000000 implements MigrationInterface {
         CONSTRAINT "PK_inventory_maintenances_id" PRIMARY KEY ("id")
       );
     `);
-    await queryRunner.query(`CREATE INDEX "IDX_maintenance_item_id" ON "inventory_maintenances" ("item_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_maintenance_status" ON "inventory_maintenances" ("status");`);
-    await queryRunner.query(`ALTER TABLE "inventory_maintenances" ADD CONSTRAINT "FK_maintenance_item" FOREIGN KEY ("item_id") REFERENCES "inventory_items"("id") ON DELETE CASCADE;`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_maintenance_item_id" ON "inventory_maintenances" ("item_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_maintenance_status" ON "inventory_maintenances" ("status");`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "inventory_maintenances" ADD CONSTRAINT "FK_maintenance_item" FOREIGN KEY ("item_id") REFERENCES "inventory_items"("id") ON DELETE CASCADE;`,
+    );
 
     // ---------------------------------------------------------------------
     // foods
@@ -451,12 +549,24 @@ export class InitialSchema1770000000000 implements MigrationInterface {
         CONSTRAINT "PK_nutrition_logs_id" PRIMARY KEY ("id")
       );
     `);
-    await queryRunner.query(`CREATE INDEX "IDX_nutrition_logs_gym_id" ON "nutrition_logs" ("gym_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_nutrition_logs_user_id" ON "nutrition_logs" ("user_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_nutrition_logs_eaten_at" ON "nutrition_logs" ("eaten_at");`);
-    await queryRunner.query(`ALTER TABLE "nutrition_logs" ADD CONSTRAINT "FK_nl_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`);
-    await queryRunner.query(`ALTER TABLE "nutrition_logs" ADD CONSTRAINT "FK_nl_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`);
-    await queryRunner.query(`ALTER TABLE "nutrition_logs" ADD CONSTRAINT "FK_nl_food" FOREIGN KEY ("food_id") REFERENCES "foods"("id") ON DELETE RESTRICT;`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_nutrition_logs_gym_id" ON "nutrition_logs" ("gym_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_nutrition_logs_user_id" ON "nutrition_logs" ("user_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_nutrition_logs_eaten_at" ON "nutrition_logs" ("eaten_at");`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "nutrition_logs" ADD CONSTRAINT "FK_nl_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "nutrition_logs" ADD CONSTRAINT "FK_nl_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "nutrition_logs" ADD CONSTRAINT "FK_nl_food" FOREIGN KEY ("food_id") REFERENCES "foods"("id") ON DELETE RESTRICT;`,
+    );
 
     // ---------------------------------------------------------------------
     // notifications
@@ -480,10 +590,18 @@ export class InitialSchema1770000000000 implements MigrationInterface {
         CONSTRAINT "PK_notifications_id" PRIMARY KEY ("id")
       );
     `);
-    await queryRunner.query(`CREATE INDEX "IDX_notifications_user_id" ON "notifications" ("user_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_notifications_gym_id" ON "notifications" ("gym_id");`);
-    await queryRunner.query(`CREATE INDEX "IDX_notifications_read" ON "notifications" ("is_read");`);
-    await queryRunner.query(`ALTER TABLE "notifications" ADD CONSTRAINT "FK_notifications_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_notifications_user_id" ON "notifications" ("user_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_notifications_gym_id" ON "notifications" ("gym_id");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_notifications_read" ON "notifications" ("is_read");`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "notifications" ADD CONSTRAINT "FK_notifications_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;`,
+    );
 
     // ---------------------------------------------------------------------
     // campaigns
@@ -510,8 +628,12 @@ export class InitialSchema1770000000000 implements MigrationInterface {
     `);
     await queryRunner.query(`CREATE INDEX "IDX_campaigns_gym_id" ON "campaigns" ("gym_id");`);
     await queryRunner.query(`CREATE INDEX "IDX_campaigns_status" ON "campaigns" ("status");`);
-    await queryRunner.query(`ALTER TABLE "campaigns" ADD CONSTRAINT "FK_campaigns_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`);
-    await queryRunner.query(`ALTER TABLE "campaigns" ADD CONSTRAINT "FK_campaigns_created_by" FOREIGN KEY ("created_by_id") REFERENCES "users"("id") ON DELETE RESTRICT;`);
+    await queryRunner.query(
+      `ALTER TABLE "campaigns" ADD CONSTRAINT "FK_campaigns_gym" FOREIGN KEY ("gym_id") REFERENCES "gyms"("id") ON DELETE CASCADE;`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "campaigns" ADD CONSTRAINT "FK_campaigns_created_by" FOREIGN KEY ("created_by_id") REFERENCES "users"("id") ON DELETE RESTRICT;`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

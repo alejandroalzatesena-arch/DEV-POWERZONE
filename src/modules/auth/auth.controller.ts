@@ -1,10 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Req, Get, UseGuards } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
@@ -43,26 +38,26 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @Throttle({ default: { limit: 10, ttl: 60000 } })
-  @ApiOperation({ summary: 'Inicio de sesión', description: 'Autentica un usuario y devuelve tokens.' })
+  @ApiOperation({
+    summary: 'Inicio de sesión',
+    description: 'Autentica un usuario y devuelve tokens.',
+  })
   @ApiResponse({ status: 200, description: 'Sesión iniciada', type: LoginResponseDto })
   @ApiResponse({ status: 401, description: 'Credenciales inválidas' })
-  async login(
-    @Body() dto: LoginDto,
-    @Req() req: Request,
-  ): Promise<LoginResponseDto> {
+  async login(@Body() dto: LoginDto, @Req() req: Request): Promise<LoginResponseDto> {
     return this.authService.login(dto, req.get('user-agent'), req.ip);
   }
 
   @Public()
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Renovar tokens', description: 'Intercambia un refresh token por un nuevo par de tokens (rotación).' })
+  @ApiOperation({
+    summary: 'Renovar tokens',
+    description: 'Intercambia un refresh token por un nuevo par de tokens (rotación).',
+  })
   @ApiResponse({ status: 200, description: 'Nuevo par de tokens', type: TokenPairDto })
   @ApiResponse({ status: 401, description: 'Refresh token inválido o expirado' })
-  async refresh(
-    @Body() dto: RefreshTokenDto,
-    @Req() req: Request,
-  ): Promise<TokenPairDto> {
+  async refresh(@Body() dto: RefreshTokenDto, @Req() req: Request): Promise<TokenPairDto> {
     return this.authService.refresh(dto, req.get('user-agent'), req.ip);
   }
 
@@ -88,7 +83,10 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Cambiar contraseña', description: 'Cambia la contraseña del usuario autenticado y cierra todas sus sesiones.' })
+  @ApiOperation({
+    summary: 'Cambiar contraseña',
+    description: 'Cambia la contraseña del usuario autenticado y cierra todas sus sesiones.',
+  })
   @ApiResponse({ status: 200, description: 'Contraseña actualizada' })
   @ApiResponse({ status: 401, description: 'Contraseña actual incorrecta' })
   async changePassword(

@@ -53,7 +53,9 @@ export const appConfig = registerAs('app', (): AppConfig => ({
   port: parseInt(process.env.PORT || '3000', 10),
   apiPrefix: process.env.API_PREFIX || 'api',
   name: process.env.APP_NAME || 'Power Zone API',
-  corsOrigins: (process.env.CORS_ORIGINS || 'http://localhost:3001').split(',').map(o => o.trim()),
+  corsOrigins: (process.env.CORS_ORIGINS || 'http://localhost:3001')
+    .split(',')
+    .map((o) => o.trim()),
   bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS || '10', 10),
 }));
 

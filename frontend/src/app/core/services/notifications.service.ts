@@ -43,11 +43,20 @@ export class NotificationsService {
     return this.api.delete(`/notifications/${id}`);
   }
 
-  create(payload: { userId: string; type?: string; title: string; body?: string }): Observable<AppNotification> {
+  create(payload: {
+    userId: string;
+    type?: string;
+    title: string;
+    body?: string;
+  }): Observable<AppNotification> {
     return this.api.post<AppNotification>('/notifications', payload);
   }
 
-  sendMessage(payload: { userId: string; title: string; body: string }): Observable<AppNotification> {
+  sendMessage(payload: {
+    userId: string;
+    title: string;
+    body: string;
+  }): Observable<AppNotification> {
     return this.api.post<AppNotification>('/notifications/message', payload);
   }
 }

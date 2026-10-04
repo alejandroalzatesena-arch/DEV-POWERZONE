@@ -75,7 +75,8 @@ body {
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  background-image: radial-gradient(1200px 600px at 85% -10%, rgba(200, 255, 61, 0.06), transparent 60%),
+  background-image:
+    radial-gradient(1200px 600px at 85% -10%, rgba(200, 255, 61, 0.06), transparent 60%),
     radial-gradient(900px 500px at -10% 30%, rgba(56, 198, 255, 0.05), transparent 55%);
   background-attachment: fixed;
 }

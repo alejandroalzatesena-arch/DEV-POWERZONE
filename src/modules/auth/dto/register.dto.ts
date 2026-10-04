@@ -31,7 +31,10 @@ export class RegisterDto {
   @MaxLength(50)
   phone?: string;
 
-  @ApiProperty({ description: 'Gimnasio al que se afilia (multi-tenancy)', example: 'b1b3f3b3-3b3b-3b3b-3b3b-3b3b3b3b3b3b' })
+  @ApiProperty({
+    description: 'Gimnasio al que se afilia (multi-tenancy)',
+    example: 'b1b3f3b3-3b3b-3b3b-3b3b-3b3b3b3b3b3b',
+  })
   @IsUUID()
   gymId: string;
 }

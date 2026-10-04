@@ -10,7 +10,7 @@ export const USER_ROLES = [
 ] as const;
 
 export const roleLabel = (role?: string | null): string =>
-  USER_ROLES.find((r) => r.value === role)?.label ?? (role ?? '—');
+  USER_ROLES.find((r) => r.value === role)?.label ?? role ?? '—';
 
 export const roleColor = (role?: string | null): string => {
   switch (role) {
@@ -31,8 +31,7 @@ export const GENDERS = [
   { value: 'other', label: 'Otro' },
 ] as const;
 
-export const genderLabel = (g?: string): string =>
-  GENDERS.find((x) => x.value === g)?.label ?? '—';
+export const genderLabel = (g?: string): string => GENDERS.find((x) => x.value === g)?.label ?? '—';
 
 export const FITNESS_GOALS = [
   { value: 'lose_fat', label: 'Perder grasa' },
@@ -64,7 +63,11 @@ export const MEMBERSHIP_STATUSES: { value: string; label: string; color: string 
 ];
 
 export const membershipStatus = (s?: string) =>
-  MEMBERSHIP_STATUSES.find((x) => x.value === s) ?? { value: s ?? '', label: s ?? '—', color: 'muted' };
+  MEMBERSHIP_STATUSES.find((x) => x.value === s) ?? {
+    value: s ?? '',
+    label: s ?? '—',
+    color: 'muted',
+  };
 
 export const PAYMENT_STATUSES: { value: string; label: string; color: string }[] = [
   { value: 'pending', label: 'Pendiente', color: 'orange' },
@@ -75,7 +78,11 @@ export const PAYMENT_STATUSES: { value: string; label: string; color: string }[]
 ];
 
 export const paymentStatus = (s?: string) =>
-  PAYMENT_STATUSES.find((x) => x.value === s) ?? { value: s ?? '', label: s ?? '—', color: 'muted' };
+  PAYMENT_STATUSES.find((x) => x.value === s) ?? {
+    value: s ?? '',
+    label: s ?? '—',
+    color: 'muted',
+  };
 
 export const PAYMENT_METHODS: { value: string; label: string; icon: string }[] = [
   { value: 'card', label: 'Tarjeta', icon: 'credit_card' },
@@ -94,7 +101,11 @@ export const ROUTINE_STATUSES: { value: string; label: string; color: string }[]
 ];
 
 export const routineStatus = (s?: string) =>
-  ROUTINE_STATUSES.find((x) => x.value === s) ?? { value: s ?? '', label: s ?? '—', color: 'muted' };
+  ROUTINE_STATUSES.find((x) => x.value === s) ?? {
+    value: s ?? '',
+    label: s ?? '—',
+    color: 'muted',
+  };
 
 export const ROUTINE_OBJECTIVES = [
   { value: 'strength', label: 'Fuerza' },
@@ -145,7 +156,11 @@ export const BOOKING_STATUSES: { value: string; label: string; color: string }[]
 ];
 
 export const bookingStatus = (s?: string) =>
-  BOOKING_STATUSES.find((x) => x.value === s) ?? { value: s ?? '', label: s ?? '—', color: 'muted' };
+  BOOKING_STATUSES.find((x) => x.value === s) ?? {
+    value: s ?? '',
+    label: s ?? '—',
+    color: 'muted',
+  };
 
 export const ATTENDANCE_TYPES: { value: string; label: string; color: string }[] = [
   { value: 'check_in', label: 'Check-in', color: 'success' },
@@ -154,7 +169,11 @@ export const ATTENDANCE_TYPES: { value: string; label: string; color: string }[]
 ];
 
 export const attendanceType = (s?: string) =>
-  ATTENDANCE_TYPES.find((x) => x.value === s) ?? { value: s ?? '', label: s ?? '—', color: 'muted' };
+  ATTENDANCE_TYPES.find((x) => x.value === s) ?? {
+    value: s ?? '',
+    label: s ?? '—',
+    color: 'muted',
+  };
 
 export const ATTENDANCE_METHODS = [
   { value: 'member_card', label: 'Tarjeta de socio' },
@@ -186,7 +205,11 @@ export const INVENTORY_STATUSES: { value: string; label: string; color: string }
 ];
 
 export const inventoryStatus = (s?: string) =>
-  INVENTORY_STATUSES.find((x) => x.value === s) ?? { value: s ?? '', label: s ?? '—', color: 'muted' };
+  INVENTORY_STATUSES.find((x) => x.value === s) ?? {
+    value: s ?? '',
+    label: s ?? '—',
+    color: 'muted',
+  };
 
 export const INVENTORY_CONDITIONS = [
   { value: 'new', label: 'Nuevo' },
@@ -206,7 +229,11 @@ export const MAINTENANCE_STATUSES: { value: string; label: string; color: string
 ];
 
 export const maintenanceStatus = (s?: string) =>
-  MAINTENANCE_STATUSES.find((x) => x.value === s) ?? { value: s ?? '', label: s ?? '—', color: 'muted' };
+  MAINTENANCE_STATUSES.find((x) => x.value === s) ?? {
+    value: s ?? '',
+    label: s ?? '—',
+    color: 'muted',
+  };
 
 export const MEAL_TYPES: { value: string; label: string; icon: string }[] = [
   { value: 'breakfast', label: 'Desayuno', icon: 'wb_sunny' },
@@ -265,7 +292,11 @@ export const campaignTypeLabel = (t?: string): string =>
   CAMPAIGN_TYPES.find((x) => x.value === t)?.label ?? '—';
 
 export const campaignType = (t?: string) =>
-  CAMPAIGN_TYPES.find((x) => x.value === t) ?? { value: t ?? '', label: t ?? '—', icon: 'campaign' };
+  CAMPAIGN_TYPES.find((x) => x.value === t) ?? {
+    value: t ?? '',
+    label: t ?? '—',
+    icon: 'campaign',
+  };
 
 export const CAMPAIGN_STATUSES: { value: string; label: string; color: string }[] = [
   { value: 'draft', label: 'Borrador', color: 'muted' },
@@ -276,9 +307,22 @@ export const CAMPAIGN_STATUSES: { value: string; label: string; color: string }[
 ];
 
 export const campaignStatus = (s?: string) =>
-  CAMPAIGN_STATUSES.find((x) => x.value === s) ?? { value: s ?? '', label: s ?? '—', color: 'muted' };
+  CAMPAIGN_STATUSES.find((x) => x.value === s) ?? {
+    value: s ?? '',
+    label: s ?? '—',
+    color: 'muted',
+  };
 
-export const DAY_NAMES = ['', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+export const DAY_NAMES = [
+  '',
+  'Lunes',
+  'Martes',
+  'Miércoles',
+  'Jueves',
+  'Viernes',
+  'Sábado',
+  'Domingo',
+];
 
 export const formatDate = (d?: string | Date, withTime = false): string => {
   if (!d) return '—';

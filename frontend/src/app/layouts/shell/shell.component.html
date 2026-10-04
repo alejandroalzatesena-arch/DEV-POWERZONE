@@ -18,7 +18,12 @@
         <div class="nav-section">{{ section.group }}</div>
       }
       @for (item of visibleItems(section.items ?? [section]); track item.path) {
-        <a class="nav-item" [routerLink]="item.path" routerLinkActive="active" (click)="mobileNav.close()">
+        <a
+          class="nav-item"
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          (click)="mobileNav.close()"
+        >
           <mat-icon>{{ item.icon }}</mat-icon>
           <span>{{ item.label }}</span>
         </a>
@@ -39,8 +44,17 @@
 
       <div class="pz-spacer"></div>
 
-      <button mat-icon-button [matMenuTriggerFor]="notifMenu" (menuOpened)="loadRecent()" class="bell">
-        <mat-icon [matBadge]="unreadCount() === 0 ? null : unreadCount()" matBadgeColor="warn" matBadgeSize="small">
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="notifMenu"
+        (menuOpened)="loadRecent()"
+        class="bell"
+      >
+        <mat-icon
+          [matBadge]="unreadCount() === 0 ? null : unreadCount()"
+          matBadgeColor="warn"
+          matBadgeSize="small"
+        >
           notifications
         </mat-icon>
       </button>
@@ -84,8 +98,12 @@
           </div>
         </div>
         <mat-divider></mat-divider>
-        <button mat-menu-item (click)="navigate('/settings')"><mat-icon>person</mat-icon> Mi perfil</button>
-        <button mat-menu-item (click)="navigate('/notifications')"><mat-icon>notifications</mat-icon> Notificaciones</button>
+        <button mat-menu-item (click)="navigate('/settings')">
+          <mat-icon>person</mat-icon> Mi perfil
+        </button>
+        <button mat-menu-item (click)="navigate('/notifications')">
+          <mat-icon>notifications</mat-icon> Notificaciones
+        </button>
         <button mat-menu-item class="logout" (click)="logout()">
           <mat-icon>logout</mat-icon>
           Cerrar sesión

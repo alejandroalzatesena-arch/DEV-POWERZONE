@@ -67,7 +67,11 @@ export class ClassesController {
     description: 'Si la clase está llena pasa a lista de espera (si se permite).',
   })
   @ApiResponse({ status: 201, description: 'Reserva creada', type: ClassBooking })
-  book(@Param('id', ParseUUIDPipe) id: string, @Body() dto: BookClassDto, @CurrentUser() actor: JwtPayload): Promise<ClassBooking> {
+  book(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: BookClassDto,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<ClassBooking> {
     return this.classesService.book(id, dto, actor);
   }
 
@@ -119,7 +123,10 @@ export class ClassesController {
   @Get(':id')
   @ApiOperation({ summary: 'Obtener clase por ID' })
   @ApiResponse({ status: 200, description: 'Detalle de la clase', type: GymClass })
-  findOne(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<GymClass> {
+  findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<GymClass> {
     return this.classesService.findById(id, actor);
   }
 
@@ -139,7 +146,10 @@ export class ClassesController {
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Eliminar clase (soft delete, admin)' })
   @ApiResponse({ status: 200, description: 'Clase eliminada' })
-  async remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<{ message: string }> {
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<{ message: string }> {
     await this.classesService.remove(id, actor);
     return { message: 'Clase eliminada.' };
   }

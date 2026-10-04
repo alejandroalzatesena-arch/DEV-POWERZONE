@@ -325,44 +325,22 @@ export interface Campaign {
 
 export type UserRole = 'admin' | 'trainer' | 'receptionist' | 'client';
 export type UserGender = 'male' | 'female' | 'other';
-export type FitnessGoal =
-  | 'lose_fat'
-  | 'gain_muscle'
-  | 'maintain'
-  | 'endurance'
-  | 'general_fitness';
+export type FitnessGoal = 'lose_fat' | 'gain_muscle' | 'maintain' | 'endurance' | 'general_fitness';
 export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
 export type MembershipStatus = 'active' | 'expired' | 'cancelled' | 'pending';
 export type PaymentStatus = 'pending' | 'succeeded' | 'failed' | 'refunded' | 'cancelled';
 export type PaymentMethod = 'card' | 'cash' | 'transfer' | 'stripe';
 export type RoutineStatus = 'draft' | 'active' | 'archived';
 export type RoutineObjective =
-  | 'strength'
-  | 'hypertrophy'
-  | 'weight_loss'
-  | 'endurance'
-  | 'general'
-  | 'rehabilitation';
+  'strength' | 'hypertrophy' | 'weight_loss' | 'endurance' | 'general' | 'rehabilitation';
 export type ExerciseCategory =
-  | 'chest'
-  | 'back'
-  | 'legs'
-  | 'shoulders'
-  | 'arms'
-  | 'core'
-  | 'cardio'
-  | 'full_body'
-  | 'stretching';
+  'chest' | 'back' | 'legs' | 'shoulders' | 'arms' | 'core' | 'cardio' | 'full_body' | 'stretching';
 export type ClassStatus = 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
 export type BookingStatus = 'confirmed' | 'cancelled' | 'waitlisted' | 'attended' | 'no_show';
 export type AttendanceType = 'check_in' | 'check_out' | 'class';
 export type AttendanceMethod = 'member_card' | 'qr_code' | 'manual' | 'face_id';
 export type InventoryCategory =
-  | 'equipment'
-  | 'weights'
-  | 'machines'
-  | 'supplements'
-  | 'accessories';
+  'equipment' | 'weights' | 'machines' | 'supplements' | 'accessories';
 export type InventoryCondition = 'new' | 'good' | 'fair' | 'poor';
 export type InventoryStatus = 'available' | 'in_use' | 'maintenance' | 'out_of_order' | 'retired';
 export type MaintenanceStatus = 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
@@ -378,14 +356,7 @@ export type FoodCategory =
   | 'beverages'
   | 'other';
 export type NotificationType =
-  | 'info'
-  | 'alert'
-  | 'promotion'
-  | 'message'
-  | 'membership'
-  | 'payment'
-  | 'schedule'
-  | 'system';
+  'info' | 'alert' | 'promotion' | 'message' | 'membership' | 'payment' | 'schedule' | 'system';
 export type NotificationChannel = 'in_app' | 'push' | 'email' | 'sms';
 export type CampaignType = 'email' | 'sms' | 'push' | 'in_app';
 export type CampaignStatus = 'draft' | 'scheduled' | 'sending' | 'sent' | 'cancelled';

@@ -12,7 +12,14 @@ import {
   RawBodyRequest,
   Req,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiExcludeEndpoint, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiExcludeEndpoint,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { PaymentsService } from './payments.service';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
@@ -55,7 +62,10 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Mis pagos (cliente)' })
   @ApiResponse({ status: 200, description: 'Pagos del cliente autenticado' })
   async myPayments(@CurrentUser() actor: JwtPayload): Promise<Payment[]> {
-    const result = await this.paymentsService.findAll({ userId: actor.sub } as QueryPaymentsDto, actor);
+    const result = await this.paymentsService.findAll(
+      { userId: actor.sub } as QueryPaymentsDto,
+      actor,
+    );
     return result.items;
   }
 
@@ -67,7 +77,10 @@ export class PaymentsController {
       'Crea una checkout session. Si Stripe no está configurado devuelve una URL mock para desarrollo.',
   })
   @ApiResponse({ status: 201, description: 'URL de pago generada' })
-  createCheckout(@Body() dto: CreateCheckoutDto, @CurrentUser() actor: JwtPayload): Promise<{ url: string; paymentId: string }> {
+  createCheckout(
+    @Body() dto: CreateCheckoutDto,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<{ url: string; paymentId: string }> {
     return this.paymentsService.createCheckout(dto, actor);
   }
 
@@ -78,7 +91,10 @@ export class PaymentsController {
     description: 'Solo para desarrollo: marca un pago pendiente como pagado y activa la membresía.',
   })
   @ApiResponse({ status: 200, description: 'Pago confirmado', type: Payment })
-  confirmMockCheckout(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<Payment> {
+  confirmMockCheckout(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<Payment> {
     return this.paymentsService.mockConfirmCheckout(id, actor);
   }
 
@@ -86,7 +102,10 @@ export class PaymentsController {
   @Roles(UserRole.ADMIN, UserRole.TRAINER, UserRole.RECEPTIONIST)
   @ApiOperation({ summary: 'Obtener pago por ID' })
   @ApiResponse({ status: 200, description: 'Detalle del pago', type: Payment })
-  findOne(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<Payment> {
+  findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<Payment> {
     return this.paymentsService.findById(id, actor);
   }
 

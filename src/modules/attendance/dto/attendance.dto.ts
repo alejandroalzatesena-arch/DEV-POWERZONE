@@ -4,14 +4,22 @@ import { PaginationDto } from '../../../common/dto/pagination.dto';
 import { AttendanceMethod, AttendanceType } from '../../../common/enums';
 
 export class CheckInDto {
-  @ApiPropertyOptional({ description: 'Método de registro', enum: AttendanceMethod, default: 'member_card' })
+  @ApiPropertyOptional({
+    description: 'Método de registro',
+    enum: AttendanceMethod,
+    default: 'member_card',
+  })
   @IsOptional()
   @IsEnum(AttendanceMethod)
   method?: AttendanceMethod;
 }
 
 export class CheckOutDto {
-  @ApiPropertyOptional({ description: 'Método de registro', enum: AttendanceMethod, default: 'member_card' })
+  @ApiPropertyOptional({
+    description: 'Método de registro',
+    enum: AttendanceMethod,
+    default: 'member_card',
+  })
   @IsOptional()
   @IsEnum(AttendanceMethod)
   method?: AttendanceMethod;

@@ -2,7 +2,8 @@
   <pz-page-header
     eyebrow="Configuración"
     title="Mi perfil"
-    subtitle="Tus datos personales y de entrenamiento." />
+    subtitle="Tus datos personales y de entrenamiento."
+  />
 
   <div class="settings-grid">
     <!-- Datos de cuenta -->
@@ -13,37 +14,71 @@
       <mat-card-content>
         <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
           <div class="row2">
-            <mat-form-field appearance="outline"><mat-label>Nombre</mat-label><input matInput formControlName="firstName" /></mat-form-field>
-            <mat-form-field appearance="outline"><mat-label>Apellido</mat-label><input matInput formControlName="lastName" /></mat-form-field>
+            <mat-form-field appearance="outline"
+              ><mat-label>Nombre</mat-label><input matInput formControlName="firstName"
+            /></mat-form-field>
+            <mat-form-field appearance="outline"
+              ><mat-label>Apellido</mat-label><input matInput formControlName="lastName"
+            /></mat-form-field>
           </div>
           <div class="row2">
-            <mat-form-field appearance="outline"><mat-label>Teléfono</mat-label><input matInput formControlName="phone" /></mat-form-field>
-            <mat-form-field appearance="outline"><mat-label>Fecha de nacimiento</mat-label><input matInput type="date" formControlName="birthDate" /></mat-form-field>
+            <mat-form-field appearance="outline"
+              ><mat-label>Teléfono</mat-label><input matInput formControlName="phone"
+            /></mat-form-field>
+            <mat-form-field appearance="outline"
+              ><mat-label>Fecha de nacimiento</mat-label
+              ><input matInput type="date" formControlName="birthDate"
+            /></mat-form-field>
           </div>
           <div class="row2">
-            <mat-form-field appearance="outline"><mat-label>Sexo</mat-label><mat-select formControlName="gender">
-              <mat-option value="">—</mat-option>
-              <mat-option value="male">Masculino</mat-option>
-              <mat-option value="female">Femenino</mat-option>
-              <mat-option value="other">Otro</mat-option>
-            </mat-select></mat-form-field>
-            <mat-form-field appearance="outline"><mat-label>Altura (cm)</mat-label><input matInput type="number" formControlName="heightCm" /></mat-form-field>
+            <mat-form-field appearance="outline"
+              ><mat-label>Sexo</mat-label
+              ><mat-select formControlName="gender">
+                <mat-option value="">—</mat-option>
+                <mat-option value="male">Masculino</mat-option>
+                <mat-option value="female">Femenino</mat-option>
+                <mat-option value="other">Otro</mat-option>
+              </mat-select></mat-form-field
+            >
+            <mat-form-field appearance="outline"
+              ><mat-label>Altura (cm)</mat-label
+              ><input matInput type="number" formControlName="heightCm"
+            /></mat-form-field>
           </div>
           <div class="row2">
-            <mat-form-field appearance="outline"><mat-label>Peso (kg)</mat-label><input matInput type="number" formControlName="weightKg" /></mat-form-field>
-            <mat-form-field appearance="outline"><mat-label>% Grasa corporal</mat-label><input matInput type="number" formControlName="bodyFatPct" /></mat-form-field>
+            <mat-form-field appearance="outline"
+              ><mat-label>Peso (kg)</mat-label
+              ><input matInput type="number" formControlName="weightKg"
+            /></mat-form-field>
+            <mat-form-field appearance="outline"
+              ><mat-label>% Grasa corporal</mat-label
+              ><input matInput type="number" formControlName="bodyFatPct"
+            /></mat-form-field>
           </div>
           <div class="row2">
-            <mat-form-field appearance="outline"><mat-label>Objetivo</mat-label><mat-select formControlName="goal">
-              <mat-option value="">—</mat-option>
-              @for (g of FITNESS_GOALS; track g.value) { <mat-option [value]="g.value">{{ g.label }}</mat-option> }
-            </mat-select></mat-form-field>
-            <mat-form-field appearance="outline"><mat-label>Nivel de actividad</mat-label><mat-select formControlName="activityLevel">
-              <mat-option value="">—</mat-option>
-              @for (a of ACTIVITY_LEVELS; track a.value) { <mat-option [value]="a.value">{{ a.label }}</mat-option> }
-            </mat-select></mat-form-field>
+            <mat-form-field appearance="outline"
+              ><mat-label>Objetivo</mat-label
+              ><mat-select formControlName="goal">
+                <mat-option value="">—</mat-option>
+                @for (g of FITNESS_GOALS; track g.value) {
+                  <mat-option [value]="g.value">{{ g.label }}</mat-option>
+                }
+              </mat-select></mat-form-field
+            >
+            <mat-form-field appearance="outline"
+              ><mat-label>Nivel de actividad</mat-label
+              ><mat-select formControlName="activityLevel">
+                <mat-option value="">—</mat-option>
+                @for (a of ACTIVITY_LEVELS; track a.value) {
+                  <mat-option [value]="a.value">{{ a.label }}</mat-option>
+                }
+              </mat-select></mat-form-field
+            >
           </div>
-          <mat-form-field appearance="outline" style="width:100%"><mat-label>Condiciones médicas (separadas por coma)</mat-label><input matInput formControlName="medicalConditions" /></mat-form-field>
+          <mat-form-field appearance="outline" style="width: 100%"
+            ><mat-label>Condiciones médicas (separadas por coma)</mat-label
+            ><input matInput formControlName="medicalConditions"
+          /></mat-form-field>
           <button mat-raised-button class="pz-btn-volt" type="submit" [disabled]="saving">
             <mat-icon>save</mat-icon> Guardar cambios
           </button>
@@ -58,9 +93,18 @@
       </mat-card-header>
       <mat-card-content>
         <form [formGroup]="passForm" (ngSubmit)="changePassword()">
-          <mat-form-field appearance="outline" style="width:100%"><mat-label>Contraseña actual</mat-label><input matInput type="password" formControlName="currentPassword" /></mat-form-field>
-          <mat-form-field appearance="outline" style="width:100%"><mat-label>Nueva contraseña</mat-label><input matInput type="password" formControlName="newPassword" /></mat-form-field>
-          <mat-form-field appearance="outline" style="width:100%"><mat-label>Confirmar nueva contraseña</mat-label><input matInput type="password" formControlName="confirm" /></mat-form-field>
+          <mat-form-field appearance="outline" style="width: 100%"
+            ><mat-label>Contraseña actual</mat-label
+            ><input matInput type="password" formControlName="currentPassword"
+          /></mat-form-field>
+          <mat-form-field appearance="outline" style="width: 100%"
+            ><mat-label>Nueva contraseña</mat-label
+            ><input matInput type="password" formControlName="newPassword"
+          /></mat-form-field>
+          <mat-form-field appearance="outline" style="width: 100%"
+            ><mat-label>Confirmar nueva contraseña</mat-label
+            ><input matInput type="password" formControlName="confirm"
+          /></mat-form-field>
           @if (passForm.errors?.['mismatch'] && passForm.touched) {
             <div class="err-text">Las contraseñas no coinciden.</div>
           }

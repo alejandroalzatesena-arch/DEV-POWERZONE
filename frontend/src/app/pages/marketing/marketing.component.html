@@ -2,18 +2,54 @@
   <pz-page-header
     eyebrow="Comunicación"
     title="Marketing"
-    subtitle="Campañas para socios y prospectos del gimnasio.">
+    subtitle="Campañas para socios y prospectos del gimnasio."
+  >
     <button mat-raised-button class="pz-btn-volt" (click)="openCampaign()">
       <mat-icon>add</mat-icon> Nueva campaña
     </button>
   </pz-page-header>
 
   <div class="chips">
-    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === ''" (click)="applyFilter('')">Todas</button>
-    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === 'draft'" (click)="applyFilter('draft')">Borradores</button>
-    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === 'scheduled'" (click)="applyFilter('scheduled')">Programadas</button>
-    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === 'sending'" (click)="applyFilter('sending')">Enviando</button>
-    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === 'sent'" (click)="applyFilter('sent')">Enviadas</button>
+    <button
+      mat-stroked-button
+      class="pz-btn-ghost chip"
+      [class.on]="filter() === ''"
+      (click)="applyFilter('')"
+    >
+      Todas
+    </button>
+    <button
+      mat-stroked-button
+      class="pz-btn-ghost chip"
+      [class.on]="filter() === 'draft'"
+      (click)="applyFilter('draft')"
+    >
+      Borradores
+    </button>
+    <button
+      mat-stroked-button
+      class="pz-btn-ghost chip"
+      [class.on]="filter() === 'scheduled'"
+      (click)="applyFilter('scheduled')"
+    >
+      Programadas
+    </button>
+    <button
+      mat-stroked-button
+      class="pz-btn-ghost chip"
+      [class.on]="filter() === 'sending'"
+      (click)="applyFilter('sending')"
+    >
+      Enviando
+    </button>
+    <button
+      mat-stroked-button
+      class="pz-btn-ghost chip"
+      [class.on]="filter() === 'sent'"
+      (click)="applyFilter('sent')"
+    >
+      Enviadas
+    </button>
   </div>
 
   <div class="campaigns">
@@ -21,7 +57,9 @@
       <mat-card class="campaign">
         <mat-card-content>
           <div class="c-top">
-            <span class="pz-badge" [class]="'badge-' + campaignStatus(c.status).color">{{ campaignStatus(c.status).label }}</span>
+            <span class="pz-badge" [class]="'badge-' + campaignStatus(c.status).color">{{
+              campaignStatus(c.status).label
+            }}</span>
             <span class="c-type">
               <mat-icon>{{ campaignType(c.type).icon }}</mat-icon> {{ campaignType(c.type).label }}
             </span>
@@ -46,15 +84,23 @@
           }
           <div class="c-actions">
             @if (c.status === 'draft' || c.status === 'scheduled') {
-              <button mat-raised-button class="pz-btn-volt small" (click)="send(c)"><mat-icon>send</mat-icon> Enviar</button>
+              <button mat-raised-button class="pz-btn-volt small" (click)="send(c)">
+                <mat-icon>send</mat-icon> Enviar
+              </button>
             }
             @if (c.status === 'scheduled') {
-              <button mat-stroked-button class="pz-btn-ghost small" (click)="cancel(c)"><mat-icon>close</mat-icon> Cancelar</button>
+              <button mat-stroked-button class="pz-btn-ghost small" (click)="cancel(c)">
+                <mat-icon>close</mat-icon> Cancelar
+              </button>
             }
             @if (c.status === 'draft') {
-              <button mat-stroked-button class="pz-btn-ghost small" (click)="openCampaign(c)"><mat-icon>edit</mat-icon> Editar</button>
+              <button mat-stroked-button class="pz-btn-ghost small" (click)="openCampaign(c)">
+                <mat-icon>edit</mat-icon> Editar
+              </button>
             }
-            <button mat-icon-button class="danger" (click)="remove(c)"><mat-icon>delete</mat-icon></button>
+            <button mat-icon-button class="danger" (click)="remove(c)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
         </mat-card-content>
       </mat-card>
@@ -63,7 +109,8 @@
         <pz-empty
           icon="campaign"
           title="Sin campañas"
-          message="Creá tu primera campaña para comunicar novedades a tus socios." />
+          message="Creá tu primera campaña para comunicar novedades a tus socios."
+        />
       }
     }
   </div>
@@ -75,6 +122,7 @@
     [pageIndex]="page"
     [pageSizeOptions]="[10, 25]"
     (page)="onPage($event)"
-    showFirstLastButtons>
+    showFirstLastButtons
+  >
   </mat-paginator>
 </div>

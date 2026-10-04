@@ -1,6 +1,11 @@
 import { Component, Inject, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -17,7 +22,11 @@ import { ExercisesService } from '../../core/services/exercises.service';
 import { ToastService } from '../../core/services/toast.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Exercise } from '../../core/models/models';
-import { EXERCISE_CATEGORIES, exerciseCategoryLabel, exerciseCategoryIcon } from '../../shared/utils/labels';
+import {
+  EXERCISE_CATEGORIES,
+  exerciseCategoryLabel,
+  exerciseCategoryIcon,
+} from '../../shared/utils/labels';
 
 @Component({
   selector: 'app-exercises',
@@ -123,7 +132,12 @@ export class ExercisesComponent implements OnInit {
 
   remove(e: Exercise): void {
     const ref = this.dialog.open(ConfirmDialogComponent, {
-      data: { title: `Eliminar "${e.name}"`, message: '¿Querés eliminar este ejercicio?', okText: 'Eliminar', okClass: 'mat-danger' },
+      data: {
+        title: `Eliminar "${e.name}"`,
+        message: '¿Querés eliminar este ejercicio?',
+        okText: 'Eliminar',
+        okClass: 'mat-danger',
+      },
     });
     ref.afterClosed().subscribe((ok) => {
       if (!ok) return;
@@ -145,12 +159,29 @@ export class ExercisesComponent implements OnInit {
 @Component({
   selector: 'pz-exercise-dialog',
   standalone: true,
-  imports: [MatDialogModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatSliderModule, MatButtonModule],
+  imports: [
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatSliderModule,
+    MatButtonModule,
+  ],
   template: `
-    <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">{{ data ? 'Editar ejercicio' : 'Nuevo ejercicio' }}</h2>
-    <mat-dialog-content style="display:grid;gap:10px;padding:16px 24px;min-width:480px;max-height:72vh">
-      <mat-form-field appearance="outline"><mat-label>Nombre</mat-label><input matInput formControlName="name" /></mat-form-field>
-      <mat-form-field appearance="outline"><mat-label>Descripción</mat-label><textarea matInput formControlName="description" rows="2"></textarea></mat-form-field>
+    <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">
+      {{ data ? 'Editar ejercicio' : 'Nuevo ejercicio' }}
+    </h2>
+    <mat-dialog-content
+      style="display:grid;gap:10px;padding:16px 24px;min-width:480px;max-height:72vh"
+    >
+      <mat-form-field appearance="outline"
+        ><mat-label>Nombre</mat-label><input matInput formControlName="name"
+      /></mat-form-field>
+      <mat-form-field appearance="outline"
+        ><mat-label>Descripción</mat-label
+        ><textarea matInput formControlName="description" rows="2"></textarea>
+      </mat-form-field>
       <div class="row2">
         <mat-form-field appearance="outline">
           <mat-label>Categoría</mat-label>
@@ -160,27 +191,46 @@ export class ExercisesComponent implements OnInit {
             }
           </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Grupo muscular</mat-label><input matInput formControlName="muscleGroup" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Grupo muscular</mat-label><input matInput formControlName="muscleGroup"
+        /></mat-form-field>
       </div>
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Equipamiento</mat-label><input matInput formControlName="equipmentNeeded" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Dificultad (1-5)</mat-label><input matInput type="number" min="1" max="5" formControlName="difficulty" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Equipamiento</mat-label><input matInput formControlName="equipmentNeeded"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Dificultad (1-5)</mat-label
+          ><input matInput type="number" min="1" max="5" formControlName="difficulty"
+        /></mat-form-field>
       </div>
       <mat-form-field appearance="outline">
         <mat-label>Instrucciones (una por línea)</mat-label>
         <textarea matInput formControlName="instructionsText" rows="3"></textarea>
       </mat-form-field>
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>URL de video</mat-label><input matInput formControlName="videoUrl" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>URL de imagen</mat-label><input matInput formControlName="imageUrl" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>URL de video</mat-label><input matInput formControlName="videoUrl"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>URL de imagen</mat-label><input matInput formControlName="imageUrl"
+        /></mat-form-field>
       </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end" style="padding:8px 24px 20px">
       <button mat-button class="pz-btn-ghost" mat-dialog-close>Cancelar</button>
-      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">Guardar</button>
+      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">
+        Guardar
+      </button>
     </mat-dialog-actions>
   `,
-  styles: `.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}`,
+  styles: `
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+  `,
 })
 export class ExerciseDialog {
   readonly form = new FormBuilder().nonNullable.group({
@@ -222,7 +272,10 @@ export class ExerciseDialog {
       muscleGroup: v.muscleGroup,
       equipmentNeeded: v.equipmentNeeded || undefined,
       difficulty: v.difficulty ? Number(v.difficulty) : undefined,
-      instructions: v.instructionsText.split('\n').map((s) => s.trim()).filter(Boolean),
+      instructions: v.instructionsText
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean),
       videoUrl: v.videoUrl || undefined,
       imageUrl: v.imageUrl || undefined,
     });

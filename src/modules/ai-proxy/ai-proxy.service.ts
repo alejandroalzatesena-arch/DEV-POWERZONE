@@ -69,7 +69,11 @@ export class AiProxyService {
   /**
    * Chatbot del asistente del gimnasio. Fallback local si la IA está caída.
    */
-  async chat(sessionId: string, message: string, context?: Record<string, any>): Promise<{ reply: string }> {
+  async chat(
+    sessionId: string,
+    message: string,
+    context?: Record<string, any>,
+  ): Promise<{ reply: string }> {
     try {
       return await this.post<{ reply: string }>('/chat', {
         session_id: sessionId,
@@ -104,17 +108,24 @@ export class AiProxyService {
 
   async recommendWorkout(userId: string, context?: Record<string, any>): Promise<any> {
     try {
-      return await this.post('/recommendations/workout', { user_id: userId, context: context || {} });
+      return await this.post('/recommendations/workout', {
+        user_id: userId,
+        context: context || {},
+      });
     } catch {
       return {
-        recommendation: 'Te sugerimos una sesión equilibrada: 10 min de calentamiento, 40 min de fuerza y 10 min de cardio. (fallback local)',
+        recommendation:
+          'Te sugerimos una sesión equilibrada: 10 min de calentamiento, 40 min de fuerza y 10 min de cardio. (fallback local)',
       };
     }
   }
 
   async recommendNutrition(userId: string, context?: Record<string, any>): Promise<any> {
     try {
-      return await this.post('/recommendations/nutrition', { user_id: userId, context: context || {} });
+      return await this.post('/recommendations/nutrition', {
+        user_id: userId,
+        context: context || {},
+      });
     } catch {
       return {
         recommendation:

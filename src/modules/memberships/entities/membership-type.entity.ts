@@ -35,7 +35,10 @@ export class MembershipType extends TenantBaseEntity {
   @Column({ length: 3, default: 'usd' })
   currency: string;
 
-  @ApiPropertyOptional({ description: 'Características incluidas', example: ['Sauna', 'Piscina', '1 clase grupal/semana'] })
+  @ApiPropertyOptional({
+    description: 'Características incluidas',
+    example: ['Sauna', 'Piscina', '1 clase grupal/semana'],
+  })
   @Column({ type: 'jsonb', nullable: true })
   features: string[];
 
@@ -51,6 +54,6 @@ export class MembershipType extends TenantBaseEntity {
   @Column({ name: 'sort_order', type: 'int', default: 0 })
   sortOrder: number;
 
-  @OneToMany(() => UserMembership, um => um.membershipType)
+  @OneToMany(() => UserMembership, (um) => um.membershipType)
   userMemberships: UserMembership[];
 }

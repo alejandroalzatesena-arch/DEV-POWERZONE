@@ -3,34 +3,55 @@
     <pz-page-header
       eyebrow="Entrenamiento"
       [title]="r.title"
-      [subtitle]="r.description || 'Rutina de entrenamiento'">
-      <button mat-stroked-button class="pz-btn-ghost" (click)="routerBack()"><mat-icon>arrow_back</mat-icon> Volver</button>
+      [subtitle]="r.description || 'Rutina de entrenamiento'"
+    >
+      <button mat-stroked-button class="pz-btn-ghost" (click)="routerBack()">
+        <mat-icon>arrow_back</mat-icon> Volver
+      </button>
       @if (canEdit()) {
-        <button mat-stroked-button class="pz-btn-ghost" (click)="assign()"><mat-icon>person_add</mat-icon> Asignar</button>
-        <button mat-stroked-button class="pz-btn-ghost" (click)="edit()"><mat-icon>edit</mat-icon> Editar</button>
+        <button mat-stroked-button class="pz-btn-ghost" (click)="assign()">
+          <mat-icon>person_add</mat-icon> Asignar
+        </button>
+        <button mat-stroked-button class="pz-btn-ghost" (click)="edit()">
+          <mat-icon>edit</mat-icon> Editar
+        </button>
         @if (r.status !== 'active') {
-          <button mat-raised-button class="pz-btn-volt" (click)="setStatus('active')"><mat-icon>play_arrow</mat-icon> Activar</button>
+          <button mat-raised-button class="pz-btn-volt" (click)="setStatus('active')">
+            <mat-icon>play_arrow</mat-icon> Activar
+          </button>
         } @else {
-          <button mat-stroked-button class="pz-btn-ghost" (click)="setStatus('archived')"><mat-icon>archive</mat-icon> Archivar</button>
+          <button mat-stroked-button class="pz-btn-ghost" (click)="setStatus('archived')">
+            <mat-icon>archive</mat-icon> Archivar
+          </button>
         }
-        <button mat-icon-button class="danger" (click)="remove()"><mat-icon>delete</mat-icon></button>
+        <button mat-icon-button class="danger" (click)="remove()">
+          <mat-icon>delete</mat-icon>
+        </button>
       }
     </pz-page-header>
 
     <div class="meta-bar">
       <div class="meta"><mat-icon>track_changes</mat-icon> {{ objectiveLabel(r.objective) }}</div>
-      <div class="meta"><mat-icon>local_fire_department</mat-icon> Dificultad {{ r.difficulty ?? '—' }}/5</div>
+      <div class="meta">
+        <mat-icon>local_fire_department</mat-icon> Dificultad {{ r.difficulty ?? '—' }}/5
+      </div>
       <div class="meta"><mat-icon>calendar_month</mat-icon> {{ r.daysPerWeek }} días/semana</div>
-      <div class="meta"><mat-icon>hourglass_top</mat-icon> {{ r.durationWeeks ?? '—' }} semanas</div>
+      <div class="meta">
+        <mat-icon>hourglass_top</mat-icon> {{ r.durationWeeks ?? '—' }} semanas
+      </div>
       <span class="pz-spacer"></span>
       @if (r.status) {
-        <span class="pz-badge" [class]="'badge-' + routineStatus(r.status).color">{{ routineStatus(r.status).label }}</span>
+        <span class="pz-badge" [class]="'badge-' + routineStatus(r.status).color">{{
+          routineStatus(r.status).label
+        }}</span>
       }
       @if (r.isTemplate) {
         <span class="pz-badge badge-info">Plantilla</span>
       }
       @if (r.assignee) {
-        <span class="pz-badge badge-orange"><mat-icon>person</mat-icon> {{ r.assignee.fullName }}</span>
+        <span class="pz-badge badge-orange"
+          ><mat-icon>person</mat-icon> {{ r.assignee.fullName }}</span
+        >
       }
     </div>
 
@@ -51,13 +72,21 @@
                   <div class="ex-name">{{ exerciseName(ex.exerciseId) }}</div>
                   <div class="ex-meta">{{ exerciseMeta(ex.exerciseId) }}</div>
                   <div class="ex-params">
-                    <span class="param"><strong>{{ ex.sets }}</strong> series</span>
-                    <span class="param"><strong>{{ ex.reps }}</strong> reps</span>
+                    <span class="param"
+                      ><strong>{{ ex.sets }}</strong> series</span
+                    >
+                    <span class="param"
+                      ><strong>{{ ex.reps }}</strong> reps</span
+                    >
                     @if (ex.restSeconds) {
-                      <span class="param"><strong>{{ ex.restSeconds }}</strong> s desc</span>
+                      <span class="param"
+                        ><strong>{{ ex.restSeconds }}</strong> s desc</span
+                      >
                     }
                     @if (ex.weight != null) {
-                      <span class="param"><strong>{{ ex.weight }}</strong> kg</span>
+                      <span class="param"
+                        ><strong>{{ ex.weight }}</strong> kg</span
+                      >
                     }
                   </div>
                   @if (ex.notes) {
@@ -71,8 +100,12 @@
           </mat-card-content>
         </mat-card>
       } @empty {
-        <div style="grid-column:1/-1">
-          <pz-empty icon="fitness_center" title="Sin ejercicios" message="Esta rutina todavía no tiene ejercicios cargados." />
+        <div style="grid-column: 1/-1">
+          <pz-empty
+            icon="fitness_center"
+            title="Sin ejercicios"
+            message="Esta rutina todavía no tiene ejercicios cargados."
+          />
         </div>
       }
     </div>

@@ -8,9 +8,7 @@ import { CreateGymDto, UpdateGymDto } from './dto/gym.dto';
 
 @Injectable()
 export class GymsService {
-  constructor(
-    @InjectRepository(Gym) private readonly gymsRepo: Repository<Gym>,
-  ) {}
+  constructor(@InjectRepository(Gym) private readonly gymsRepo: Repository<Gym>) {}
 
   slugify(name: string): string {
     return name

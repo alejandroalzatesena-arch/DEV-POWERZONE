@@ -23,7 +23,7 @@ export class ClassBooking extends TenantBaseEntity {
   @Column({ name: 'class_id', type: 'uuid' })
   classId: string;
 
-  @ManyToOne(() => GymClass, gymClass => gymClass.bookings, { onDelete: 'CASCADE' })
+  @ManyToOne(() => GymClass, (gymClass) => gymClass.bookings, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'class_id' })
   gymClass: GymClass;
 

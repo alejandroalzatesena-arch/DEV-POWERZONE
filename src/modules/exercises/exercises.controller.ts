@@ -49,7 +49,10 @@ export class ExercisesController {
   @Roles(UserRole.ADMIN, UserRole.TRAINER)
   @ApiOperation({ summary: 'Actualizar ejercicio (admin/entrenador)' })
   @ApiResponse({ status: 200, description: 'Ejercicio actualizado', type: Exercise })
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateExerciseDto): Promise<Exercise> {
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateExerciseDto,
+  ): Promise<Exercise> {
     return this.exercisesService.update(id, dto);
   }
 
