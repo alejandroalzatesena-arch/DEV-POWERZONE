@@ -104,6 +104,10 @@
         <button mat-menu-item (click)="navigate('/notifications')">
           <mat-icon>notifications</mat-icon> Notificaciones
         </button>
+        <button mat-menu-item (click)="theme.toggle()">
+          <mat-icon>{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+          {{ theme.isDark() ? 'Tema claro' : 'Tema oscuro' }}
+        </button>
         <button mat-menu-item class="logout" (click)="logout()">
           <mat-icon>logout</mat-icon>
           Cerrar sesión

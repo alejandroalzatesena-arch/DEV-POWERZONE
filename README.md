@@ -19,9 +19,12 @@ Sistema de gestión integral para gimnasios **"Power Zone"**. Backend desarrolla
 - **Nutrición**: catálogo de alimentos y registro/diario de macros.
 - **Notificaciones**: envío y consulta en tiempo real por WebSocket.
 - **Marketing**: campañas segmentadas con programación de envío y cancelación.
-- **Reportes**: financieros, operativos, membresías, asistencia y progreso.
-- **IA**: proxy seguro hacia un servicio de IA (FastAPI) con fallback local.
-- **Seguridad**: helmet, CORS, rate limiting (Throttler), DTOs de validación y filtro global de excepciones.
+- **Reportes**: financieros, operativos, membresías, asistencia y progreso, con **exportación a CSV** y estado de carga con skeletons.
+- **Check-in QR**: los clientes obtienen un QR propio en Asistencia y el personal puede registrar ingresos escaneando/pegando ese código.
+- **Tema claro/oscuro**: toggle desde el menú de usuario del frontend (persistido en localStorage y con fallback a `prefers-color-scheme`).
+- **IA**: proxy seguro hacia un servicio de IA (FastAPI) con fallback local, y contexto enriquecido (membresía, rutinas, asistencia y nutrición del usuario).
+- **Seguridad**: helmet, CORS, rate limiting (Throttler), DTOs de validación, filtro global de excepciones y **bloqueo automático por intentos fallidos de login** (5 intentos / 15 min).
+- **Jobs programados** (`@nestjs/schedule`): expiración automática de membresías vencidas (02:00) y envío de campañas de marketing programadas (cada 5 min).
 - **Documentación Swagger** automática.
 
 ---

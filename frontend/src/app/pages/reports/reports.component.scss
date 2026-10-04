@@ -6,6 +6,20 @@
   padding: 20px 0;
 }
 
+.pz-tree-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 2px;
+
+  .pz-skeleton:nth-child(2) {
+    margin-left: 18px;
+  }
+  .pz-skeleton:nth-child(3) {
+    margin-left: 36px;
+  }
+}
+
 .filters {
   display: flex;
   gap: 12px;
