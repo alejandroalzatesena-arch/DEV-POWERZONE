@@ -106,6 +106,7 @@ export class ReportsComponent implements OnInit {
   readonly progress = signal<Node[]>([]);
 
   readonly loading = signal(true);
+  private pending = 0;
 
   ngOnInit(): void {
     this.usersService.list({ role: 'client', limit: 500 }).subscribe({
@@ -117,6 +118,11 @@ export class ReportsComponent implements OnInit {
     this.loadOperational();
     this.loadMemberships();
     this.loadAttendance();
+  }
+
+  private done(): void {
+    this.pending -= 1;
+    if (this.pending <= 0) this.loading.set(false);
   }
 
   private buildNodes(data: Record<string, unknown>, rootKey = ''): Node[] {
@@ -173,41 +179,103 @@ export class ReportsComponent implements OnInit {
 
   loadFinancial(): void {
     const f = this.financialForm.getRawValue();
+    this.pending += 1;
+    this.loading.set(true);
     this.reports.financial(f.from || undefined, f.to || undefined).subscribe({
-      next: (r) => this.financial.set(this.buildNodes(r)),
-      error: () => this.financial.set([]),
+      next: (r) => {
+        this.financial.set(this.buildNodes(r));
+        this.done();
+      },
+      error: () => {
+        this.financial.set([]);
+        this.done();
+      },
     });
   }
 
   loadOperational(): void {
+    this.pending += 1;
+    this.loading.set(true);
     this.reports.operational().subscribe({
-      next: (r) => this.operational.set(this.buildNodes(r)),
-      error: () => this.operational.set([]),
+      next: (r) => {
+        this.operational.set(this.buildNodes(r));
+        this.done();
+      },
+      error: () => {
+        this.operational.set([]);
+        this.done();
+      },
     });
   }
 
   loadMemberships(): void {
+    this.pending += 1;
+    this.loading.set(true);
     this.reports.memberships().subscribe({
-      next: (r) => this.memberships.set(this.buildNodes(r)),
-      error: () => this.memberships.set([]),
+      next: (r) => {
+        this.memberships.set(this.buildNodes(r));
+        this.done();
+      },
+      error: () => {
+        this.memberships.set([]);
+        this.done();
+      },
     });
   }
 
   loadAttendance(): void {
     const f = this.attendanceForm.getRawValue();
+    this.pending += 1;
+    this.loading.set(true);
     this.reports.attendance(f.from || undefined, f.to || undefined).subscribe({
-      next: (r) => this.attendance.set(this.buildNodes(r)),
-      error: () => this.attendance.set([]),
+      next: (r) => {
+        this.attendance.set(this.buildNodes(r));
+        this.done();
+      },
+      error: () => {
+        this.attendance.set([]);
+        this.done();
+      },
     });
   }
 
   loadProgress(): void {
     const userId = this.progressForm.controls.userId.value;
     if (!userId) return;
+    this.pending += 1;
+    this.loading.set(true);
     this.reports.progress(userId).subscribe({
-      next: (r) => this.progress.set(this.buildNodes(r)),
-      error: () => this.progress.set([]),
+      next: (r) => {
+        this.progress.set(this.buildNodes(r));
+        this.done();
+      },
+      error: () => {
+        this.progress.set([]);
+        this.done();
+      },
     });
+  }
+
+  protected exportCsv(rows: Node[], filename: string): void {
+    const lines: string[][] = [];
+    const walk = (nodes: Node[], prefix: string): void => {
+      for (const n of nodes) {
+        if (n.children?.length) {
+          walk(n.children, prefix ? `${prefix} / ${n.label}` : n.label);
+        } else {
+          lines.push([prefix, n.label, n.value?.split(' ')[0] ?? '']);
+        }
+      }
+    };
+    walk(rows, '');
+    const esc = (v: string): string => (/[";\n\r]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
+    const csv = '\uFEFF' + lines.map((r) => r.map(esc).join(';')).join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${filename}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
   }
 
   protected readonly initials = initials;

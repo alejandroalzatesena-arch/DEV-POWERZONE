@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsEnum,
@@ -71,6 +72,7 @@ export class SendMessageDto {
 export class QueryNotificationsDto extends PaginationDto {
   @ApiPropertyOptional({ description: 'Solo no leídas' })
   @IsOptional()
+  @Transform(({ value }) => value === true || value === 'true')
   @IsBoolean()
   unreadOnly?: boolean;
 

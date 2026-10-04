@@ -28,6 +28,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { MarketingModule } from './modules/marketing/marketing.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { AiProxyModule } from './modules/ai-proxy/ai-proxy.module';
+import { SchedulerModule } from './scheduler/scheduler.module';
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { AiProxyModule } from './modules/ai-proxy/ai-proxy.module';
     MarketingModule,
     ReportsModule,
     AiProxyModule,
+    SchedulerModule,
   ],
   controllers: [AppController],
   providers: [

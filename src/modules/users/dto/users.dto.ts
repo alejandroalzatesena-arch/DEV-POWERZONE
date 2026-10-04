@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -208,6 +209,7 @@ export class QueryUsersDto extends PaginationDto {
 
   @ApiPropertyOptional({ description: 'Filtrar por estado activo' })
   @IsOptional()
+  @Transform(({ value }) => value === true || value === 'true')
   @IsBoolean()
   isActive?: boolean;
 }

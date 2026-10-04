@@ -24,6 +24,26 @@ $pz-theme: mat.define-theme(
   )
 );
 
+$pz-theme-light: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$chartreuse-palette,
+      tertiary: mat.$orange-palette,
+    ),
+    typography: (
+      plain-family: 'Inter',
+      brand-family: 'Oswald',
+      bold-weight: 700,
+      medium-weight: 500,
+      regular-weight: 400,
+    ),
+    density: (
+      scale: -1,
+    ),
+  )
+);
+
 html {
   height: 100%;
   @include mat.all-component-themes($pz-theme);
@@ -56,6 +76,30 @@ html {
   --pz-dur-fast: 120ms;
   --pz-dur: 250ms;
   --pz-focus: 2px solid var(--pz-volt);
+  --pz-scheme: dark;
+}
+
+// ---------- Tema claro ----------
+html[data-theme='light'] {
+  @include mat.all-component-themes($pz-theme-light);
+  @include mat.system-level-colors($pz-theme-light);
+
+  --pz-bg: #f2f4f7;
+  --pz-surface: #ffffff;
+  --pz-surface-2: #eceff4;
+  --pz-surface-3: #dfe4ec;
+  --pz-border: #cdd6e0;
+  --pz-volt-dark: #86b500;
+  --pz-volt-glow: rgba(134, 181, 0, 0.25);
+  --pz-white: #151a21;
+  --pz-muted: #5c6675;
+  --pz-muted-2: #8a93a1;
+  --pz-danger: #d33040;
+  --pz-info: #0f83b8;
+  --pz-success: #1a9b5a;
+  --pz-warn: #d97e06;
+  --pz-shadow: 0 10px 30px rgba(23, 32, 48, 0.12);
+  --pz-scheme: light;
 }
 
 // ---------- Accesibilidad: foco visible en teclado ----------
@@ -79,7 +123,7 @@ body {
 
 body {
   margin: 0;
-  color-scheme: dark;
+  color-scheme: var(--pz-scheme);
   background-color: var(--pz-bg);
   color: var(--pz-white);
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
@@ -397,6 +441,37 @@ a {
 
 .mat-mdc-select-panel {
   background: var(--pz-surface-2) !important;
+}
+
+// ---------- Skeletons (carga) ----------
+.pz-skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--pz-surface-2);
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(200, 255, 61, 0.07), transparent);
+    animation: pzShimmer 1.4s var(--pz-ease) infinite;
+  }
+}
+.pz-skeleton-text {
+  height: 14px;
+}
+.pz-skeleton-title {
+  height: 22px;
+}
+.pz-skeleton-circle {
+  border-radius: 50%;
+}
+
+@keyframes pzShimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 // ---------- Animación de entrada ----------

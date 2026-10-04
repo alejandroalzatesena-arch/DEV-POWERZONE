@@ -27,10 +27,15 @@ export class ReportsService {
     @InjectRepository(UserProfile) private readonly profilesRepo: Repository<UserProfile>,
   ) {}
 
-  private assertGymAccess(actor: JwtPayload): string {
+  private async assertGymAccess(actor: JwtPayload): Promise<string> {
     if (actor.isSuperAdmin) {
-      // Revisar el gym indicado vía actor.gymId; si super admin sin gym, usar el primero.
-      throw new ForbiddenException('Para reportes debes indicar un gimnasio (multi-tenancy).');
+      if (actor.gymId) return actor.gymId;
+      const gym = await this.gymsRepo.findOne({
+        where: { isActive: true },
+        order: { createdAt: 'ASC' },
+      });
+      if (gym) return gym.id;
+      throw new ForbiddenException('No hay gimnasios activos para reportes.');
     }
     if (!actor.gymId) throw new ForbiddenException('No perteneces a un gimnasio.');
     return actor.gymId;
@@ -48,7 +53,7 @@ export class ReportsService {
   // Reporte financiero
   // ------------------------------------------------------------------
   async financial(query: ReportQueryDto, actor: JwtPayload): Promise<Record<string, any>> {
-    const gymId = this.assertGymAccess(actor);
+    const gymId = await this.assertGymAccess(actor);
     const { from, to } = this.dateRange(query);
 
     const payments = await this.paymentsRepo.find({
@@ -86,7 +91,7 @@ export class ReportsService {
   // Reporte operativo
   // ------------------------------------------------------------------
   async operational(actor: JwtPayload): Promise<Record<string, any>> {
-    const gymId = this.assertGymAccess(actor);
+    const gymId = await this.assertGymAccess(actor);
     const today = new Date();
     const todayStart = new Date(today);
     todayStart.setHours(0, 0, 0, 0);
@@ -130,7 +135,7 @@ export class ReportsService {
   // Reporte de membresías
   // ------------------------------------------------------------------
   async memberships(actor: JwtPayload): Promise<Record<string, any>> {
-    const gymId = this.assertGymAccess(actor);
+    const gymId = await this.assertGymAccess(actor);
 
     const types = await this.typesRepo.find({ where: { gymId } });
     const byType: Record<string, { total: number; active: number }> = {};
@@ -178,7 +183,7 @@ export class ReportsService {
   // Reporte de asistencia
   // ------------------------------------------------------------------
   async attendance(query: ReportQueryDto, actor: JwtPayload): Promise<Record<string, any>> {
-    const gymId = this.assertGymAccess(actor);
+    const gymId = await this.assertGymAccess(actor);
     const { from, to } = this.dateRange(query);
 
     const rows = await this.attendanceRepo
@@ -212,7 +217,7 @@ export class ReportsService {
   // Progreso de un cliente
   // ------------------------------------------------------------------
   async progress(userId: string, actor: JwtPayload): Promise<Record<string, any>> {
-    const gymId = this.assertGymAccess(actor);
+    const gymId = await this.assertGymAccess(actor);
     const user = await this.usersRepo.findOne({ where: { id: userId } });
     if (!user) throw new ForbiddenException('Usuario no encontrado.');
     if (!actor.isSuperAdmin && user.gymId !== gymId) {
