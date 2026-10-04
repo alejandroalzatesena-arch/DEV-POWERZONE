@@ -26,7 +26,7 @@ async function bootstrap(): Promise<void> {
 
   app.use(helmet());
   app.enableCors({
-    origin: corsOrigins.length > 0 ? corsOrigins : true,
+    origin: corsOrigins.length > 0 ? corsOrigins : false,
     credentials: true,
   });
 
