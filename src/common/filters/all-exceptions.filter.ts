@@ -22,6 +22,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
+    const isProduction = process.env.NODE_ENV === 'production';
 
     let status: number;
     let message: string | string[] = 'Error interno del servidor';
@@ -39,20 +40,22 @@ export class AllExceptionsFilter implements ExceptionFilter {
       }
     } else if (exception instanceof Error) {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
-      message = exception.message;
-      error = exception.name;
+      message = isProduction ? 'Error interno del servidor' : exception.message;
+      error = isProduction ? undefined : exception.name;
       this.logger.error(exception.message, exception.stack);
     } else {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
-    response.status(status).json({
-      statusCode: status,
-      error,
-      message,
-      path: request.url,
-      method: request.method,
-      timestamp: new Date().toISOString(),
-    });
+    const body: Record<string, unknown> = { statusCode: status };
+    if (message !== undefined) body.message = message;
+    if (!isProduction) {
+      if (error !== undefined) body.error = error;
+      body.path = request.url;
+      body.method = request.method;
+      body.timestamp = new Date().toISOString();
+    }
+
+    response.status(status).json(body);
   }
 }

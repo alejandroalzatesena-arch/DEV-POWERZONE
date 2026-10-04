@@ -1,4 +1,5 @@
 import { registerAs, ConfigFactory } from '@nestjs/config';
+import { parseCorsOrigins } from '../common/config/cors';
 
 export interface AppConfig {
   env: string;
@@ -48,16 +49,19 @@ export interface ThrottleConfig {
   limit: number;
 }
 
-export const appConfig = registerAs('app', (): AppConfig => ({
-  env: process.env.NODE_ENV || 'development',
-  port: parseInt(process.env.PORT || '3000', 10),
-  apiPrefix: process.env.API_PREFIX || 'api',
-  name: process.env.APP_NAME || 'Power Zone API',
-  corsOrigins: (process.env.CORS_ORIGINS || 'http://localhost:3001')
-    .split(',')
-    .map((o) => o.trim()),
-  bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS || '10', 10),
-}));
+export const appConfig = registerAs('app', (): AppConfig => {
+  if (process.env.NODE_ENV === 'production' && !process.env.CORS_ORIGINS) {
+    throw new Error('CORS_ORIGINS es obligatorio en producción');
+  }
+  return {
+    env: process.env.NODE_ENV || 'development',
+    port: parseInt(process.env.PORT || '3000', 10),
+    apiPrefix: process.env.API_PREFIX || 'api',
+    name: process.env.APP_NAME || 'Power Zone API',
+    corsOrigins: parseCorsOrigins(process.env.CORS_ORIGINS),
+    bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS || '10', 10),
+  };
+});
 
 export const databaseConfig = registerAs('database', (): DatabaseConfig => ({
   host: process.env.DB_HOST || 'localhost',
@@ -97,10 +101,15 @@ export const paymentsConfig = registerAs('payments', (): PaymentConfig => ({
   currency: process.env.STRIPE_CURRENCY || 'usd',
 }));
 
-export const aiConfig = registerAs('ai', (): AiConfig => ({
-  url: process.env.AI_SERVICE_URL || 'http://localhost:8000',
-  apiKey: process.env.AI_SERVICE_API_KEY || 'internal-ai-key',
-}));
+export const aiConfig = registerAs('ai', (): AiConfig => {
+  if (process.env.NODE_ENV === 'production' && !process.env.AI_SERVICE_API_KEY) {
+    throw new Error('AI_SERVICE_API_KEY es obligatoria en producción');
+  }
+  return {
+    url: process.env.AI_SERVICE_URL || 'http://localhost:8000',
+    apiKey: process.env.AI_SERVICE_API_KEY || 'internal-ai-key',
+  };
+});
 
 export const throttleConfig = registerAs('throttle', (): ThrottleConfig => ({
   ttl: parseInt(process.env.THROTTLE_TTL || '60', 10),
