@@ -16,7 +16,12 @@ import { ToastService } from '../../core/services/toast.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SocketService } from '../../core/services/socket.service';
 import { AttendanceRecord, Occupancy, User } from '../../core/models/models';
-import { formatDateTime, attendanceType, attendanceMethodLabel, initials } from '../../shared/utils/labels';
+import {
+  formatDateTime,
+  attendanceType,
+  attendanceMethodLabel,
+  initials,
+} from '../../shared/utils/labels';
 
 @Component({
   selector: 'app-attendance',
@@ -73,7 +78,9 @@ export class AttendanceComponent implements OnInit {
 
   ngOnInit(): void {
     this.isStaff.set(this.auth.user()?.role !== 'client');
-    this.columns = this.isStaff() ? ['member', 'time', 'type', 'method'] : ['time', 'type', 'method'];
+    this.columns = this.isStaff()
+      ? ['member', 'time', 'type', 'method']
+      : ['time', 'type', 'method'];
 
     if (this.isStaff()) {
       this.usersService.list({ limit: 200 }).subscribe({
@@ -96,14 +103,18 @@ export class AttendanceComponent implements OnInit {
     this.attendance.occupancy(this.meGymId).subscribe({
       next: (o) => {
         this.occupancy.set(o);
-        this.occupancyPct.set(Math.min(100, Math.round((o.current / Math.max(1, o.maxCapacity)) * 100)));
+        this.occupancyPct.set(
+          Math.min(100, Math.round((o.current / Math.max(1, o.maxCapacity)) * 100)),
+        );
       },
       error: () => undefined,
     });
     this.socket.connectOccupancy(this.meGymId, (data) => {
       const d = data as Occupancy;
       this.occupancy.set(d);
-      this.occupancyPct.set(Math.min(100, Math.round((d.current / Math.max(1, d.maxCapacity)) * 100)));
+      this.occupancyPct.set(
+        Math.min(100, Math.round((d.current / Math.max(1, d.maxCapacity)) * 100)),
+      );
     });
   }
 

@@ -101,8 +101,24 @@ export function validateEnv(config: Record<string, unknown>): EnvironmentVariabl
   });
 
   if (errors.length > 0) {
-    const details = errors.map(e => Object.values(e.constraints || {}).join('; ')).join('\n');
+    const details = errors.map((e) => Object.values(e.constraints || {}).join('; ')).join('\n');
     throw new Error(`Error de validación de variables de entorno:\n${details}`);
+  }
+
+  if (validated.NODE_ENV === 'production') {
+    if (
+      validated.JWT_ACCESS_SECRET === 'cambia-este-secreto-access' ||
+      validated.JWT_REFRESH_SECRET === 'cambia-este-secreto-refresh'
+    ) {
+      throw new Error(
+        'Error de validación de variables de entorno:\nCambia JWT_ACCESS_SECRET y JWT_REFRESH_SECRET antes de ejecutar en producción.',
+      );
+    }
+    if (validated.DB_SYNCHRONIZE === 'true') {
+      throw new Error(
+        'Error de validación de variables de entorno:\nDB_SYNCHRONIZE debe estar en false en producción; usa migraciones para el esquema.',
+      );
+    }
   }
 
   return validated;

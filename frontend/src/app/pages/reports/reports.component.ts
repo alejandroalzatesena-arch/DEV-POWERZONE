@@ -128,13 +128,19 @@ export class ReportsComponent implements OnInit {
         const children = (v as unknown[]).map((item, i) => {
           if (item !== null && typeof item === 'object') {
             const built = this.buildNodes(item as Record<string, unknown>);
-            return built.length ? { ...built[0], key: `${k}[${i}]` } : { key: `${k}[${i}]`, label: `#${i + 1}`, value: String(item) };
+            return built.length
+              ? { ...built[0], key: `${k}[${i}]` }
+              : { key: `${k}[${i}]`, label: `#${i + 1}`, value: String(item) };
           }
           return this.leaf(`${k}[${i}]`, `#${i + 1}`, item);
         });
         out.push({ key: k, label, children });
       } else if (typeof v === 'object') {
-        out.push({ key: k, label, children: this.buildNodes(v as Record<string, unknown>, rootKey) });
+        out.push({
+          key: k,
+          label,
+          children: this.buildNodes(v as Record<string, unknown>, rootKey),
+        });
       } else {
         out.push(this.leaf(k, label, v));
       }
@@ -146,14 +152,22 @@ export class ReportsComponent implements OnInit {
     const s = String(v);
     let value = s;
     if (typeof v === 'number') {
-      if (/[Rr]evenue|[Ii]ncome|[Pp]rofit|[Cc]ost|[Pp]rice|[Tt]icket|[Ee]xpense|[Mm]oney|[Bb]alance|amount/i.test(k)) {
+      if (
+        /[Rr]evenue|[Ii]ncome|[Pp]rofit|[Cc]ost|[Pp]rice|[Tt]icket|[Ee]xpense|[Mm]oney|[Bb]alance|amount/i.test(
+          k,
+        )
+      ) {
         value = formatMoney(v);
       } else {
         value = new Intl.NumberFormat('es-AR').format(v);
       }
     }
     const badge: Node['badge'] | undefined =
-      typeof v === 'number' && (k === 'netProfit' || k === 'totalRevenue' || k === 'active') && v > 0 ? 'success' : undefined;
+      typeof v === 'number' &&
+      (k === 'netProfit' || k === 'totalRevenue' || k === 'active') &&
+      v > 0
+        ? 'success'
+        : undefined;
     return { key: k, label, value, badge };
   }
 

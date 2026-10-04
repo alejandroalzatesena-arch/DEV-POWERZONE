@@ -62,10 +62,10 @@ export class Routine extends TenantBaseEntity {
   @Column({ name: 'created_by_id', type: 'uuid' })
   createdById: string;
 
-  @ManyToOne(() => User, user => user.routinesCreated, { onDelete: 'RESTRICT' })
+  @ManyToOne(() => User, (user) => user.routinesCreated, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'created_by_id' })
   createdBy: User;
 
-  @OneToMany(() => RoutineExercise, re => re.routine, { cascade: true })
+  @OneToMany(() => RoutineExercise, (re) => re.routine, { cascade: true })
   exercises: RoutineExercise[];
 }

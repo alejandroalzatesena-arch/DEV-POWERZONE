@@ -46,7 +46,10 @@ export class User extends BaseEntity {
   @Column({ length: 500, nullable: true })
   avatarUrl: string;
 
-  @ApiProperty({ description: 'Si el usuario puede operar globalmente (super admin)', default: false })
+  @ApiProperty({
+    description: 'Si el usuario puede operar globalmente (super admin)',
+    default: false,
+  })
   @Column({ default: false })
   isSuperAdmin: boolean;
 
@@ -58,7 +61,9 @@ export class User extends BaseEntity {
   @Column({ type: 'timestamptz', nullable: true })
   lastLoginAt: Date;
 
-  @ApiPropertyOptional({ description: 'ID del gimnasio al que pertenece (null => global/super admin)' })
+  @ApiPropertyOptional({
+    description: 'ID del gimnasio al que pertenece (null => global/super admin)',
+  })
   @Column({ name: 'gym_id', type: 'uuid', nullable: true })
   gymId: string | null;
 
@@ -66,13 +71,13 @@ export class User extends BaseEntity {
   @JoinColumn({ name: 'gym_id' })
   gym?: Gym;
 
-  @OneToMany(() => RefreshToken, token => token.user)
+  @OneToMany(() => RefreshToken, (token) => token.user)
   refreshTokens: RefreshToken[];
 
-  @OneToMany(() => Routine, routine => routine.createdBy)
+  @OneToMany(() => Routine, (routine) => routine.createdBy)
   routinesCreated: Routine[];
 
-  @OneToOne(() => UserProfile, profile => profile.user)
+  @OneToOne(() => UserProfile, (profile) => profile.user)
   profile: UserProfile;
 
   @ApiPropertyOptional({ description: 'Nombre completo calculado' })

@@ -43,12 +43,13 @@ export class InventoryService {
     return this.itemsRepo.save(item);
   }
 
-  async findAll(query: QueryInventoryDto, actor: JwtPayload): Promise<PaginatedResult<InventoryItem>> {
+  async findAll(
+    query: QueryInventoryDto,
+    actor: JwtPayload,
+  ): Promise<PaginatedResult<InventoryItem>> {
     const { page, limit, sortBy, sortOrder, category, status, search } = query;
 
-    const qb = this.itemsRepo
-      .createQueryBuilder('i')
-      .leftJoinAndSelect('i.maintenances', 'm');
+    const qb = this.itemsRepo.createQueryBuilder('i').leftJoinAndSelect('i.maintenances', 'm');
 
     if (!actor.isSuperAdmin) {
       qb.andWhere('i.gym_id = :gymId', { gymId: actor.gymId });
@@ -87,7 +88,11 @@ export class InventoryService {
   // ------------------------------------------------------------------
   // Mantenimiento
   // ------------------------------------------------------------------
-  async createMaintenance(itemId: string, dto: CreateMaintenanceDto, actor: JwtPayload): Promise<InventoryMaintenance> {
+  async createMaintenance(
+    itemId: string,
+    dto: CreateMaintenanceDto,
+    actor: JwtPayload,
+  ): Promise<InventoryMaintenance> {
     const item = await this.findById(itemId, actor);
 
     const maintenance = this.maintenanceRepo.create({

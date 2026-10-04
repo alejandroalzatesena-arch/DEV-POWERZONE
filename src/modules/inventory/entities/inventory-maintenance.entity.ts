@@ -11,7 +11,7 @@ export class InventoryMaintenance extends BaseEntity {
   @Column({ name: 'item_id', type: 'uuid' })
   itemId: string;
 
-  @ManyToOne(() => InventoryItem, item => item.maintenances, { onDelete: 'CASCADE' })
+  @ManyToOne(() => InventoryItem, (item) => item.maintenances, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'item_id' })
   item: InventoryItem;
 

@@ -2,7 +2,8 @@
   <pz-page-header
     eyebrow="Recursos"
     title="Inventario"
-    subtitle="Equipamiento, pesas y accesorios del gimnasio con su estado.">
+    subtitle="Equipamiento, pesas y accesorios del gimnasio con su estado."
+  >
     <button mat-raised-button class="pz-btn-volt" (click)="openItem()">
       <mat-icon>add</mat-icon> Nuevo ítem
     </button>
@@ -11,7 +12,12 @@
   <div class="stats">
     <pz-stat-card icon="inventory_2" label="Ítems totales" [value]="total()" theme="volt" />
     <pz-stat-card icon="inventory" label="Stock bajo" [value]="lowStockCount()" theme="orange" />
-    <pz-stat-card icon="build" label="En mantenimiento" [value]="maintenanceCount()" theme="danger" />
+    <pz-stat-card
+      icon="build"
+      label="En mantenimiento"
+      [value]="maintenanceCount()"
+      theme="danger"
+    />
   </div>
 
   <mat-card class="table-card">
@@ -19,7 +25,13 @@
       <div class="filters">
         <mat-form-field appearance="outline">
           <mat-label>Buscar</mat-label>
-          <input matInput [value]="search()" (input)="search.set($any($event.target).value)" (keyup.enter)="applyFilter()" placeholder="mancuernas, cinta…" />
+          <input
+            matInput
+            [value]="search()"
+            (input)="search.set($any($event.target).value)"
+            (keyup.enter)="applyFilter()"
+            placeholder="mancuernas, cinta…"
+          />
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Categoría</mat-label>
@@ -30,7 +42,9 @@
             }
           </mat-select>
         </mat-form-field>
-        <button mat-raised-button class="pz-btn-volt" (click)="applyFilter()"><mat-icon>search</mat-icon> Filtrar</button>
+        <button mat-raised-button class="pz-btn-volt" (click)="applyFilter()">
+          <mat-icon>search</mat-icon> Filtrar
+        </button>
       </div>
 
       <div class="table-wrap">
@@ -41,8 +55,12 @@
               <div class="item-cell">
                 <div class="item-dot"></div>
                 <div>
-                  <div style="color:var(--pz-white);font-weight:600;font-size:13.5px">{{ i.name }}</div>
-                  @if (i.location) { <div style="color:var(--pz-muted);font-size:12px">{{ i.location }}</div> }
+                  <div style="color: var(--pz-white); font-weight: 600; font-size: 13.5px">
+                    {{ i.name }}
+                  </div>
+                  @if (i.location) {
+                    <div style="color: var(--pz-muted); font-size: 12px">{{ i.location }}</div>
+                  }
                 </div>
               </div>
             </td>
@@ -54,7 +72,9 @@
           <ng-container matColumnDef="quantity">
             <th mat-header-cell *matHeaderCellDef>Stock</th>
             <td mat-cell *matCellDef="let i">
-              <span [class.low]="isLow(i)">⚡ {{ i.availableQuantity ?? i.quantity }} / {{ i.quantity }}</span>
+              <span [class.low]="isLow(i)"
+                >⚡ {{ i.availableQuantity ?? i.quantity }} / {{ i.quantity }}</span
+              >
             </td>
           </ng-container>
           <ng-container matColumnDef="condition">
@@ -64,17 +84,27 @@
           <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef>Estado</th>
             <td mat-cell *matCellDef="let i">
-              <span class="pz-badge" [class]="'badge-' + inventoryStatus(i.status).color">{{ inventoryStatus(i.status).label }}</span>
+              <span class="pz-badge" [class]="'badge-' + inventoryStatus(i.status).color">{{
+                inventoryStatus(i.status).label
+              }}</span>
             </td>
           </ng-container>
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let i">
               <div class="row-actions">
-                <button mat-icon-button matTooltip="Mantenimiento" (click)="openMaintenance(i)"><mat-icon>build</mat-icon></button>
-                <button mat-icon-button matTooltip="Historial" (click)="viewMaintenance(i)"><mat-icon>history</mat-icon></button>
-                <button mat-icon-button matTooltip="Editar" (click)="openItem(i)"><mat-icon>edit</mat-icon></button>
-                <button mat-icon-button matTooltip="Eliminar" class="danger" (click)="remove(i)"><mat-icon>delete</mat-icon></button>
+                <button mat-icon-button matTooltip="Mantenimiento" (click)="openMaintenance(i)">
+                  <mat-icon>build</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Historial" (click)="viewMaintenance(i)">
+                  <mat-icon>history</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Editar" (click)="openItem(i)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Eliminar" class="danger" (click)="remove(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
               </div>
             </td>
           </ng-container>
@@ -89,7 +119,8 @@
           [pageIndex]="page"
           [pageSizeOptions]="[10, 20, 50]"
           (page)="onPage($event)"
-          showFirstLastButtons>
+          showFirstLastButtons
+        >
         </mat-paginator>
       </div>
     </mat-card-content>

@@ -2,7 +2,8 @@
   <pz-page-header
     eyebrow="Agenda"
     title="Clases"
-    subtitle="Clases grupales con reservas y cupos disponibles.">
+    subtitle="Clases grupales con reservas y cupos disponibles."
+  >
     @if (isStaffManage) {
       <button mat-raised-button class="pz-btn-volt" (click)="openCreate()">
         <mat-icon>add</mat-icon> Nueva clase
@@ -12,14 +13,46 @@
 
   <div class="toolbar">
     <div class="toggles">
-      <button mat-raised-button [class.active]="upcomingOnly()" (click)="setView(true)">Próximas</button>
-      <button mat-raised-button [class.active]="!upcomingOnly()" (click)="setView(false)">Todas</button>
+      <button mat-raised-button [class.active]="upcomingOnly()" (click)="setView(true)">
+        Próximas
+      </button>
+      <button mat-raised-button [class.active]="!upcomingOnly()" (click)="setView(false)">
+        Todas
+      </button>
     </div>
     <div class="chips">
-      <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="categoryFilter() === ''" (click)="setCategory('')">Todas las categorías</button>
-      <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="categoryFilter() === 'strength'" (click)="setCategory('strength')">Fuerza</button>
-      <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="categoryFilter() === 'cardio'" (click)="setCategory('cardio')">Cardio</button>
-      <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="categoryFilter() === 'yoga'" (click)="setCategory('yoga')">Yoga</button>
+      <button
+        mat-stroked-button
+        class="pz-btn-ghost chip"
+        [class.on]="categoryFilter() === ''"
+        (click)="setCategory('')"
+      >
+        Todas las categorías
+      </button>
+      <button
+        mat-stroked-button
+        class="pz-btn-ghost chip"
+        [class.on]="categoryFilter() === 'strength'"
+        (click)="setCategory('strength')"
+      >
+        Fuerza
+      </button>
+      <button
+        mat-stroked-button
+        class="pz-btn-ghost chip"
+        [class.on]="categoryFilter() === 'cardio'"
+        (click)="setCategory('cardio')"
+      >
+        Cardio
+      </button>
+      <button
+        mat-stroked-button
+        class="pz-btn-ghost chip"
+        [class.on]="categoryFilter() === 'yoga'"
+        (click)="setCategory('yoga')"
+      >
+        Yoga
+      </button>
     </div>
   </div>
 
@@ -46,7 +79,9 @@
           <div class="c-meta">
             @if (c.instructor) {
               <span class="c-instructor">
-                <div class="mini-avatar">{{ initials(c.instructor.firstName, c.instructor.lastName) }}</div>
+                <div class="mini-avatar">
+                  {{ initials(c.instructor.firstName, c.instructor.lastName) }}
+                </div>
                 {{ c.instructor.fullName }}
               </span>
             }
@@ -70,7 +105,12 @@
                   <mat-icon>event_busy</mat-icon> Cancelar reserva
                 </button>
               } @else {
-                <button mat-raised-button class="pz-btn-volt full-w" [disabled]="(c.availableSpots ?? 0) <= 0" (click)="book(c)">
+                <button
+                  mat-raised-button
+                  class="pz-btn-volt full-w"
+                  [disabled]="(c.availableSpots ?? 0) <= 0"
+                  (click)="book(c)"
+                >
                   <mat-icon>event_available</mat-icon> Reservar
                 </button>
               }
@@ -80,7 +120,9 @@
                   <mat-icon>event</mat-icon> Reservar
                 </button>
                 <button mat-icon-button (click)="edit(c)"><mat-icon>edit</mat-icon></button>
-                <button mat-icon-button class="danger" (click)="remove(c)"><mat-icon>delete</mat-icon></button>
+                <button mat-icon-button class="danger" (click)="remove(c)">
+                  <mat-icon>delete</mat-icon>
+                </button>
               </div>
             }
           </div>
@@ -88,8 +130,12 @@
       </mat-card>
     } @empty {
       @if (!loading()) {
-        <div style="grid-column:1/-1">
-          <pz-empty icon="event" title="Sin clases" message="No se encontraron clases para esta vista." />
+        <div style="grid-column: 1/-1">
+          <pz-empty
+            icon="event"
+            title="Sin clases"
+            message="No se encontraron clases para esta vista."
+          />
         </div>
       }
     }
@@ -102,6 +148,7 @@
     [pageIndex]="page"
     [pageSizeOptions]="[12, 24, 48]"
     (page)="onPage($event)"
-    showFirstLastButtons>
+    showFirstLastButtons
+  >
   </mat-paginator>
 </div>

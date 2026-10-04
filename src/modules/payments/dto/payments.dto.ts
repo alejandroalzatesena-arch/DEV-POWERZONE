@@ -1,13 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-  MaxLength,
-  Min,
-} from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString, IsUUID, MaxLength, Min } from 'class-validator';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 import { PaymentMethod, PaymentStatus } from '../../../common/enums';
 
@@ -53,7 +45,9 @@ export class CreateCheckoutDto {
   @IsUUID()
   membershipTypeId: string;
 
-  @ApiPropertyOptional({ description: 'ID del usuario que paga (obligatorio si lo hace admin/recepcionista)' })
+  @ApiPropertyOptional({
+    description: 'ID del usuario que paga (obligatorio si lo hace admin/recepcionista)',
+  })
   @IsOptional()
   @IsUUID()
   userId?: string;

@@ -5,12 +5,7 @@ export enum UserRole {
   CLIENT = 'client',
 }
 
-export const ALL_ROLES = [
-  UserRole.ADMIN,
-  UserRole.TRAINER,
-  UserRole.RECEPTIONIST,
-  UserRole.CLIENT,
-];
+export const ALL_ROLES = [UserRole.ADMIN, UserRole.TRAINER, UserRole.RECEPTIONIST, UserRole.CLIENT];
 
 export enum UserGender {
   MALE = 'male',

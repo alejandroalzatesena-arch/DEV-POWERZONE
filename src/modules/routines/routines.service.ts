@@ -27,7 +27,8 @@ import {
 export class RoutinesService {
   constructor(
     @InjectRepository(Routine) private readonly routinesRepo: Repository<Routine>,
-    @InjectRepository(RoutineExercise) private readonly routineExercisesRepo: Repository<RoutineExercise>,
+    @InjectRepository(RoutineExercise)
+    private readonly routineExercisesRepo: Repository<RoutineExercise>,
     @InjectRepository(User) private readonly usersRepo: Repository<User>,
     @InjectRepository(Exercise) private readonly exercisesRepo: Repository<Exercise>,
     @Optional() private readonly aiProxy: AiProxyService | null,
@@ -186,7 +187,16 @@ export class RoutinesService {
       const saved = await this.routinesRepo.save(routine);
       if (Array.isArray(aiRoutine.exercises)) {
         const mapped: any[] = aiRoutine.exercises.map(
-          (ex: { exerciseId: string; dayOfWeek?: number; sets?: number; reps?: number; restSeconds?: number }, i: number) => ({
+          (
+            ex: {
+              exerciseId: string;
+              dayOfWeek?: number;
+              sets?: number;
+              reps?: number;
+              restSeconds?: number;
+            },
+            i: number,
+          ) => ({
             exerciseId: ex.exerciseId,
             dayOfWeek: ex.dayOfWeek ?? (i % dto.daysPerWeek) + 1,
             order: (i % dto.daysPerWeek) + 1,
@@ -209,12 +219,41 @@ export class RoutinesService {
     actor: JwtPayload,
   ): Promise<Routine> {
     const categoriesByObjective: Record<string, ExerciseCategory[]> = {
-      [RoutineObjective.STRENGTH]: [ExerciseCategory.CHEST, ExerciseCategory.BACK, ExerciseCategory.LEGS, ExerciseCategory.SHOULDERS],
-      [RoutineObjective.HYPERTROPHY]: [ExerciseCategory.CHEST, ExerciseCategory.BACK, ExerciseCategory.LEGS, ExerciseCategory.ARMS],
-      [RoutineObjective.WEIGHT_LOSS]: [ExerciseCategory.CARDIO, ExerciseCategory.FULL_BODY, ExerciseCategory.CORE, ExerciseCategory.LEGS],
-      [RoutineObjective.ENDURANCE]: [ExerciseCategory.CARDIO, ExerciseCategory.FULL_BODY, ExerciseCategory.STRETCHING, ExerciseCategory.CORE],
-      [RoutineObjective.REHABILITATION]: [ExerciseCategory.STRETCHING, ExerciseCategory.CORE, ExerciseCategory.FULL_BODY],
-      [RoutineObjective.GENERAL]: [ExerciseCategory.FULL_BODY, ExerciseCategory.CHEST, ExerciseCategory.BACK, ExerciseCategory.LEGS],
+      [RoutineObjective.STRENGTH]: [
+        ExerciseCategory.CHEST,
+        ExerciseCategory.BACK,
+        ExerciseCategory.LEGS,
+        ExerciseCategory.SHOULDERS,
+      ],
+      [RoutineObjective.HYPERTROPHY]: [
+        ExerciseCategory.CHEST,
+        ExerciseCategory.BACK,
+        ExerciseCategory.LEGS,
+        ExerciseCategory.ARMS,
+      ],
+      [RoutineObjective.WEIGHT_LOSS]: [
+        ExerciseCategory.CARDIO,
+        ExerciseCategory.FULL_BODY,
+        ExerciseCategory.CORE,
+        ExerciseCategory.LEGS,
+      ],
+      [RoutineObjective.ENDURANCE]: [
+        ExerciseCategory.CARDIO,
+        ExerciseCategory.FULL_BODY,
+        ExerciseCategory.STRETCHING,
+        ExerciseCategory.CORE,
+      ],
+      [RoutineObjective.REHABILITATION]: [
+        ExerciseCategory.STRETCHING,
+        ExerciseCategory.CORE,
+        ExerciseCategory.FULL_BODY,
+      ],
+      [RoutineObjective.GENERAL]: [
+        ExerciseCategory.FULL_BODY,
+        ExerciseCategory.CHEST,
+        ExerciseCategory.BACK,
+        ExerciseCategory.LEGS,
+      ],
     };
 
     const categories = categoriesByObjective[dto.objective] || categoriesByObjective[1];

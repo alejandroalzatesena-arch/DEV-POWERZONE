@@ -141,7 +141,10 @@ export class GenerateRoutineDto {
   @Max(5)
   difficulty?: number;
 
-  @ApiPropertyOptional({ description: '¿Usar el servicio de IA? (por defecto generación local)', default: false })
+  @ApiPropertyOptional({
+    description: '¿Usar el servicio de IA? (por defecto generación local)',
+    default: false,
+  })
   @IsOptional()
   @IsBoolean()
   useAI?: boolean;
@@ -196,7 +199,10 @@ export class UpdateRoutineDto {
   @IsBoolean()
   isTemplate?: boolean;
 
-  @ApiPropertyOptional({ description: 'Ejercicios de la rutina (reemplaza los existentes)', type: [RoutineExerciseDto] })
+  @ApiPropertyOptional({
+    description: 'Ejercicios de la rutina (reemplaza los existentes)',
+    type: [RoutineExerciseDto],
+  })
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })

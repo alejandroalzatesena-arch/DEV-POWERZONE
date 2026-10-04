@@ -50,16 +50,41 @@
   place-items: center;
   flex-shrink: 0;
 
-  &.info { background: rgba(56, 198, 255, 0.12); color: var(--pz-info); }
-  &.danger { background: rgba(255, 77, 94, 0.12); color: var(--pz-danger); }
-  &.volt { background: rgba(200, 255, 61, 0.12); color: var(--pz-volt); }
-  &.orange { background: rgba(255, 138, 42, 0.12); color: var(--pz-orange); }
-  &.success { background: rgba(44, 229, 138, 0.12); color: #2ce58a; }
-  &.muted { background: rgba(160, 166, 178, 0.12); color: var(--pz-muted-2); }
+  &.info {
+    background: rgba(56, 198, 255, 0.12);
+    color: var(--pz-info);
+  }
+  &.danger {
+    background: rgba(255, 77, 94, 0.12);
+    color: var(--pz-danger);
+  }
+  &.volt {
+    background: rgba(200, 255, 61, 0.12);
+    color: var(--pz-volt);
+  }
+  &.orange {
+    background: rgba(255, 138, 42, 0.12);
+    color: var(--pz-orange);
+  }
+  &.success {
+    background: rgba(44, 229, 138, 0.12);
+    color: #2ce58a;
+  }
+  &.muted {
+    background: rgba(160, 166, 178, 0.12);
+    color: var(--pz-muted-2);
+  }
   &.schedule,
-  &.membership { background: rgba(200, 255, 61, 0.12); color: var(--pz-volt); }
+  &.membership {
+    background: rgba(200, 255, 61, 0.12);
+    color: var(--pz-volt);
+  }
 
-  mat-icon { font-size: 19px; width: 19px; height: 19px; }
+  mat-icon {
+    font-size: 19px;
+    width: 19px;
+    height: 19px;
+  }
 }
 
 .n-body {
@@ -105,7 +130,9 @@
 
 .n-close {
   color: var(--pz-muted-2);
-  &:hover { color: var(--pz-danger); }
+  &:hover {
+    color: var(--pz-danger);
+  }
 }
 
 .pag {

@@ -9,7 +9,10 @@ export class Gym extends BaseEntity {
   @Column({ length: 120, unique: true })
   name: string;
 
-  @ApiProperty({ description: 'Identificador único (slug) del gimnasio', example: 'power-zone-downtown' })
+  @ApiProperty({
+    description: 'Identificador único (slug) del gimnasio',
+    example: 'power-zone-downtown',
+  })
   @Column({ length: 120 })
   slug: string;
 

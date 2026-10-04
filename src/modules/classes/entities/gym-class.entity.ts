@@ -66,6 +66,6 @@ export class GymClass extends TenantBaseEntity {
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 
-  @OneToMany(() => ClassBooking, booking => booking.gymClass)
+  @OneToMany(() => ClassBooking, (booking) => booking.gymClass)
   bookings: ClassBooking[];
 }

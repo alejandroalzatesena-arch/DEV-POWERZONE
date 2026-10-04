@@ -22,7 +22,10 @@ export class CreateUserDto {
   @MaxLength(120)
   email: string;
 
-  @ApiPropertyOptional({ description: 'Contraseña inicial (mínimo 8). Si no se envía se genera una temporal.', example: 'Entrenador123' })
+  @ApiPropertyOptional({
+    description: 'Contraseña inicial (mínimo 8). Si no se envía se genera una temporal.',
+    example: 'Entrenador123',
+  })
   @IsOptional()
   @IsString()
   @MinLength(8)

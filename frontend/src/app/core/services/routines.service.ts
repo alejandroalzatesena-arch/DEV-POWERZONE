@@ -23,7 +23,13 @@ export class RoutinesService {
     return this.api.post<Routine>('/routines', payload);
   }
 
-  generate(payload: { userId: string; objective: string; daysPerWeek: number; difficulty?: number; useAI?: boolean }): Observable<Routine> {
+  generate(payload: {
+    userId: string;
+    objective: string;
+    daysPerWeek: number;
+    difficulty?: number;
+    useAI?: boolean;
+  }): Observable<Routine> {
     return this.api.post<Routine>('/routines/generate', payload);
   }
 

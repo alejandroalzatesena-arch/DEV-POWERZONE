@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
@@ -106,10 +111,13 @@ export class MarketingService {
       )`);
     }
     if (audience.goal) {
-      qb.andWhere(`EXISTS (
+      qb.andWhere(
+        `EXISTS (
         SELECT 1 FROM user_profiles up
         WHERE up.user_id = u.id AND up.goal = :goal
-      )`, { goal: audience.goal });
+      )`,
+        { goal: audience.goal },
+      );
     }
     if (audience.search) {
       qb.andWhere('(u."firstName" ILIKE :search OR u."lastName" ILIKE :search)', {

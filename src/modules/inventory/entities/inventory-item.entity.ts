@@ -62,6 +62,6 @@ export class InventoryItem extends TenantBaseEntity {
   @Column({ length: 100, nullable: true })
   location: string;
 
-  @OneToMany(() => InventoryMaintenance, m => m.item)
+  @OneToMany(() => InventoryMaintenance, (m) => m.item)
   maintenances: InventoryMaintenance[];
 }

@@ -1,7 +1,12 @@
 import { Component, Inject, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -18,7 +23,13 @@ import { AuthService } from '../../core/services/auth.service';
 import { ClassesService } from '../../core/services/classes.service';
 import { UsersService } from '../../core/services/users.service';
 import { GymClass, User } from '../../core/models/models';
-import { formatDate, timeOnly, classStatus, bookingStatus, initials } from '../../shared/utils/labels';
+import {
+  formatDate,
+  timeOnly,
+  classStatus,
+  bookingStatus,
+  initials,
+} from '../../shared/utils/labels';
 
 @Component({
   selector: 'app-classes',
@@ -70,7 +81,10 @@ export class ClassesComponent implements OnInit {
     });
     if (this.isClient) {
       this.classes.myBookings({ limit: 200 }).subscribe({
-        next: (r) => this.myBookingsSet.set(new Set(r.items.filter((b) => b.status !== 'cancelled').map((b) => b.classId))),
+        next: (r) =>
+          this.myBookingsSet.set(
+            new Set(r.items.filter((b) => b.status !== 'cancelled').map((b) => b.classId)),
+          ),
         error: () => undefined,
       });
     }
@@ -137,7 +151,10 @@ export class ClassesComponent implements OnInit {
   }
 
   openCreate(): void {
-    const ref = this.dialog.open(CreateClassDialog, { data: { instructors: this.classesInstructors() }, width: '560px' });
+    const ref = this.dialog.open(CreateClassDialog, {
+      data: { instructors: this.classesInstructors() },
+      width: '560px',
+    });
     ref.afterClosed().subscribe((res) => {
       if (!res) return;
       this.classes.create(res).subscribe({
@@ -151,7 +168,10 @@ export class ClassesComponent implements OnInit {
   }
 
   edit(c: GymClass): void {
-    const ref = this.dialog.open(CreateClassDialog, { data: { instructors: this.classesInstructors(), cls: c }, width: '560px' });
+    const ref = this.dialog.open(CreateClassDialog, {
+      data: { instructors: this.classesInstructors(), cls: c },
+      width: '560px',
+    });
     ref.afterClosed().subscribe((res) => {
       if (!res) return;
       this.classes.update(c.id, res).subscribe({
@@ -175,14 +195,14 @@ export class ClassesComponent implements OnInit {
   }
 
   availableColor(c: GymClass): string {
-    const a = c.availableSpots ?? (c.capacity - (c.bookedSpots ?? 0));
+    const a = c.availableSpots ?? c.capacity - (c.bookedSpots ?? 0);
     if (a <= 0) return 'badge-danger';
     if (a <= Math.max(3, c.capacity * 0.2)) return 'badge-orange';
     return 'badge-success';
   }
 
   availableText(c: GymClass): string {
-    const a = c.availableSpots ?? (c.capacity - (c.bookedSpots ?? 0));
+    const a = c.availableSpots ?? c.capacity - (c.bookedSpots ?? 0);
     if (a <= 0) return 'Completa';
     return `${a} cupos`;
   }
@@ -214,12 +234,24 @@ export class ClassesComponent implements OnInit {
     MatButtonModule,
   ],
   template: `
-    <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">{{ data?.cls ? 'Editar clase' : 'Nueva clase' }}</h2>
-    <mat-dialog-content style="display:grid;gap:10px;padding:16px 24px;min-width:480px;max-height:72vh">
-      <mat-form-field appearance="outline"><mat-label>Nombre</mat-label><input matInput formControlName="name" placeholder="CrossFit / Spinning / HIIT…" /></mat-form-field>
-      <mat-form-field appearance="outline"><mat-label>Descripción</mat-label><textarea matInput formControlName="description" rows="2"></textarea></mat-form-field>
+    <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">
+      {{ data?.cls ? 'Editar clase' : 'Nueva clase' }}
+    </h2>
+    <mat-dialog-content
+      style="display:grid;gap:10px;padding:16px 24px;min-width:480px;max-height:72vh"
+    >
+      <mat-form-field appearance="outline"
+        ><mat-label>Nombre</mat-label
+        ><input matInput formControlName="name" placeholder="CrossFit / Spinning / HIIT…"
+      /></mat-form-field>
+      <mat-form-field appearance="outline"
+        ><mat-label>Descripción</mat-label
+        ><textarea matInput formControlName="description" rows="2"></textarea>
+      </mat-form-field>
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Categoría</mat-label><input matInput formControlName="category" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Categoría</mat-label><input matInput formControlName="category"
+        /></mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Instructor</mat-label>
           <mat-select formControlName="instructorId">
@@ -230,25 +262,59 @@ export class ClassesComponent implements OnInit {
         </mat-form-field>
       </div>
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Capacidad</mat-label><input matInput type="number" formControlName="capacity" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Sala</mat-label><input matInput formControlName="room" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Capacidad</mat-label><input matInput type="number" formControlName="capacity"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Sala</mat-label><input matInput formControlName="room"
+        /></mat-form-field>
       </div>
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Fecha y hora inicio</mat-label><input matInput [matDatepicker]="p1" formControlName="startDate" /><mat-datepicker-toggle matIconSuffix [for]="p1"></mat-datepicker-toggle><mat-datepicker #p1></mat-datepicker></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Hora inicio</mat-label><input matInput type="time" formControlName="startTime" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Fecha y hora inicio</mat-label
+          ><input matInput [matDatepicker]="p1" formControlName="startDate" /><mat-datepicker-toggle
+            matIconSuffix
+            [for]="p1"
+          ></mat-datepicker-toggle
+          ><mat-datepicker #p1></mat-datepicker
+        ></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Hora inicio</mat-label
+          ><input matInput type="time" formControlName="startTime"
+        /></mat-form-field>
       </div>
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Fecha y hora fin</mat-label><input matInput [matDatepicker]="p2" formControlName="endDate" /><mat-datepicker-toggle matIconSuffix [for]="p2"></mat-datepicker-toggle><mat-datepicker #p2></mat-datepicker></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Hora fin</mat-label><input matInput type="time" formControlName="endTime" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Fecha y hora fin</mat-label
+          ><input matInput [matDatepicker]="p2" formControlName="endDate" /><mat-datepicker-toggle
+            matIconSuffix
+            [for]="p2"
+          ></mat-datepicker-toggle
+          ><mat-datepicker #p2></mat-datepicker
+        ></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Hora fin</mat-label><input matInput type="time" formControlName="endTime"
+        /></mat-form-field>
       </div>
-      <mat-form-field appearance="outline"><mat-label>Color (hex)</mat-label><input matInput formControlName="color" placeholder="#c8ff3d" /></mat-form-field>
+      <mat-form-field appearance="outline"
+        ><mat-label>Color (hex)</mat-label
+        ><input matInput formControlName="color" placeholder="#c8ff3d"
+      /></mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end" style="padding:8px 24px 20px">
       <button mat-button class="pz-btn-ghost" mat-dialog-close>Cancelar</button>
-      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">Guardar</button>
+      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">
+        Guardar
+      </button>
     </mat-dialog-actions>
   `,
-  styles: `.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}`,
+  styles: `
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+  `,
 })
 export class CreateClassDialog {
   readonly form = new FormBuilder().nonNullable.group({

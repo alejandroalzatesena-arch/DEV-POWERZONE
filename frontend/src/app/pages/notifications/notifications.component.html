@@ -2,18 +2,42 @@
   <pz-page-header
     eyebrow="Centro de mensajes"
     title="Notificaciones"
-    [subtitle]="unread() > 0 ? 'Tenés ' + unread() + ' sin leer.' : 'Estás al día. Sin notificaciones pendientes.'">
+    [subtitle]="
+      unread() > 0
+        ? 'Tenés ' + unread() + ' sin leer.'
+        : 'Estás al día. Sin notificaciones pendientes.'
+    "
+  >
     <button mat-stroked-button class="pz-btn-ghost" [disabled]="unread() === 0" (click)="markAll()">
       <mat-icon>done_all</mat-icon> Marcar todas como leídas
     </button>
   </pz-page-header>
 
   <div class="chips">
-    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === ''" (click)="applyFilter('')">Todas</button>
-    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === 'false'" (click)="applyFilter('false')">
+    <button
+      mat-stroked-button
+      class="pz-btn-ghost chip"
+      [class.on]="filter() === ''"
+      (click)="applyFilter('')"
+    >
+      Todas
+    </button>
+    <button
+      mat-stroked-button
+      class="pz-btn-ghost chip"
+      [class.on]="filter() === 'false'"
+      (click)="applyFilter('false')"
+    >
       No leídas ({{ unread() }})
     </button>
-    <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="filter() === 'true'" (click)="applyFilter('true')">Leídas</button>
+    <button
+      mat-stroked-button
+      class="pz-btn-ghost chip"
+      [class.on]="filter() === 'true'"
+      (click)="applyFilter('true')"
+    >
+      Leídas
+    </button>
   </div>
 
   <div class="notif-list">
@@ -43,7 +67,11 @@
       </mat-card>
     } @empty {
       @if (!loading()) {
-        <pz-empty icon="notifications_off" title="Sin notificaciones" message="Cuando haya novedades, te avisamos acá." />
+        <pz-empty
+          icon="notifications_off"
+          title="Sin notificaciones"
+          message="Cuando haya novedades, te avisamos acá."
+        />
       }
     }
   </div>
@@ -55,6 +83,7 @@
     [pageIndex]="page"
     [pageSizeOptions]="[20, 50]"
     (page)="onPage($event)"
-    showFirstLastButtons>
+    showFirstLastButtons
+  >
   </mat-paginator>
 </div>

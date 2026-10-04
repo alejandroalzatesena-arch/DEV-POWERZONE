@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
@@ -57,7 +62,11 @@ export class MembershipsService {
     return type;
   }
 
-  async updateType(id: string, dto: UpdateMembershipTypeDto, actor: JwtPayload): Promise<MembershipType> {
+  async updateType(
+    id: string,
+    dto: UpdateMembershipTypeDto,
+    actor: JwtPayload,
+  ): Promise<MembershipType> {
     const type = await this.getTypeById(id, actor);
     Object.assign(type, dto);
     return this.typesRepo.save(type);
@@ -82,8 +91,7 @@ export class MembershipsService {
     }
 
     const type = await this.getTypeById(dto.membershipTypeId, actor);
-    const gymId: string =
-      (actor.isSuperAdmin ? (user.gymId as string) : actor.gymId) as string;
+    const gymId: string = (actor.isSuperAdmin ? (user.gymId as string) : actor.gymId) as string;
     if (!gymId) {
       throw new ForbiddenException('Se requiere un gimnasio para asignar la membresía.');
     }
@@ -127,7 +135,10 @@ export class MembershipsService {
     return saved;
   }
 
-  async findAll(query: QueryMembershipsDto, actor: JwtPayload): Promise<PaginatedResult<UserMembership>> {
+  async findAll(
+    query: QueryMembershipsDto,
+    actor: JwtPayload,
+  ): Promise<PaginatedResult<UserMembership>> {
     const { page, limit, sortBy, sortOrder, status, userId } = query;
     const where: Record<string, any> = this.tenantWhere(actor);
     if (status) where.status = status;

@@ -44,7 +44,11 @@ export class CreateMembershipTypeDto {
   @Length(3, 3)
   currency?: string;
 
-  @ApiPropertyOptional({ description: 'Características incluidas', type: [String], example: ['Sauna', '1 clase grupal/semana'] })
+  @ApiPropertyOptional({
+    description: 'Características incluidas',
+    type: [String],
+    example: ['Sauna', '1 clase grupal/semana'],
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })

@@ -20,13 +20,19 @@ export class ReportsController {
     description: 'Ingresos por periodo, por método de pago y diarios. Solo multimillonario-gym.',
   })
   @ApiResponse({ status: 200, description: 'Resumen financiero' })
-  financial(@Query() query: ReportQueryDto, @CurrentUser() actor: JwtPayload): Promise<Record<string, any>> {
+  financial(
+    @Query() query: ReportQueryDto,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<Record<string, any>> {
     return this.reportsService.financial(query, actor);
   }
 
   @Get('operational')
   @Roles(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Reporte operativo (admin)', description: 'Usuarios, membresías activas y aforo.' })
+  @ApiOperation({
+    summary: 'Reporte operativo (admin)',
+    description: 'Usuarios, membresías activas y aforo.',
+  })
   @ApiResponse({ status: 200, description: 'Resumen operativo' })
   operational(@CurrentUser() actor: JwtPayload): Promise<Record<string, any>> {
     return this.reportsService.operational(actor);
@@ -34,7 +40,10 @@ export class ReportsController {
 
   @Get('memberships')
   @Roles(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Reporte de membresías (admin)', description: 'Por tipo y estado, próximas a vencer.' })
+  @ApiOperation({
+    summary: 'Reporte de membresías (admin)',
+    description: 'Por tipo y estado, próximas a vencer.',
+  })
   @ApiResponse({ status: 200, description: 'Resumen de membresías' })
   memberships(@CurrentUser() actor: JwtPayload): Promise<Record<string, any>> {
     return this.reportsService.memberships(actor);
@@ -42,9 +51,15 @@ export class ReportsController {
 
   @Get('attendance')
   @Roles(UserRole.ADMIN, UserRole.TRAINER, UserRole.RECEPTIONIST)
-  @ApiOperation({ summary: 'Reporte de asistencia', description: 'Check-ins/outs por día en un rango.' })
+  @ApiOperation({
+    summary: 'Reporte de asistencia',
+    description: 'Check-ins/outs por día en un rango.',
+  })
   @ApiResponse({ status: 200, description: 'Resumen de asistencia' })
-  attendance(@Query() query: ReportQueryDto, @CurrentUser() actor: JwtPayload): Promise<Record<string, any>> {
+  attendance(
+    @Query() query: ReportQueryDto,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<Record<string, any>> {
     return this.reportsService.attendance(query, actor);
   }
 

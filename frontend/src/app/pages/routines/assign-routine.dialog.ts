@@ -7,7 +7,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogModule,
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoutinesService } from '../../core/services/routines.service';
 import { UsersService } from '../../core/services/users.service';
@@ -32,7 +37,8 @@ import { routineStatus, routineObjectiveLabel } from '../../shared/utils/labels'
     <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">Asignar rutina</h2>
     <mat-dialog-content style="padding:16px 24px;min-width:400px">
       <p style="color:var(--pz-muted);margin:0 0 14px">
-        Asignar <strong style="color:var(--pz-white)">{{ data.routine.title }}</strong> a un cliente.
+        Asignar <strong style="color:var(--pz-white)">{{ data.routine.title }}</strong> a un
+        cliente.
       </p>
       <mat-form-field appearance="outline" style="width:100%">
         <mat-label>Cliente</mat-label>
@@ -45,7 +51,9 @@ import { routineStatus, routineObjectiveLabel } from '../../shared/utils/labels'
     </mat-dialog-content>
     <mat-dialog-actions align="end" style="padding:8px 24px 20px">
       <button mat-button class="pz-btn-ghost" mat-dialog-close>Cancelar</button>
-      <button mat-raised-button class="pz-btn-volt" [disabled]="!selected" (click)="save()">Asignar</button>
+      <button mat-raised-button class="pz-btn-volt" [disabled]="!selected" (click)="save()">
+        Asignar
+      </button>
     </mat-dialog-actions>
   `,
 })

@@ -24,9 +24,13 @@
 
 .campaign {
   transition: all 0.2s ease;
-  &:hover { transform: translateY(-3px); }
+  &:hover {
+    transform: translateY(-3px);
+  }
 
-  mat-card-content { padding: 20px; }
+  mat-card-content {
+    padding: 20px;
+  }
 }
 
 .c-top {
@@ -42,7 +46,10 @@
   color: var(--pz-muted);
   font-size: 12.5px;
 
-  mat-icon { font-size: 15px; color: var(--pz-orange); }
+  mat-icon {
+    font-size: 15px;
+    color: var(--pz-orange);
+  }
 }
 
 .c-name {
@@ -99,7 +106,10 @@
     gap: 5px;
     font-size: 13px;
   }
-  .danger { color: var(--pz-danger); margin-left: auto; }
+  .danger {
+    color: var(--pz-danger);
+    margin-left: auto;
+  }
 }
 
 .pag {

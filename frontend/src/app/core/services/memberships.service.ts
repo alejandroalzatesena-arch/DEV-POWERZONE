@@ -31,7 +31,13 @@ export class MembershipsService {
     return this.api.get<UserMembership | null>('/memberships/my');
   }
 
-  assign(payload: { userId: string; membershipTypeId: string; price?: number; autoRenew?: boolean; notes?: string }): Observable<UserMembership> {
+  assign(payload: {
+    userId: string;
+    membershipTypeId: string;
+    price?: number;
+    autoRenew?: boolean;
+    notes?: string;
+  }): Observable<UserMembership> {
     return this.api.post<UserMembership>('/memberships/assign', payload);
   }
 

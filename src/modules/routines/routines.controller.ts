@@ -43,7 +43,8 @@ export class RoutinesController {
   @Roles(UserRole.ADMIN, UserRole.TRAINER)
   @ApiOperation({
     summary: 'Generar rutina automáticamente (admin/entrenador)',
-    description: 'Genera una rutina con la generación local por objetivo o con el módulo de IA (useAI=true).',
+    description:
+      'Genera una rutina con la generación local por objetivo o con el módulo de IA (useAI=true).',
   })
   @ApiResponse({ status: 201, description: 'Rutina generada', type: Routine })
   generate(@Body() dto: GenerateRoutineDto, @CurrentUser() actor: JwtPayload): Promise<Routine> {
@@ -72,7 +73,10 @@ export class RoutinesController {
   @Roles(UserRole.ADMIN, UserRole.TRAINER)
   @ApiOperation({ summary: 'Obtener rutina por ID' })
   @ApiResponse({ status: 200, description: 'Detalle de la rutina', type: Routine })
-  findOne(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<Routine> {
+  findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<Routine> {
     return this.routinesService.findById(id, actor);
   }
 
@@ -104,7 +108,10 @@ export class RoutinesController {
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Eliminar rutina (soft delete, admin)' })
   @ApiResponse({ status: 200, description: 'Rutina eliminada' })
-  async remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<{ message: string }> {
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<{ message: string }> {
     await this.routinesService.remove(id, actor);
     return { message: 'Rutina eliminada.' };
   }
