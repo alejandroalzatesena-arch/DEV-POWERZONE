@@ -67,6 +67,7 @@ export class ShellComponent implements OnDestroy {
 
   groups: NavGroup[] = [
     { label: 'Dashboard', icon: 'space_dashboard', path: '/dashboard' },
+    { label: 'Asistente IA', icon: 'smart_toy', path: '/assistant' },
     {
       group: 'Mi cuenta',
       items: [
