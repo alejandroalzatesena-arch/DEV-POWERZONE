@@ -1,4 +1,10 @@
-import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandlerFn,
+  HttpInterceptorFn,
+  HttpRequest,
+} from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, catchError, filter, switchMap, take, throwError } from 'rxjs';
@@ -8,7 +14,10 @@ import { AuthService } from '../services/auth.service';
 let refreshing = false;
 const pending: Array<() => void> = [];
 
-export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
+export function authInterceptor(
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn,
+): Observable<HttpEvent<unknown>> {
   const tokenService = inject(TokenService);
 
   const isAuthEndpoint = req.url.includes('/auth/refresh');
@@ -33,7 +42,10 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
   );
 }
 
-function refreshAndRetry(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
+function refreshAndRetry(
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn,
+): Observable<HttpEvent<unknown>> {
   const authService = inject(AuthService);
   const router = inject(Router);
   const tokenService = inject(TokenService);

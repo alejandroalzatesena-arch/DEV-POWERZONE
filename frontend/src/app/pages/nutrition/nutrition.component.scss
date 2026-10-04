@@ -64,12 +64,23 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    &.p { background: var(--pz-volt); }
-    &.c { background: var(--pz-orange); }
-    &.f { background: var(--pz-danger); }
+    &.p {
+      background: var(--pz-volt);
+    }
+    &.c {
+      background: var(--pz-orange);
+    }
+    &.f {
+      background: var(--pz-danger);
+    }
   }
-  .m-name { color: var(--pz-muted); }
-  .m-val { color: var(--pz-white); font-weight: 600; }
+  .m-name {
+    color: var(--pz-muted);
+  }
+  .m-val {
+    color: var(--pz-white);
+    font-weight: 600;
+  }
 }
 
 .logs-card {
@@ -92,7 +103,9 @@
   border: 1px solid var(--pz-border);
   margin-bottom: 8px;
 
-  &:last-child { margin-bottom: 0; }
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .meal-icon {
@@ -104,14 +117,31 @@
   display: grid;
   place-items: center;
 
-  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 }
 
-.log-name { color: var(--pz-white); font-size: 14px; font-weight: 600; }
-.log-sub { color: var(--pz-muted); font-size: 12px; }
-.log-cal { color: var(--pz-volt); font-size: 14px; font-weight: 700; }
+.log-name {
+  color: var(--pz-white);
+  font-size: 14px;
+  font-weight: 600;
+}
+.log-sub {
+  color: var(--pz-muted);
+  font-size: 12px;
+}
+.log-cal {
+  color: var(--pz-volt);
+  font-size: 14px;
+  font-weight: 700;
+}
 
-.danger { color: var(--pz-danger); }
+.danger {
+  color: var(--pz-danger);
+}
 
 .foods-grid {
   display: grid;
@@ -121,9 +151,13 @@
 
 .food-card {
   transition: all 0.2s ease;
-  &:hover { transform: translateY(-3px); }
+  &:hover {
+    transform: translateY(-3px);
+  }
 
-  mat-card-content { padding: 18px; }
+  mat-card-content {
+    padding: 18px;
+  }
 }
 
 .food-top {
@@ -134,7 +168,9 @@
 
 .food-actions {
   display: flex;
-  .danger { color: var(--pz-danger); }
+  .danger {
+    color: var(--pz-danger);
+  }
 }
 
 .food-name {
@@ -146,14 +182,20 @@
   margin-top: 10px;
 }
 
-.food-serve { color: var(--pz-muted); font-size: 12.5px; }
+.food-serve {
+  color: var(--pz-muted);
+  font-size: 12.5px;
+}
 
 .food-cal {
   font-size: 28px;
   color: var(--pz-volt);
   margin: 6px 0;
 
-  span { color: var(--pz-muted); font-size: 14px; }
+  span {
+    color: var(--pz-muted);
+    font-size: 14px;
+  }
 }
 
 .food-macros {

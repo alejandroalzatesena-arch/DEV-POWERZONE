@@ -38,7 +38,11 @@ export class AttendanceRecord extends TenantBaseEntity {
   @JoinColumn({ name: 'class_id' })
   gymClass: GymClass;
 
-  @ApiProperty({ description: 'Método de registro', enum: AttendanceMethod, default: 'member_card' })
+  @ApiProperty({
+    description: 'Método de registro',
+    enum: AttendanceMethod,
+    default: 'member_card',
+  })
   @Column({ length: 20, default: AttendanceMethod.MEMBER_CARD })
   method: AttendanceMethod;
 

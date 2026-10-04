@@ -31,7 +31,12 @@ export class NutritionService {
     return this.api.get<NutritionSummary>('/nutrition/summary/daily', { date, userId });
   }
 
-  createLog(payload: { foodId: string; mealType: string; quantityG: number; eatenAt?: string }): Observable<NutritionLog> {
+  createLog(payload: {
+    foodId: string;
+    mealType: string;
+    quantityG: number;
+    eatenAt?: string;
+  }): Observable<NutritionLog> {
     return this.api.post<NutritionLog>('/nutrition/logs', payload);
   }
 

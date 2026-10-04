@@ -19,7 +19,8 @@ export class ReportsService {
     @InjectRepository(Payment) private readonly paymentsRepo: Repository<Payment>,
     @InjectRepository(UserMembership) private readonly membershipsRepo: Repository<UserMembership>,
     @InjectRepository(MembershipType) private readonly typesRepo: Repository<MembershipType>,
-    @InjectRepository(AttendanceRecord) private readonly attendanceRepo: Repository<AttendanceRecord>,
+    @InjectRepository(AttendanceRecord)
+    private readonly attendanceRepo: Repository<AttendanceRecord>,
     @InjectRepository(ClassBooking) private readonly bookingsRepo: Repository<ClassBooking>,
     @InjectRepository(Gym) private readonly gymsRepo: Repository<Gym>,
     @InjectRepository(User) private readonly usersRepo: Repository<User>,
@@ -54,13 +55,16 @@ export class ReportsService {
       where: { gymId, paidAt: Between(from, to) },
     });
 
-    const succeeded = payments.filter(p => p.status === PaymentStatus.SUCCEEDED);
+    const succeeded = payments.filter((p) => p.status === PaymentStatus.SUCCEEDED);
     const totalRevenue = succeeded.reduce((sum, p) => sum + Number(p.amount), 0);
 
     const byMethod = new Map<string, number>();
     const daily: Record<string, number> = {};
     for (const payment of succeeded) {
-      byMethod.set(payment.paymentMethod, (byMethod.get(payment.paymentMethod) ?? 0) + Number(payment.amount));
+      byMethod.set(
+        payment.paymentMethod,
+        (byMethod.get(payment.paymentMethod) ?? 0) + Number(payment.amount),
+      );
       const day = payment.paidAt?.toISOString().slice(0, 10) ?? 'sin-fecha';
       daily[day] = (daily[day] ?? 0) + Number(payment.amount);
     }
@@ -70,9 +74,9 @@ export class ReportsService {
       totalRevenue,
       totalPayments: payments.length,
       successfulPayments: succeeded.length,
-      failedPayments: payments.filter(p => p.status === PaymentStatus.FAILED).length,
-      pendingPayments: payments.filter(p => p.status === PaymentStatus.PENDING).length,
-      refunded: payments.filter(p => p.status === PaymentStatus.REFUNDED).length,
+      failedPayments: payments.filter((p) => p.status === PaymentStatus.FAILED).length,
+      pendingPayments: payments.filter((p) => p.status === PaymentStatus.PENDING).length,
+      refunded: payments.filter((p) => p.status === PaymentStatus.REFUNDED).length,
       revenueByMethod: Object.fromEntries(byMethod),
       dailyRevenue: daily,
     };
@@ -113,7 +117,10 @@ export class ReportsService {
       totalUsers,
       clients,
       activeMemberships,
-      attendanceToday: todayRows.reduce((acc, r) => ({ ...acc, [r.type]: parseInt(r.count, 10) }), {}),
+      attendanceToday: todayRows.reduce(
+        (acc, r) => ({ ...acc, [r.type]: parseInt(r.count, 10) }),
+        {},
+      ),
       estimatedCurrentOccupancy: Math.max(0, inside),
       reportedAt: new Date().toISOString(),
     };
@@ -152,13 +159,13 @@ export class ReportsService {
       .leftJoinAndSelect('um.membershipType', 'membership_type')
       .where('um.gym_id = :gymId', { gymId })
       .andWhere('um.status = :status', { status: MembershipStatus.ACTIVE })
-      .andWhere('um.end_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL \'7 days\'')
+      .andWhere("um.end_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '7 days'")
       .getMany();
 
     return {
       byType,
       byStatus: statuses.reduce((acc, r) => ({ ...acc, [r.status]: parseInt(r.count, 10) }), {}),
-      expiringWithin7Days: expiringSoon.map(um => ({
+      expiringWithin7Days: expiringSoon.map((um) => ({
         id: um.id,
         member: `${um.user?.firstName ?? ''} ${um.user?.lastName ?? ''}`,
         membershipType: um.membershipType?.name,
@@ -176,7 +183,7 @@ export class ReportsService {
 
     const rows = await this.attendanceRepo
       .createQueryBuilder('a')
-      .select("DATE(a.timestamp)", 'day')
+      .select('DATE(a.timestamp)', 'day')
       .addSelect('a.type', 'type')
       .addSelect('COUNT(*)', 'count')
       .where('a.gym_id = :gymId', { gymId })
@@ -231,7 +238,7 @@ export class ReportsService {
       take: 6,
     });
 
-    const currentMembership = memberships.find(m => m.status === MembershipStatus.ACTIVE) ?? null;
+    const currentMembership = memberships.find((m) => m.status === MembershipStatus.ACTIVE) ?? null;
 
     const paymentHistory = await this.paymentsRepo.find({
       where: { userId, status: PaymentStatus.SUCCEEDED },

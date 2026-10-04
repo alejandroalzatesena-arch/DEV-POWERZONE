@@ -76,88 +76,89 @@ async function seedUsers(gym: Gym): Promise<Record<string, User>> {
   const profileRepo = dataSource.getRepository(UserProfile);
   const hash = await bcrypt.hash(PASSWORD, BCRYPT_ROUNDS);
 
-  const usersToCreate: Array<Omit<Partial<User>, 'profile'> & { profile?: Partial<UserProfile> }> = [
-    {
-      email: 'superadmin@powerzone.app',
-      firstName: 'Sistema',
-      lastName: 'Super Admin',
-      role: UserRole.ADMIN,
-      isSuperAdmin: true,
-      isActive: true,
-      gymId: null,
-    },
-    {
-      email: 'admin@powerzone.app',
-      firstName: 'Laura',
-      lastName: 'Gómez',
-      role: UserRole.ADMIN,
-      isSuperAdmin: false,
-      isActive: true,
-      gymId: gym.id,
-      phone: '+52 55 1111 2222',
-      gender: UserGender.FEMALE,
-    },
-    {
-      email: 'trainer@powerzone.app',
-      firstName: 'Carlos',
-      lastName: 'Mendoza',
-      role: UserRole.TRAINER,
-      isSuperAdmin: false,
-      isActive: true,
-      gymId: gym.id,
-      phone: '+52 55 2222 3333',
-      gender: UserGender.MALE,
-    },
-    {
-      email: 'reception@powerzone.app',
-      firstName: 'Ana',
-      lastName: 'Ríos',
-      role: UserRole.RECEPTIONIST,
-      isSuperAdmin: false,
-      isActive: true,
-      gymId: gym.id,
-      phone: '+52 55 3333 4444',
-      gender: UserGender.FEMALE,
-    },
-    {
-      email: 'client@powerzone.app',
-      firstName: 'Diego',
-      lastName: 'Sánchez',
-      role: UserRole.CLIENT,
-      isSuperAdmin: false,
-      isActive: true,
-      gymId: gym.id,
-      phone: '+52 55 4444 5555',
-      gender: UserGender.MALE,
-      profile: {
-        heightCm: 178,
-        weightKg: 82.5,
-        bodyFatPct: 18,
-        goal: FitnessGoal.GAIN_MUSCLE,
-        activityLevel: ActivityLevel.MODERATE,
-        medicalConditions: [],
-        emergencyContactName: 'María Sánchez',
-        emergencyContactPhone: '+52 55 5555 6666',
+  const usersToCreate: Array<Omit<Partial<User>, 'profile'> & { profile?: Partial<UserProfile> }> =
+    [
+      {
+        email: 'superadmin@powerzone.app',
+        firstName: 'Sistema',
+        lastName: 'Super Admin',
+        role: UserRole.ADMIN,
+        isSuperAdmin: true,
+        isActive: true,
+        gymId: null,
       },
-    },
-    {
-      email: 'client2@powerzone.app',
-      firstName: 'Valeria',
-      lastName: 'Fernández',
-      role: UserRole.CLIENT,
-      isSuperAdmin: false,
-      isActive: true,
-      gymId: gym.id,
-      gender: UserGender.FEMALE,
-      profile: {
-        heightCm: 165,
-        weightKg: 58,
-        bodyFatPct: 24,
-        goal: FitnessGoal.LOSE_FAT,
-        activityLevel: ActivityLevel.ACTIVE,
+      {
+        email: 'admin@powerzone.app',
+        firstName: 'Laura',
+        lastName: 'Gómez',
+        role: UserRole.ADMIN,
+        isSuperAdmin: false,
+        isActive: true,
+        gymId: gym.id,
+        phone: '+52 55 1111 2222',
+        gender: UserGender.FEMALE,
       },
-    },
-  ];
+      {
+        email: 'trainer@powerzone.app',
+        firstName: 'Carlos',
+        lastName: 'Mendoza',
+        role: UserRole.TRAINER,
+        isSuperAdmin: false,
+        isActive: true,
+        gymId: gym.id,
+        phone: '+52 55 2222 3333',
+        gender: UserGender.MALE,
+      },
+      {
+        email: 'reception@powerzone.app',
+        firstName: 'Ana',
+        lastName: 'Ríos',
+        role: UserRole.RECEPTIONIST,
+        isSuperAdmin: false,
+        isActive: true,
+        gymId: gym.id,
+        phone: '+52 55 3333 4444',
+        gender: UserGender.FEMALE,
+      },
+      {
+        email: 'client@powerzone.app',
+        firstName: 'Diego',
+        lastName: 'Sánchez',
+        role: UserRole.CLIENT,
+        isSuperAdmin: false,
+        isActive: true,
+        gymId: gym.id,
+        phone: '+52 55 4444 5555',
+        gender: UserGender.MALE,
+        profile: {
+          heightCm: 178,
+          weightKg: 82.5,
+          bodyFatPct: 18,
+          goal: FitnessGoal.GAIN_MUSCLE,
+          activityLevel: ActivityLevel.MODERATE,
+          medicalConditions: [],
+          emergencyContactName: 'María Sánchez',
+          emergencyContactPhone: '+52 55 5555 6666',
+        },
+      },
+      {
+        email: 'client2@powerzone.app',
+        firstName: 'Valeria',
+        lastName: 'Fernández',
+        role: UserRole.CLIENT,
+        isSuperAdmin: false,
+        isActive: true,
+        gymId: gym.id,
+        gender: UserGender.FEMALE,
+        profile: {
+          heightCm: 165,
+          weightKg: 58,
+          bodyFatPct: 24,
+          goal: FitnessGoal.LOSE_FAT,
+          activityLevel: ActivityLevel.ACTIVE,
+        },
+      },
+    ];
 
   const saved: Record<string, User> = {};
   for (const data of usersToCreate) {
@@ -185,7 +186,7 @@ async function seedMembershipTypes(gym: Gym): Promise<Record<string, MembershipT
   const existing = await repo.find({ where: { gymId: gym.id } });
   if (existing.length > 0) {
     console.log(`Ya existen ${existing.length} tipos de membresía.`);
-    return Object.fromEntries(existing.map(t => [t.name, t]));
+    return Object.fromEntries(existing.map((t) => [t.name, t]));
   }
 
   const types = repo.create([
@@ -220,7 +221,11 @@ async function seedMembershipTypes(gym: Gym): Promise<Record<string, MembershipT
       durationDays: 365,
       price: 449.99,
       currency: 'usd',
-      features: ['Sesión de personal training mensual', 'Sauna y piscina', 'Plan de nutrición personalizado'],
+      features: [
+        'Sesión de personal training mensual',
+        'Sauna y piscina',
+        'Plan de nutrición personalizado',
+      ],
       maxClassesPerWeek: 12,
       isActive: true,
       sortOrder: 3,
@@ -228,10 +233,14 @@ async function seedMembershipTypes(gym: Gym): Promise<Record<string, MembershipT
   ]);
   const savedTypes = await repo.save(types);
   console.log(`Tipos de membresía creados: ${savedTypes.length}`);
-  return Object.fromEntries(savedTypes.map(t => [t.name, t]));
+  return Object.fromEntries(savedTypes.map((t) => [t.name, t]));
 }
 
-async function seedMemberships(gym: Gym, users: Record<string, User>, types: Record<string, MembershipType>): Promise<void> {
+async function seedMemberships(
+  gym: Gym,
+  users: Record<string, User>,
+  types: Record<string, MembershipType>,
+): Promise<void> {
   const umRepo = dataSource.getRepository(UserMembership);
   const paymentRepo = dataSource.getRepository(Payment);
 
@@ -295,7 +304,9 @@ async function seedMemberships(gym: Gym, users: Record<string, User>, types: Rec
   console.log('Membresías y pagos de ejemplo creados.');
 
   const paymentRepo2 = dataSource.getRepository(Payment);
-  const existingPayment = await paymentRepo2.findOne({ where: { userId: users['admin@powerzone.app'].id } });
+  const existingPayment = await paymentRepo2.findOne({
+    where: { userId: users['admin@powerzone.app'].id },
+  });
   if (!existingPayment) {
     await paymentRepo2.save(
       paymentRepo2.create({
@@ -324,18 +335,110 @@ async function seedExercises(): Promise<void> {
   }
 
   const list = [
-    { name: 'Press de banca', category: ExerciseCategory.CHEST, muscleGroup: 'Pectoral', equipmentNeeded: 'Barra, banco, discos', difficulty: 2, instructions: ['Acuéstate en el banco', 'Baja la barra al pecho', 'Empuja hacia arriba'] },
-    { name: 'Sentadilla', category: ExerciseCategory.LEGS, muscleGroup: 'Cuádriceps', equipmentNeeded: 'Barra, rack', difficulty: 3, instructions: ['Coloca la barra en la espalda', 'Baja flexionando rodillas y cadera', 'Sube empujando el suelo'] },
-    { name: 'Peso muerto convencional', category: ExerciseCategory.BACK, muscleGroup: 'Espalda baja y glúteos', equipmentNeeded: 'Barra, discos', difficulty: 4, instructions: ['Pies al ancho de hombros', 'Toma la barra', 'Extiende cadera y rodillas'] },
-    { name: 'Press militar', category: ExerciseCategory.SHOULDERS, muscleGroup: 'Hombros', equipmentNeeded: 'Barra o mancuernas', difficulty: 3, instructions: ['De pie, barra al pecho', 'Empuja hacia arriba', 'Controla el descenso'] },
-    { name: 'Remo con barra', category: ExerciseCategory.BACK, muscleGroup: 'Dorsal', equipmentNeeded: 'Barra, discos', difficulty: 3, instructions: ['Inclina el torso', 'Lleva la barra al abdomen', 'Aprieta los omóplatos'] },
-    { name: 'Curl de bíceps', category: ExerciseCategory.ARMS, muscleGroup: 'Bíceps', equipmentNeeded: 'Mancuernas', difficulty: 1, instructions: ['Mancuernas a los lados', 'Flexiona los codos', 'Baja controlado'] },
-    { name: 'Plancha', category: ExerciseCategory.CORE, muscleGroup: 'Core', equipmentNeeded: 'Tapete', difficulty: 1, instructions: ['Apoya antebrazos y pies', 'Mantén el cuerpo alineado', 'Aguanta 30-60 s'] },
-    { name: 'Cuerda de saltar', category: ExerciseCategory.CARDIO, muscleGroup: 'Cardio', equipmentNeeded: 'Cuerda', difficulty: 2, instructions: ['Salta manteniendo el ritmo', 'Muñecas suaves', 'Mantén respiración estable'] },
-    { name: 'Sentadilla con salto', category: ExerciseCategory.FULL_BODY, muscleGroup: 'Todo el cuerpo', equipmentNeeded: 'Ninguno', difficulty: 3, instructions: ['Baja en sentadilla', 'Explota hacia arriba', 'Aterriza suave'] },
-    { name: 'Dominadas', category: ExerciseCategory.BACK, muscleGroup: 'Dorsales', equipmentNeeded: 'Barra fija', difficulty: 4, instructions: ['Cuelga de la barra', 'Sube llevando codos al cuerpo', 'Baja controlado'] },
-    { name: 'Zancadas alternas', category: ExerciseCategory.LEGS, muscleGroup: 'Glúteos y cuádriceps', equipmentNeeded: 'Ninguno', difficulty: 2, instructions: ['Da un paso al frente', 'Baja la rodilla trasera', 'Empuja para volver'] },
-    { name: 'Hip thrust', category: ExerciseCategory.LEGS, muscleGroup: 'Glúteos', equipmentNeeded: 'Banco, barra', difficulty: 3, instructions: ['Apoya la espalda en el banco', 'Sube la cadera', 'Aprieta los glúteos arriba'] },
+    {
+      name: 'Press de banca',
+      category: ExerciseCategory.CHEST,
+      muscleGroup: 'Pectoral',
+      equipmentNeeded: 'Barra, banco, discos',
+      difficulty: 2,
+      instructions: ['Acuéstate en el banco', 'Baja la barra al pecho', 'Empuja hacia arriba'],
+    },
+    {
+      name: 'Sentadilla',
+      category: ExerciseCategory.LEGS,
+      muscleGroup: 'Cuádriceps',
+      equipmentNeeded: 'Barra, rack',
+      difficulty: 3,
+      instructions: [
+        'Coloca la barra en la espalda',
+        'Baja flexionando rodillas y cadera',
+        'Sube empujando el suelo',
+      ],
+    },
+    {
+      name: 'Peso muerto convencional',
+      category: ExerciseCategory.BACK,
+      muscleGroup: 'Espalda baja y glúteos',
+      equipmentNeeded: 'Barra, discos',
+      difficulty: 4,
+      instructions: ['Pies al ancho de hombros', 'Toma la barra', 'Extiende cadera y rodillas'],
+    },
+    {
+      name: 'Press militar',
+      category: ExerciseCategory.SHOULDERS,
+      muscleGroup: 'Hombros',
+      equipmentNeeded: 'Barra o mancuernas',
+      difficulty: 3,
+      instructions: ['De pie, barra al pecho', 'Empuja hacia arriba', 'Controla el descenso'],
+    },
+    {
+      name: 'Remo con barra',
+      category: ExerciseCategory.BACK,
+      muscleGroup: 'Dorsal',
+      equipmentNeeded: 'Barra, discos',
+      difficulty: 3,
+      instructions: ['Inclina el torso', 'Lleva la barra al abdomen', 'Aprieta los omóplatos'],
+    },
+    {
+      name: 'Curl de bíceps',
+      category: ExerciseCategory.ARMS,
+      muscleGroup: 'Bíceps',
+      equipmentNeeded: 'Mancuernas',
+      difficulty: 1,
+      instructions: ['Mancuernas a los lados', 'Flexiona los codos', 'Baja controlado'],
+    },
+    {
+      name: 'Plancha',
+      category: ExerciseCategory.CORE,
+      muscleGroup: 'Core',
+      equipmentNeeded: 'Tapete',
+      difficulty: 1,
+      instructions: ['Apoya antebrazos y pies', 'Mantén el cuerpo alineado', 'Aguanta 30-60 s'],
+    },
+    {
+      name: 'Cuerda de saltar',
+      category: ExerciseCategory.CARDIO,
+      muscleGroup: 'Cardio',
+      equipmentNeeded: 'Cuerda',
+      difficulty: 2,
+      instructions: ['Salta manteniendo el ritmo', 'Muñecas suaves', 'Mantén respiración estable'],
+    },
+    {
+      name: 'Sentadilla con salto',
+      category: ExerciseCategory.FULL_BODY,
+      muscleGroup: 'Todo el cuerpo',
+      equipmentNeeded: 'Ninguno',
+      difficulty: 3,
+      instructions: ['Baja en sentadilla', 'Explota hacia arriba', 'Aterriza suave'],
+    },
+    {
+      name: 'Dominadas',
+      category: ExerciseCategory.BACK,
+      muscleGroup: 'Dorsales',
+      equipmentNeeded: 'Barra fija',
+      difficulty: 4,
+      instructions: ['Cuelga de la barra', 'Sube llevando codos al cuerpo', 'Baja controlado'],
+    },
+    {
+      name: 'Zancadas alternas',
+      category: ExerciseCategory.LEGS,
+      muscleGroup: 'Glúteos y cuádriceps',
+      equipmentNeeded: 'Ninguno',
+      difficulty: 2,
+      instructions: ['Da un paso al frente', 'Baja la rodilla trasera', 'Empuja para volver'],
+    },
+    {
+      name: 'Hip thrust',
+      category: ExerciseCategory.LEGS,
+      muscleGroup: 'Glúteos',
+      equipmentNeeded: 'Banco, barra',
+      difficulty: 3,
+      instructions: [
+        'Apoya la espalda en el banco',
+        'Sube la cadera',
+        'Aprieta los glúteos arriba',
+      ],
+    },
   ];
   await repo.save(repo.create(list));
   console.log(`Ejercicios creados: ${list.length}`);
@@ -350,17 +453,127 @@ async function seedFoods(): Promise<void> {
   }
 
   const list = [
-    { name: 'Pechuga de pollo', category: FoodCategory.PROTEIN, servingSizeG: 100, calories: 165, protein: 31, carbs: 0, fats: 3.6, fiber: 0, sugar: 0 },
-    { name: 'Arroz integral', category: FoodCategory.CARBOHYDRATES, servingSizeG: 100, calories: 112, protein: 2.6, carbs: 23.5, fats: 0.9, fiber: 1.8, sugar: 0.4 },
-    { name: 'Aguacate', category: FoodCategory.FATS, servingSizeG: 100, calories: 160, protein: 2, carbs: 8.5, fats: 14.7, fiber: 6.7, sugar: 0.7 },
-    { name: 'Brócoli', category: FoodCategory.VEGETABLES, servingSizeG: 100, calories: 34, protein: 2.8, carbs: 6.6, fats: 0.4, fiber: 2.6, sugar: 1.7 },
-    { name: 'Plátano', category: FoodCategory.FRUITS, servingSizeG: 100, calories: 89, protein: 1.1, carbs: 22.8, fats: 0.3, fiber: 2.6, sugar: 12.2 },
-    { name: 'Yogur griego', category: FoodCategory.DAIRY, servingSizeG: 100, calories: 59, protein: 10, carbs: 3.6, fats: 0.4, fiber: 0, sugar: 3.2 },
-    { name: 'Huevo entero', category: FoodCategory.PROTEIN, servingSizeG: 100, calories: 155, protein: 13, carbs: 1.1, fats: 11, fiber: 0, sugar: 1.1 },
-    { name: 'Whey protein', category: FoodCategory.SUPPLEMENTS, servingSizeG: 30, calories: 120, protein: 24, carbs: 3, fats: 1.5, fiber: 0, sugar: 1 },
-    { name: 'Batata', category: FoodCategory.CARBOHYDRATES, servingSizeG: 100, calories: 86, protein: 1.6, carbs: 20, fats: 0.1, fiber: 3, sugar: 4.2 },
-    { name: 'Salmón', category: FoodCategory.PROTEIN, servingSizeG: 100, calories: 208, protein: 20, carbs: 0, fats: 13, fiber: 0, sugar: 0 },
-    { name: 'Avena', category: FoodCategory.CARBOHYDRATES, servingSizeG: 100, calories: 389, protein: 16.9, carbs: 66.3, fats: 6.9, fiber: 10.6, sugar: 0 },
+    {
+      name: 'Pechuga de pollo',
+      category: FoodCategory.PROTEIN,
+      servingSizeG: 100,
+      calories: 165,
+      protein: 31,
+      carbs: 0,
+      fats: 3.6,
+      fiber: 0,
+      sugar: 0,
+    },
+    {
+      name: 'Arroz integral',
+      category: FoodCategory.CARBOHYDRATES,
+      servingSizeG: 100,
+      calories: 112,
+      protein: 2.6,
+      carbs: 23.5,
+      fats: 0.9,
+      fiber: 1.8,
+      sugar: 0.4,
+    },
+    {
+      name: 'Aguacate',
+      category: FoodCategory.FATS,
+      servingSizeG: 100,
+      calories: 160,
+      protein: 2,
+      carbs: 8.5,
+      fats: 14.7,
+      fiber: 6.7,
+      sugar: 0.7,
+    },
+    {
+      name: 'Brócoli',
+      category: FoodCategory.VEGETABLES,
+      servingSizeG: 100,
+      calories: 34,
+      protein: 2.8,
+      carbs: 6.6,
+      fats: 0.4,
+      fiber: 2.6,
+      sugar: 1.7,
+    },
+    {
+      name: 'Plátano',
+      category: FoodCategory.FRUITS,
+      servingSizeG: 100,
+      calories: 89,
+      protein: 1.1,
+      carbs: 22.8,
+      fats: 0.3,
+      fiber: 2.6,
+      sugar: 12.2,
+    },
+    {
+      name: 'Yogur griego',
+      category: FoodCategory.DAIRY,
+      servingSizeG: 100,
+      calories: 59,
+      protein: 10,
+      carbs: 3.6,
+      fats: 0.4,
+      fiber: 0,
+      sugar: 3.2,
+    },
+    {
+      name: 'Huevo entero',
+      category: FoodCategory.PROTEIN,
+      servingSizeG: 100,
+      calories: 155,
+      protein: 13,
+      carbs: 1.1,
+      fats: 11,
+      fiber: 0,
+      sugar: 1.1,
+    },
+    {
+      name: 'Whey protein',
+      category: FoodCategory.SUPPLEMENTS,
+      servingSizeG: 30,
+      calories: 120,
+      protein: 24,
+      carbs: 3,
+      fats: 1.5,
+      fiber: 0,
+      sugar: 1,
+    },
+    {
+      name: 'Batata',
+      category: FoodCategory.CARBOHYDRATES,
+      servingSizeG: 100,
+      calories: 86,
+      protein: 1.6,
+      carbs: 20,
+      fats: 0.1,
+      fiber: 3,
+      sugar: 4.2,
+    },
+    {
+      name: 'Salmón',
+      category: FoodCategory.PROTEIN,
+      servingSizeG: 100,
+      calories: 208,
+      protein: 20,
+      carbs: 0,
+      fats: 13,
+      fiber: 0,
+      sugar: 0,
+    },
+    {
+      name: 'Avena',
+      category: FoodCategory.CARBOHYDRATES,
+      servingSizeG: 100,
+      calories: 389,
+      protein: 16.9,
+      carbs: 66.3,
+      fats: 6.9,
+      fiber: 10.6,
+      sugar: 0,
+    },
   ];
   await repo.save(repo.create(list));
   console.log(`Alimentos creados: ${list.length}`);
@@ -455,12 +668,30 @@ async function seedAttendance(gym: Gym, users: Record<string, User>): Promise<vo
     out.setHours(11, 0, 0, 0);
 
     records.push(
-      attendanceRepo.create({ gymId: gym.id, userId: client.id, type: AttendanceType.CHECK_IN, method: AttendanceMethod.MEMBER_CARD, timestamp: ts }),
-      attendanceRepo.create({ gymId: gym.id, userId: client.id, type: AttendanceType.CHECK_OUT, method: AttendanceMethod.MEMBER_CARD, timestamp: out }),
+      attendanceRepo.create({
+        gymId: gym.id,
+        userId: client.id,
+        type: AttendanceType.CHECK_IN,
+        method: AttendanceMethod.MEMBER_CARD,
+        timestamp: ts,
+      }),
+      attendanceRepo.create({
+        gymId: gym.id,
+        userId: client.id,
+        type: AttendanceType.CHECK_OUT,
+        method: AttendanceMethod.MEMBER_CARD,
+        timestamp: out,
+      }),
     );
     if (day <= 3) {
       records.push(
-        attendanceRepo.create({ gymId: gym.id, userId: client2.id, type: AttendanceType.CHECK_IN, method: AttendanceMethod.QR_CODE, timestamp: ts }),
+        attendanceRepo.create({
+          gymId: gym.id,
+          userId: client2.id,
+          type: AttendanceType.CHECK_IN,
+          method: AttendanceMethod.QR_CODE,
+          timestamp: ts,
+        }),
       );
     }
   }
@@ -478,7 +709,7 @@ async function seedNutrition(gym: Gym, users: Record<string, User>): Promise<voi
   if (existing > 0) return;
 
   const foods = await foodRepo.find();
-  const map = Object.fromEntries(foods.map(f => [f.name, f]));
+  const map = Object.fromEntries(foods.map((f) => [f.name, f]));
 
   const logs = [
     { food: 'Avena', mealType: MealType.BREAKFAST, quantityG: 80 },
@@ -492,7 +723,7 @@ async function seedNutrition(gym: Gym, users: Record<string, User>): Promise<voi
   for (let day = 0; day < 3; day++) {
     for (const entry of logs) {
       const eaten = daysFromNow(-day);
-      eaten.setHours(8 + logs.indexOf(entry) % 10, 0, 0, 0);
+      eaten.setHours(8 + (logs.indexOf(entry) % 10), 0, 0, 0);
       rows.push(
         logRepo.create({
           gymId: gym.id,
@@ -501,7 +732,9 @@ async function seedNutrition(gym: Gym, users: Record<string, User>): Promise<voi
           mealType: entry.mealType,
           quantityG: entry.quantityG,
           eatenAt: eaten,
-          calculatedCalories: Number(map[entry.food].calories) * (entry.quantityG / Number(map[entry.food].servingSizeG)),
+          calculatedCalories:
+            Number(map[entry.food].calories) *
+            (entry.quantityG / Number(map[entry.food].servingSizeG)),
         }),
       );
     }
@@ -516,12 +749,85 @@ async function seedInventory(gym: Gym): Promise<void> {
   if (existing > 0) return;
 
   const items = repo.create([
-    { gymId: gym.id, name: 'Banco de press', category: InventoryCategory.EQUIPMENT, description: 'Banco plano', quantity: 4, availableQuantity: 4, condition: InventoryCondition.GOOD, status: InventoryStatus.AVAILABLE, replacementCost: 299.99, purchasedAt: dateOnly(-180), supplier: 'Spartan Fitness', location: 'Área de pesas' },
-    { gymId: gym.id, name: 'Juego de mancuernas 2-40 kg', category: InventoryCategory.WEIGHTS, quantity: 6, availableQuantity: 5, condition: InventoryCondition.GOOD, status: InventoryStatus.AVAILABLE, replacementCost: 899, purchasedAt: dateOnly(-360), supplier: 'IronGym', location: 'Área de pesas' },
-    { gymId: gym.id, name: 'Cinta de correr', category: InventoryCategory.MACHINES, quantity: 8, availableQuantity: 7, condition: InventoryCondition.FAIR, status: InventoryStatus.AVAILABLE, replacementCost: 1499, purchasedAt: dateOnly(-720), supplier: 'CardioTech', location: 'Sala de cardio' },
-    { gymId: gym.id, name: 'Bicicleta estática', category: InventoryCategory.MACHINES, quantity: 6, availableQuantity: 6, condition: InventoryCondition.NEW, status: InventoryStatus.AVAILABLE, replacementCost: 1099, purchasedAt: dateOnly(-30), supplier: 'CardioTech', location: 'Estudio de ciclismo' },
-    { gymId: gym.id, name: 'Cuerdas de batalla', category: InventoryCategory.ACCESSORIES, quantity: 3, availableQuantity: 3, condition: InventoryCondition.GOOD, status: InventoryStatus.AVAILABLE, replacementCost: 129, purchasedAt: dateOnly(-90), supplier: 'Spartan Fitness', location: 'Área funcional' },
-    { gymId: gym.id, name: 'Torre multifuncional', category: InventoryCategory.EQUIPMENT, quantity: 1, availableQuantity: 0, condition: InventoryCondition.POOR, status: InventoryStatus.MAINTENANCE, replacementCost: 2499, purchasedAt: dateOnly(-500), supplier: 'Spartan Fitness', location: 'Área de pesas' },
+    {
+      gymId: gym.id,
+      name: 'Banco de press',
+      category: InventoryCategory.EQUIPMENT,
+      description: 'Banco plano',
+      quantity: 4,
+      availableQuantity: 4,
+      condition: InventoryCondition.GOOD,
+      status: InventoryStatus.AVAILABLE,
+      replacementCost: 299.99,
+      purchasedAt: dateOnly(-180),
+      supplier: 'Spartan Fitness',
+      location: 'Área de pesas',
+    },
+    {
+      gymId: gym.id,
+      name: 'Juego de mancuernas 2-40 kg',
+      category: InventoryCategory.WEIGHTS,
+      quantity: 6,
+      availableQuantity: 5,
+      condition: InventoryCondition.GOOD,
+      status: InventoryStatus.AVAILABLE,
+      replacementCost: 899,
+      purchasedAt: dateOnly(-360),
+      supplier: 'IronGym',
+      location: 'Área de pesas',
+    },
+    {
+      gymId: gym.id,
+      name: 'Cinta de correr',
+      category: InventoryCategory.MACHINES,
+      quantity: 8,
+      availableQuantity: 7,
+      condition: InventoryCondition.FAIR,
+      status: InventoryStatus.AVAILABLE,
+      replacementCost: 1499,
+      purchasedAt: dateOnly(-720),
+      supplier: 'CardioTech',
+      location: 'Sala de cardio',
+    },
+    {
+      gymId: gym.id,
+      name: 'Bicicleta estática',
+      category: InventoryCategory.MACHINES,
+      quantity: 6,
+      availableQuantity: 6,
+      condition: InventoryCondition.NEW,
+      status: InventoryStatus.AVAILABLE,
+      replacementCost: 1099,
+      purchasedAt: dateOnly(-30),
+      supplier: 'CardioTech',
+      location: 'Estudio de ciclismo',
+    },
+    {
+      gymId: gym.id,
+      name: 'Cuerdas de batalla',
+      category: InventoryCategory.ACCESSORIES,
+      quantity: 3,
+      availableQuantity: 3,
+      condition: InventoryCondition.GOOD,
+      status: InventoryStatus.AVAILABLE,
+      replacementCost: 129,
+      purchasedAt: dateOnly(-90),
+      supplier: 'Spartan Fitness',
+      location: 'Área funcional',
+    },
+    {
+      gymId: gym.id,
+      name: 'Torre multifuncional',
+      category: InventoryCategory.EQUIPMENT,
+      quantity: 1,
+      availableQuantity: 0,
+      condition: InventoryCondition.POOR,
+      status: InventoryStatus.MAINTENANCE,
+      replacementCost: 2499,
+      purchasedAt: dateOnly(-500),
+      supplier: 'Spartan Fitness',
+      location: 'Área de pesas',
+    },
   ]);
   await repo.save(items);
   console.log(`Artículos de inventario creados: ${items.length}`);

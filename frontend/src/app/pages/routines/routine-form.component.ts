@@ -13,7 +13,13 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
 import { RoutinesService } from '../../core/services/routines.service';
 import { ExercisesService } from '../../core/services/exercises.service';
 import { Exercise } from '../../core/models/models';
-import { ROUTINE_OBJECTIVES, routineObjectiveLabel, DAY_NAMES, fitnessGoalLabel, FITNESS_GOALS } from '../../shared/utils/labels';
+import {
+  ROUTINE_OBJECTIVES,
+  routineObjectiveLabel,
+  DAY_NAMES,
+  fitnessGoalLabel,
+  FITNESS_GOALS,
+} from '../../shared/utils/labels';
 
 @Component({
   selector: 'app-routine-form',
@@ -47,7 +53,8 @@ export class RoutineFormComponent implements OnInit {
 
   readonly objectives = ROUTINE_OBJECTIVES;
   readonly fitnessGoals = FITNESS_GOALS.filter((g) =>
-    ['gain_muscle', 'weight_loss', 'endurance', 'general_fitness'].includes(g.value));
+    ['gain_muscle', 'weight_loss', 'endurance', 'general_fitness'].includes(g.value),
+  );
   readonly loading = true;
 
   tryToSync = false;
@@ -138,7 +145,9 @@ export class RoutineFormComponent implements OnInit {
       : this.routines.create(payload);
     obs.subscribe({
       next: () => {
-        this.snackbar.open(this.editing ? 'Rutina actualizada' : 'Rutina creada', 'Cerrar', { duration: 3000 });
+        this.snackbar.open(this.editing ? 'Rutina actualizada' : 'Rutina creada', 'Cerrar', {
+          duration: 3000,
+        });
         this.router.navigate(['/routines']);
       },
       error: () => undefined,

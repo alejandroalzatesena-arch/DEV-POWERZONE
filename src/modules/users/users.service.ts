@@ -47,7 +47,9 @@ export class UsersService {
       throw new ForbiddenException('No puedes gestionar usuarios de otro gimnasio.');
     }
     if (user.role === UserRole.ADMIN && actor.role !== UserRole.ADMIN) {
-      throw new ForbiddenException('Solo un administrador puede gestionar a otros administradores.');
+      throw new ForbiddenException(
+        'Solo un administrador puede gestionar a otros administradores.',
+      );
     }
   }
 
@@ -126,7 +128,7 @@ export class UsersService {
     }
     if (search) {
       qb.andWhere(
-        "(u.first_name ILIKE :search OR u.last_name ILIKE :search OR u.email ILIKE :search)",
+        '(u.first_name ILIKE :search OR u.last_name ILIKE :search OR u.email ILIKE :search)',
         { search: `%${search}%` },
       );
     }

@@ -7,9 +7,7 @@ import { Exercise } from './entities/exercise.entity';
 
 @Injectable()
 export class ExercisesService {
-  constructor(
-    @InjectRepository(Exercise) private readonly exercisesRepo: Repository<Exercise>,
-  ) {}
+  constructor(@InjectRepository(Exercise) private readonly exercisesRepo: Repository<Exercise>) {}
 
   async create(dto: CreateExerciseDto): Promise<Exercise> {
     const exercise = this.exercisesRepo.create(dto);

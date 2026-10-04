@@ -21,7 +21,8 @@ export class AiProxyController {
   @Post('chat')
   @ApiOperation({
     summary: 'Chatbot asistente (IA)',
-    description: 'Envía un mensaje al asistente virtual basado en FastAPI. Si la IA está caída usa un fallback local.',
+    description:
+      'Envía un mensaje al asistente virtual basado en FastAPI. Si la IA está caída usa un fallback local.',
   })
   @ApiResponse({ status: 201, description: 'Respuesta del asistente' })
   chat(@Body() dto: ChatDto): Promise<{ reply: string }> {
@@ -31,7 +32,9 @@ export class AiProxyController {
   @Post('routines/generate')
   @ApiOperation({ summary: 'Generar rutina con IA' })
   @ApiResponse({ status: 201, description: 'Rutina generada' })
-  generateRoutine(@Body() dto: AiGenerateRoutineDto): Promise<{ title: string; description: string; exercises: any[] }> {
+  generateRoutine(
+    @Body() dto: AiGenerateRoutineDto,
+  ): Promise<{ title: string; description: string; exercises: any[] }> {
     return this.aiProxyService.generateRoutine(dto);
   }
 

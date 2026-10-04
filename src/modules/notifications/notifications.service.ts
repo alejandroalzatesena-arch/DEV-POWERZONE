@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
@@ -11,7 +6,11 @@ import { PaginatedResult, paginate } from '../../common/dto/pagination.dto';
 import { NotificationChannel, NotificationType, UserRole } from '../../common/enums';
 import { User } from '../users/entities/user.entity';
 import { AppNotification } from './entities/notification.entity';
-import { CreateNotificationDto, QueryNotificationsDto, SendMessageDto } from './dto/notifications.dto';
+import {
+  CreateNotificationDto,
+  QueryNotificationsDto,
+  SendMessageDto,
+} from './dto/notifications.dto';
 import { NotificationsGateway } from './notifications.gateway';
 
 @Injectable()
@@ -19,7 +18,8 @@ export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
 
   constructor(
-    @InjectRepository(AppNotification) private readonly notificationsRepo: Repository<AppNotification>,
+    @InjectRepository(AppNotification)
+    private readonly notificationsRepo: Repository<AppNotification>,
     @InjectRepository(User) private readonly usersRepo: Repository<User>,
     private readonly gateway: NotificationsGateway,
   ) {}
@@ -71,7 +71,10 @@ export class NotificationsService {
     return saved;
   }
 
-  async findMine(query: QueryNotificationsDto, actor: JwtPayload): Promise<PaginatedResult<AppNotification>> {
+  async findMine(
+    query: QueryNotificationsDto,
+    actor: JwtPayload,
+  ): Promise<PaginatedResult<AppNotification>> {
     const { page, limit, sortBy, sortOrder, unreadOnly, type } = query;
     const where: Record<string, any> = { userId: actor.sub };
     if (unreadOnly) where.isRead = false;

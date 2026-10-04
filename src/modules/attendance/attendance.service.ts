@@ -15,7 +15,12 @@ import { User } from '../users/entities/user.entity';
 import { UserMembership } from '../memberships/entities/user-membership.entity';
 import { GymClass } from '../classes/entities/gym-class.entity';
 import { AttendanceRecord } from './entities/attendance.entity';
-import { CheckInDto, CheckOutDto, QueryAttendanceDto, RecordClassAttendanceDto } from './dto/attendance.dto';
+import {
+  CheckInDto,
+  CheckOutDto,
+  QueryAttendanceDto,
+  RecordClassAttendanceDto,
+} from './dto/attendance.dto';
 import { OccupancyPayload, AttendanceGateway } from './attendance.gateway';
 import { RedisService } from '../../common/redis/redis.service';
 
@@ -24,7 +29,8 @@ export class AttendanceService {
   private readonly logger = new Logger(AttendanceService.name);
 
   constructor(
-    @InjectRepository(AttendanceRecord) private readonly attendanceRepo: Repository<AttendanceRecord>,
+    @InjectRepository(AttendanceRecord)
+    private readonly attendanceRepo: Repository<AttendanceRecord>,
     @InjectRepository(UserMembership) private readonly membershipsRepo: Repository<UserMembership>,
     @InjectRepository(User) private readonly usersRepo: Repository<User>,
     @InjectRepository(Gym) private readonly gymsRepo: Repository<Gym>,
@@ -84,10 +90,12 @@ export class AttendanceService {
       .createQueryBuilder('a')
       .where('a.user_id = :userId', { userId })
       .andWhere("a.type = 'check_in'")
-      .andWhere(`NOT EXISTS (
+      .andWhere(
+        `NOT EXISTS (
         SELECT 1 FROM attendance_records o
         WHERE o.user_id = a.user_id AND o.type = 'check_out' AND o.timestamp > a.timestamp
-      )`)
+      )`,
+      )
       .getOne();
     return !!result;
   }
@@ -134,7 +142,10 @@ export class AttendanceService {
   // ------------------------------------------------------------------
   // Historial
   // ------------------------------------------------------------------
-  async findAll(query: QueryAttendanceDto, actor: JwtPayload): Promise<PaginatedResult<AttendanceRecord>> {
+  async findAll(
+    query: QueryAttendanceDto,
+    actor: JwtPayload,
+  ): Promise<PaginatedResult<AttendanceRecord>> {
     const { page, limit, sortBy, sortOrder, type, userId, from, to } = query;
 
     const qb = this.attendanceRepo
@@ -162,7 +173,10 @@ export class AttendanceService {
     return paginate(items, total, page, limit);
   }
 
-  async myHistory(query: QueryAttendanceDto, actor: JwtPayload): Promise<PaginatedResult<AttendanceRecord>> {
+  async myHistory(
+    query: QueryAttendanceDto,
+    actor: JwtPayload,
+  ): Promise<PaginatedResult<AttendanceRecord>> {
     return this.findAll({ ...query, userId: actor.sub }, actor);
   }
 
@@ -199,7 +213,9 @@ export class AttendanceService {
     return inside;
   }
 
-  async capacityStatus(gymId: string): Promise<{ current: number; maxCapacity: number; isFull: boolean }> {
+  async capacityStatus(
+    gymId: string,
+  ): Promise<{ current: number; maxCapacity: number; isFull: boolean }> {
     const gym = await this.gymsRepo.findOne({ where: { id: gymId } });
     if (!gym) throw new NotFoundException('Gimnasio no encontrado.');
 

@@ -7,12 +7,24 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { PaymentsService } from '../../core/services/payments.service';
 import { Payment } from '../../core/models/models';
-import { formatMoney, formatDate, paymentStatus, paymentMethodLabel } from '../../shared/utils/labels';
+import {
+  formatMoney,
+  formatDate,
+  paymentStatus,
+  paymentMethodLabel,
+} from '../../shared/utils/labels';
 
 @Component({
   selector: 'app-my-payments',
   standalone: true,
-  imports: [MatIconModule, MatCardModule, MatTableModule, MatPaginatorModule, PageHeaderComponent, EmptyStateComponent],
+  imports: [
+    MatIconModule,
+    MatCardModule,
+    MatTableModule,
+    MatPaginatorModule,
+    PageHeaderComponent,
+    EmptyStateComponent,
+  ],
   templateUrl: './my-payments.component.html',
   styleUrl: '../payments/payments.component.scss',
 })

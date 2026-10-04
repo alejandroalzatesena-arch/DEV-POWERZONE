@@ -1,6 +1,11 @@
 import { Component, Inject, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -229,22 +234,50 @@ export class MembershipsComponent implements OnInit {
 @Component({
   selector: 'pz-membership-type-dialog',
   standalone: true,
-  imports: [MatDialogModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatButtonModule],
+  imports: [
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatButtonModule,
+  ],
   template: `
     <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">
       {{ data ? 'Editar tipo de membresía' : 'Nuevo tipo de membresía' }}
     </h2>
-    <mat-dialog-content style="display:grid;gap:10px;padding:16px 24px;min-width:440px;max-height:70vh">
-      <mat-form-field appearance="outline"><mat-label>Nombre</mat-label><input matInput formControlName="name" placeholder="Mensual / Trimestral" /></mat-form-field>
-      <mat-form-field appearance="outline"><mat-label>Descripción</mat-label><textarea matInput formControlName="description" rows="2"></textarea></mat-form-field>
+    <mat-dialog-content
+      style="display:grid;gap:10px;padding:16px 24px;min-width:440px;max-height:70vh"
+    >
+      <mat-form-field appearance="outline"
+        ><mat-label>Nombre</mat-label
+        ><input matInput formControlName="name" placeholder="Mensual / Trimestral"
+      /></mat-form-field>
+      <mat-form-field appearance="outline"
+        ><mat-label>Descripción</mat-label
+        ><textarea matInput formControlName="description" rows="2"></textarea>
+      </mat-form-field>
       <div class="row3">
-        <mat-form-field appearance="outline"><mat-label>Duración (días)</mat-label><input matInput type="number" formControlName="durationDays" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Precio</mat-label><input matInput type="number" formControlName="price" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Moneda</mat-label><input matInput formControlName="currency" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Duración (días)</mat-label
+          ><input matInput type="number" formControlName="durationDays"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Precio</mat-label><input matInput type="number" formControlName="price"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Moneda</mat-label><input matInput formControlName="currency"
+        /></mat-form-field>
       </div>
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Clases máx / semana</mat-label><input matInput type="number" formControlName="maxClassesPerWeek" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Orden</mat-label><input matInput type="number" formControlName="sortOrder" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Clases máx / semana</mat-label
+          ><input matInput type="number" formControlName="maxClassesPerWeek"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Orden</mat-label><input matInput type="number" formControlName="sortOrder"
+        /></mat-form-field>
       </div>
       <mat-form-field appearance="outline">
         <mat-label>Beneficios (uno por línea)</mat-label>
@@ -254,10 +287,23 @@ export class MembershipsComponent implements OnInit {
     </mat-dialog-content>
     <mat-dialog-actions align="end" style="padding:8px 24px 20px">
       <button mat-button class="pz-btn-ghost" mat-dialog-close>Cancelar</button>
-      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">Guardar</button>
+      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">
+        Guardar
+      </button>
     </mat-dialog-actions>
   `,
-  styles: `.row3{display:grid;grid-template-columns:1.2fr 1fr 0.8fr;gap:10px}.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}`,
+  styles: `
+    .row3 {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 0.8fr;
+      gap: 10px;
+    }
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+  `,
 })
 export class MembershipTypeDialog {
   readonly form = new FormBuilder().nonNullable.group({
@@ -299,7 +345,10 @@ export class MembershipTypeDialog {
       currency: v.currency,
       maxClassesPerWeek: v.maxClassesPerWeek ? Number(v.maxClassesPerWeek) : undefined,
       sortOrder: v.sortOrder != null ? Number(v.sortOrder) : undefined,
-      features: v.featuresText.split('\n').map((s) => s.trim()).filter(Boolean),
+      features: v.featuresText
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean),
       isActive: v.isActive,
     });
   }
@@ -308,7 +357,15 @@ export class MembershipTypeDialog {
 @Component({
   selector: 'pz-assign-membership-dialog',
   standalone: true,
-  imports: [MatDialogModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatButtonModule],
+  imports: [
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatButtonModule,
+  ],
   template: `
     <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">Asignar membresía</h2>
     <mat-dialog-content style="display:grid;gap:10px;padding:16px 24px;min-width:440px">
@@ -324,7 +381,9 @@ export class MembershipTypeDialog {
         <mat-label>Tipo de membresía</mat-label>
         <mat-select formControlName="membershipTypeId" (selectionChange)="onType($event.value)">
           @for (t of types; track t.id) {
-            <mat-option [value]="t.id">{{ t.name }} · {{ t.durationDays }} días · {{ t.price }}{{ t.currency }}</mat-option>
+            <mat-option [value]="t.id"
+              >{{ t.name }} · {{ t.durationDays }} días · {{ t.price }}{{ t.currency }}</mat-option
+            >
           }
         </mat-select>
       </mat-form-field>
@@ -341,7 +400,9 @@ export class MembershipTypeDialog {
     </mat-dialog-content>
     <mat-dialog-actions align="end" style="padding:8px 24px 20px">
       <button mat-button class="pz-btn-ghost" mat-dialog-close>Cancelar</button>
-      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">Asignar</button>
+      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">
+        Asignar
+      </button>
     </mat-dialog-actions>
   `,
 })

@@ -2,7 +2,8 @@
   <pz-page-header
     eyebrow="Mi agenda"
     title="Mis reservas"
-    subtitle="Clases que reservaste en el gimnasio." />
+    subtitle="Clases que reservaste en el gimnasio."
+  />
 
   <div class="bookings">
     @for (b of rows(); track b.id) {
@@ -17,7 +18,9 @@
               <div class="b-name">{{ b.class?.name }}</div>
               @if (b.class?.instructor) {
                 <div class="b-sub">
-                  <div class="mini-avatar">{{ initials(b.class?.instructor.firstName, b.class?.instructor.lastName) }}</div>
+                  <div class="mini-avatar">
+                    {{ initials(b.class?.instructor.firstName, b.class?.instructor.lastName) }}
+                  </div>
                   {{ b.class?.instructor.fullName }}
                 </div>
               }
@@ -27,7 +30,9 @@
             </div>
           </div>
           <div class="b-side">
-            <span class="pz-badge" [class]="'badge-' + bookingStatus(b.status).color">{{ bookingStatus(b.status).label }}</span>
+            <span class="pz-badge" [class]="'badge-' + bookingStatus(b.status).color">{{
+              bookingStatus(b.status).label
+            }}</span>
             @if (isUpcoming(b) && b.status === 'confirmed') {
               <button mat-stroked-button class="pz-btn-ghost" (click)="cancel(b)">
                 <mat-icon>event_busy</mat-icon> Cancelar
@@ -41,7 +46,8 @@
         <pz-empty
           icon="event_available"
           title="Sin reservas"
-          message="Reservá tu lugar en las próximas clases desde la sección Clases." />
+          message="Reservá tu lugar en las próximas clases desde la sección Clases."
+        />
       }
     }
   </div>
@@ -53,6 +59,7 @@
     [pageIndex]="page"
     [pageSizeOptions]="[10, 20]"
     (page)="onPage($event)"
-    showFirstLastButtons>
+    showFirstLastButtons
+  >
   </mat-paginator>
 </div>

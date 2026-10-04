@@ -161,7 +161,8 @@ export class PaymentsService {
         },
       ],
       customer_email: user.email,
-      success_url: dto.successUrl || `http://localhost:3001/checkout/success?payment_id=${payment.id}`,
+      success_url:
+        dto.successUrl || `http://localhost:3001/checkout/success?payment_id=${payment.id}`,
       cancel_url: dto.cancelUrl || `http://localhost:3001/checkout/cancel`,
       metadata: { paymentId: payment.id, gymId: user.gymId!, userId: user.id },
     });

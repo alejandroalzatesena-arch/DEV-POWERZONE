@@ -50,7 +50,11 @@ export class UsersController {
 
   @Get('me/profile')
   @ApiOperation({ summary: 'Mi perfil corporal' })
-  @ApiResponse({ status: 200, description: 'Perfil corporal del usuario autenticado', type: UserProfile })
+  @ApiResponse({
+    status: 200,
+    description: 'Perfil corporal del usuario autenticado',
+    type: UserProfile,
+  })
   getMyProfile(@CurrentUser() actor: JwtPayload): Promise<UserProfile> {
     return this.usersService.getProfile(actor.sub, actor);
   }

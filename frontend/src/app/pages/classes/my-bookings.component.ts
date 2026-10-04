@@ -14,7 +14,15 @@ import { formatDate, timeOnly, bookingStatus, initials } from '../../shared/util
 @Component({
   selector: 'app-my-bookings',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatCardModule, MatPaginatorModule, DatePipe, PageHeaderComponent, EmptyStateComponent],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatPaginatorModule,
+    DatePipe,
+    PageHeaderComponent,
+    EmptyStateComponent,
+  ],
   templateUrl: './my-bookings.component.html',
   styleUrl: './my-bookings.component.scss',
 })

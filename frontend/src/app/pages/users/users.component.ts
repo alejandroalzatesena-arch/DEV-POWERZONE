@@ -9,14 +9,25 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { UsersService } from '../../core/services/users.service';
 import { GymsService } from '../../core/services/gyms.service';
 import { ToastService } from '../../core/services/toast.service';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/models';
-import { formatDate, initials, roleLabel, genderLabel, USER_ROLES } from '../../shared/utils/labels';
+import {
+  formatDate,
+  initials,
+  roleLabel,
+  genderLabel,
+  USER_ROLES,
+} from '../../shared/utils/labels';
 
 @Component({
   selector: 'app-users',
@@ -95,12 +106,18 @@ export class UsersComponent implements OnInit {
       if (!res) return;
       if (user) {
         this.users.update(user.id, res).subscribe({
-          next: () => { this.toast.success('Usuario actualizado'); this.load(); },
+          next: () => {
+            this.toast.success('Usuario actualizado');
+            this.load();
+          },
           error: () => undefined,
         });
       } else {
         this.users.create(res).subscribe({
-          next: () => { this.toast.success('Usuario creado'); this.load(); },
+          next: () => {
+            this.toast.success('Usuario creado');
+            this.load();
+          },
           error: () => undefined,
         });
       }
@@ -119,7 +136,10 @@ export class UsersComponent implements OnInit {
 
   remove(u: User): void {
     this.users.remove(u.id).subscribe({
-      next: () => { this.toast.success('Usuario eliminado'); this.load(); },
+      next: () => {
+        this.toast.success('Usuario eliminado');
+        this.load();
+      },
       error: () => undefined,
     });
   }
@@ -132,10 +152,14 @@ export class UsersComponent implements OnInit {
 
   roleBadge(r: string): string {
     switch (r) {
-      case 'admin': return 'badge-volt';
-      case 'trainer': return 'badge-orange';
-      case 'receptionist': return 'badge-info';
-      default: return 'badge-muted';
+      case 'admin':
+        return 'badge-volt';
+      case 'trainer':
+        return 'badge-orange';
+      case 'receptionist':
+        return 'badge-info';
+      default:
+        return 'badge-muted';
     }
   }
 
@@ -149,48 +173,92 @@ export class UsersComponent implements OnInit {
 @Component({
   selector: 'pz-user-dialog',
   standalone: true,
-  imports: [MatDialogModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule],
+  imports: [
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+  ],
   template: `
-    <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">{{ data?.user ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
+    <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">
+      {{ data?.user ? 'Editar usuario' : 'Nuevo usuario' }}
+    </h2>
     <mat-dialog-content style="display:grid;gap:10px;padding:16px 24px;min-width:480px">
       @if (!data?.user) {
         <div class="row2">
-          <mat-form-field appearance="outline"><mat-label>Email</mat-label><input matInput formControlName="email" /></mat-form-field>
-          <mat-form-field appearance="outline"><mat-label>Contraseña</mat-label><input matInput type="password" formControlName="password" /></mat-form-field>
+          <mat-form-field appearance="outline"
+            ><mat-label>Email</mat-label><input matInput formControlName="email"
+          /></mat-form-field>
+          <mat-form-field appearance="outline"
+            ><mat-label>Contraseña</mat-label
+            ><input matInput type="password" formControlName="password"
+          /></mat-form-field>
         </div>
       }
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Nombre</mat-label><input matInput formControlName="firstName" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Apellido</mat-label><input matInput formControlName="lastName" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Nombre</mat-label><input matInput formControlName="firstName"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Apellido</mat-label><input matInput formControlName="lastName"
+        /></mat-form-field>
       </div>
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Teléfono</mat-label><input matInput formControlName="phone" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Sexo</mat-label><mat-select formControlName="gender">
-          <mat-option value="">—</mat-option>
-          <mat-option value="male">Masculino</mat-option>
-          <mat-option value="female">Femenino</mat-option>
-          <mat-option value="other">Otro</mat-option>
-        </mat-select></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Teléfono</mat-label><input matInput formControlName="phone"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Sexo</mat-label
+          ><mat-select formControlName="gender">
+            <mat-option value="">—</mat-option>
+            <mat-option value="male">Masculino</mat-option>
+            <mat-option value="female">Femenino</mat-option>
+            <mat-option value="other">Otro</mat-option>
+          </mat-select></mat-form-field
+        >
       </div>
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Fecha de nacimiento</mat-label><input matInput type="date" formControlName="birthDate" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Rol</mat-label><mat-select formControlName="role">
-          @for (r of USER_ROLES; track r.value) { <mat-option [value]="r.value">{{ r.label }}</mat-option> }
-        </mat-select></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Fecha de nacimiento</mat-label
+          ><input matInput type="date" formControlName="birthDate"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Rol</mat-label
+          ><mat-select formControlName="role">
+            @for (r of USER_ROLES; track r.value) {
+              <mat-option [value]="r.value">{{ r.label }}</mat-option>
+            }
+          </mat-select></mat-form-field
+        >
       </div>
       @if (data?.canPickGym) {
-        <mat-form-field appearance="outline"><mat-label>Gimnasio</mat-label><mat-select formControlName="gymId">
-          <mat-option [value]="''">Sin asignar</mat-option>
-          @for (g of gyms(); track g.id) { <mat-option [value]="g.id">{{ g.name }}</mat-option> }
-        </mat-select></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Gimnasio</mat-label
+          ><mat-select formControlName="gymId">
+            <mat-option [value]="''">Sin asignar</mat-option>
+            @for (g of gyms(); track g.id) {
+              <mat-option [value]="g.id">{{ g.name }}</mat-option>
+            }
+          </mat-select></mat-form-field
+        >
       }
     </mat-dialog-content>
     <mat-dialog-actions align="end" style="padding:8px 24px 20px">
       <button mat-button class="pz-btn-ghost" mat-dialog-close>Cancelar</button>
-      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">Guardar</button>
+      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">
+        Guardar
+      </button>
     </mat-dialog-actions>
   `,
-  styles: `.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}`,
+  styles: `
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+  `,
 })
 export class UserDialog implements OnInit {
   readonly USER_ROLES = USER_ROLES;
@@ -210,7 +278,10 @@ export class UserDialog implements OnInit {
     gymId: [''],
   });
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { user?: User; canPickGym?: boolean; service?: GymsService }) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA)
+    public data: { user?: User; canPickGym?: boolean; service?: GymsService },
+  ) {
     if (data?.user) {
       this.form.patchValue({
         email: data.user.email,
@@ -218,7 +289,9 @@ export class UserDialog implements OnInit {
         lastName: data.user.lastName,
         phone: data.user.phone ?? '',
         gender: data.user.gender ?? '',
-        birthDate: data.user.birthDate ? new Date(data.user.birthDate).toISOString().slice(0, 10) : '',
+        birthDate: data.user.birthDate
+          ? new Date(data.user.birthDate).toISOString().slice(0, 10)
+          : '',
         role: data.user.role,
         gymId: data.user.gymId ?? '',
       });

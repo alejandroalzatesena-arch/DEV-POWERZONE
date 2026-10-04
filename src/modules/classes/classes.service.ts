@@ -94,7 +94,10 @@ export class ClassesService {
       ...c,
       bookedSpots: c.bookings.filter((b) => b.status === BookingStatus.CONFIRMED).length,
       waitlisted: c.bookings.filter((b) => b.status === BookingStatus.WAITLISTED).length,
-      availableSpots: Math.max(0, c.capacity - c.bookings.filter((b) => b.status === BookingStatus.CONFIRMED).length),
+      availableSpots: Math.max(
+        0,
+        c.capacity - c.bookings.filter((b) => b.status === BookingStatus.CONFIRMED).length,
+      ),
     }));
 
     return paginate(result, total, page, limit);
@@ -217,7 +220,10 @@ export class ClassesService {
     await this.promoteWaitlist(classId);
   }
 
-  async myBookings(query: QueryBookingsDto, actor: JwtPayload): Promise<PaginatedResult<ClassBooking>> {
+  async myBookings(
+    query: QueryBookingsDto,
+    actor: JwtPayload,
+  ): Promise<PaginatedResult<ClassBooking>> {
     const { page, limit, sortBy, sortOrder, status } = query;
     const where: Record<string, any> = { userId: actor.sub };
     if (status) where.status = status;

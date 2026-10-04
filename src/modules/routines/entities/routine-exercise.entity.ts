@@ -11,7 +11,7 @@ export class RoutineExercise extends BaseEntity {
   @Column({ name: 'routine_id', type: 'uuid' })
   routineId: string;
 
-  @ManyToOne(() => Routine, routine => routine.exercises, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Routine, (routine) => routine.exercises, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'routine_id' })
   routine: Routine;
 

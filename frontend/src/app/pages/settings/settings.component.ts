@@ -58,7 +58,10 @@ export class SettingsComponent implements OnInit {
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirm: ['', Validators.required],
     },
-    { validators: (g) => (g.get('newPassword')?.value !== g.get('confirm')?.value ? { mismatch: true } : null) },
+    {
+      validators: (g) =>
+        g.get('newPassword')?.value !== g.get('confirm')?.value ? { mismatch: true } : null,
+    },
   );
 
   saving = false;
@@ -113,14 +116,26 @@ export class SettingsComponent implements OnInit {
               bodyFatPct: v.bodyFatPct ? Number(v.bodyFatPct) : undefined,
               goal: (v.goal || undefined) as FitnessGoal | undefined,
               activityLevel: (v.activityLevel || undefined) as ActivityLevel | undefined,
-              medicalConditions: v.medicalConditions ? v.medicalConditions.split(',').map((s) => s.trim()).filter(Boolean) : undefined,
+              medicalConditions: v.medicalConditions
+                ? v.medicalConditions
+                    .split(',')
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                : undefined,
             })
             .subscribe({
-              next: () => { this.toast.success('Perfil actualizado'); this.saving = false; },
-              error: () => { this.saving = false; },
+              next: () => {
+                this.toast.success('Perfil actualizado');
+                this.saving = false;
+              },
+              error: () => {
+                this.saving = false;
+              },
             });
         },
-        error: () => { this.saving = false; },
+        error: () => {
+          this.saving = false;
+        },
       });
   }
 

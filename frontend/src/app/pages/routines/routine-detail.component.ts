@@ -12,13 +12,25 @@ import { RoutinesService } from '../../core/services/routines.service';
 import { ExercisesService } from '../../core/services/exercises.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Routine, Exercise } from '../../core/models/models';
-import { routineStatus, routineObjectiveLabel, DAY_NAMES, initials } from '../../shared/utils/labels';
+import {
+  routineStatus,
+  routineObjectiveLabel,
+  DAY_NAMES,
+  initials,
+} from '../../shared/utils/labels';
 import { AssignRoutineDialog } from './assign-routine.dialog';
 
 @Component({
   selector: 'app-routine-detail',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatCardModule, MatDialogModule, PageHeaderComponent, EmptyStateComponent],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatDialogModule,
+    PageHeaderComponent,
+    EmptyStateComponent,
+  ],
   templateUrl: './routine-detail.component.html',
   styleUrl: './routine-detail.component.scss',
 })
@@ -76,7 +88,10 @@ export class RoutineDetailComponent implements OnInit {
 
   assign(): void {
     if (!this.routine()) return;
-    const ref = this.dialog.open(AssignRoutineDialog, { data: { routine: this.routine() }, width: '480px' });
+    const ref = this.dialog.open(AssignRoutineDialog, {
+      data: { routine: this.routine() },
+      width: '480px',
+    });
     ref.afterClosed().subscribe((userId) => {
       if (!userId) return;
       this.reload();
@@ -97,7 +112,12 @@ export class RoutineDetailComponent implements OnInit {
   remove(): void {
     const r = this.routine()!;
     const ref = this.dialog.open(ConfirmDialogComponent, {
-      data: { title: 'Eliminar rutina', message: `¿Eliminar "${r.title}"?`, okText: 'Eliminar', okClass: 'mat-danger' },
+      data: {
+        title: 'Eliminar rutina',
+        message: `¿Eliminar "${r.title}"?`,
+        okText: 'Eliminar',
+        okClass: 'mat-danger',
+      },
     });
     ref.afterClosed().subscribe((ok) => {
       if (!ok) return;
@@ -112,7 +132,9 @@ export class RoutineDetailComponent implements OnInit {
   }
 
   reload(): void {
-    this.routines.get(this.routine()!.id).subscribe({ next: (r) => this.routine.set(r), error: () => undefined });
+    this.routines
+      .get(this.routine()!.id)
+      .subscribe({ next: (r) => this.routine.set(r), error: () => undefined });
   }
 
   exerciseName(id: string): string {

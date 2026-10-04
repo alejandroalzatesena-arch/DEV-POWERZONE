@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
@@ -73,7 +78,11 @@ export class NutritionService {
   // ------------------------------------------------------------------
   // Registro de comidas
   // ------------------------------------------------------------------
-  async createLog(dto: CreateNutritionLogDto, actor: JwtPayload, targetUserId?: string): Promise<NutritionLog> {
+  async createLog(
+    dto: CreateNutritionLogDto,
+    actor: JwtPayload,
+    targetUserId?: string,
+  ): Promise<NutritionLog> {
     let userId = actor.sub;
     if (targetUserId && (actor.isSuperAdmin || actor.role !== UserRole.CLIENT)) {
       const target = await this.usersRepo.findOne({ where: { id: targetUserId } });
@@ -105,7 +114,10 @@ export class NutritionService {
     return this.logsRepo.save(log);
   }
 
-  async findAllLogs(query: QueryNutritionLogsDto, actor: JwtPayload): Promise<PaginatedResult<NutritionLog>> {
+  async findAllLogs(
+    query: QueryNutritionLogsDto,
+    actor: JwtPayload,
+  ): Promise<PaginatedResult<NutritionLog>> {
     const { page, limit, sortBy, sortOrder, mealType, from, to, userId } = query;
 
     const qb = this.logsRepo
@@ -144,7 +156,8 @@ export class NutritionService {
     });
     if (!log) throw new NotFoundException('Registro no encontrado.');
     if (!actor.isSuperAdmin) {
-      if (log.gymId !== actor.gymId) throw new ForbiddenException('No tienes acceso a este registro.');
+      if (log.gymId !== actor.gymId)
+        throw new ForbiddenException('No tienes acceso a este registro.');
       if (actor.role === UserRole.CLIENT && log.userId !== actor.sub) {
         throw new ForbiddenException('No puedes ver este registro.');
       }
@@ -160,7 +173,11 @@ export class NutritionService {
   // ------------------------------------------------------------------
   // Resumen diario
   // ------------------------------------------------------------------
-  async dailySummary(actor: JwtPayload, date = new Date().toISOString().slice(0, 10), userId?: string): Promise<{
+  async dailySummary(
+    actor: JwtPayload,
+    date = new Date().toISOString().slice(0, 10),
+    userId?: string,
+  ): Promise<{
     date: string;
     logs: NutritionLog[];
     totals: MacroTotals;

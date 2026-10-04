@@ -22,7 +22,9 @@ export type ReportNode = {
               <span class="l-label">{{ n.label }}</span>
               <span class="l-value" [class.is-num]="isNumber(n.value)">
                 @if (n.badge) {
-                  <span class="pz-badge" [class]="'badge-' + n.badge">{{ n.badge === 'success' ? 'OK' : n.badge }}</span>
+                  <span class="pz-badge" [class]="'badge-' + n.badge">{{
+                    n.badge === 'success' ? 'OK' : n.badge
+                  }}</span>
                 }
                 {{ n.value }}
               </span>
@@ -40,7 +42,9 @@ export type ReportNode = {
                     @if (!c.children || c.children.length === 0) {
                       <div class="leaf">
                         <span class="l-label">{{ c.label }}</span>
-                        <span class="l-value" [class.is-num]="isNumber(c.value)">{{ c.value }}</span>
+                        <span class="l-value" [class.is-num]="isNumber(c.value)">{{
+                          c.value
+                        }}</span>
                       </div>
                     } @else {
                       <pz-node-tree [nodes]="c.children" />
@@ -55,7 +59,10 @@ export type ReportNode = {
     </div>
   `,
   styles: `
-    .tree { display: grid; gap: 6px; }
+    .tree {
+      display: grid;
+      gap: 6px;
+    }
     .group {
       border: 1px solid var(--pz-border);
       border-radius: 12px;
@@ -77,9 +84,16 @@ export type ReportNode = {
       color: var(--pz-white);
       background: var(--pz-surface-2);
     }
-    .group summary::-webkit-details-marker { display: none; }
-    .group summary mat-icon { color: var(--pz-volt); transition: transform 0.15s ease; }
-    .group:not([open]) summary mat-icon { transform: rotate(-90deg); }
+    .group summary::-webkit-details-marker {
+      display: none;
+    }
+    .group summary mat-icon {
+      color: var(--pz-volt);
+      transition: transform 0.15s ease;
+    }
+    .group:not([open]) summary mat-icon {
+      transform: rotate(-90deg);
+    }
     .g-count {
       margin-left: auto;
       font-size: 11px;
@@ -99,10 +113,21 @@ export type ReportNode = {
       border-radius: 8px;
       font-size: 13px;
     }
-    .leaf:hover { background: var(--pz-surface-2); }
-    .l-label { color: var(--pz-muted); }
-    .l-value { color: var(--pz-white); font-weight: 700; }
-    .l-value.is-num { color: var(--pz-volt); font-family: 'Oswald', sans-serif; font-size: 15px; }
+    .leaf:hover {
+      background: var(--pz-surface-2);
+    }
+    .l-label {
+      color: var(--pz-muted);
+    }
+    .l-value {
+      color: var(--pz-white);
+      font-weight: 700;
+    }
+    .l-value.is-num {
+      color: var(--pz-volt);
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+    }
   `,
 })
 export class NodeTreeComponent {
@@ -113,6 +138,8 @@ export class NodeTreeComponent {
   }
 
   isNumber(v?: string): boolean {
-    return v != null && !Number.isNaN(Number(String(v).replace(/[^0-9.\-]/g, ''))) && v.trim() !== '';
+    return (
+      v != null && !Number.isNaN(Number(String(v).replace(/[^0-9.\-]/g, ''))) && v.trim() !== ''
+    );
   }
 }

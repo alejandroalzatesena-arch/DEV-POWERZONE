@@ -8,12 +8,23 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 import { MembershipsService } from '../../core/services/memberships.service';
 import { PaymentsService } from '../../core/services/payments.service';
 import { UserMembership, Payment } from '../../core/models/models';
-import { formatMoney, formatDate, membershipStatus, paymentStatus } from '../../shared/utils/labels';
+import {
+  formatMoney,
+  formatDate,
+  membershipStatus,
+  paymentStatus,
+} from '../../shared/utils/labels';
 
 @Component({
   selector: 'app-my-membership',
   standalone: true,
-  imports: [MatIconModule, MatCardModule, MatButtonModule, PageHeaderComponent, EmptyStateComponent],
+  imports: [
+    MatIconModule,
+    MatCardModule,
+    MatButtonModule,
+    PageHeaderComponent,
+    EmptyStateComponent,
+  ],
   templateUrl: './my-membership.component.html',
   styleUrl: './my-membership.component.scss',
 })

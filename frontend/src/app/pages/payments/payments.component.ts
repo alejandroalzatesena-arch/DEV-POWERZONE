@@ -1,6 +1,11 @@
 import { Component, Inject, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -114,7 +119,10 @@ export class PaymentsComponent implements OnInit {
   }
 
   createPayment(): void {
-    const ref = this.dialog.open(CreatePaymentDialog, { data: { clients: this.clients() }, width: '520px' });
+    const ref = this.dialog.open(CreatePaymentDialog, {
+      data: { clients: this.clients() },
+      width: '520px',
+    });
     ref.afterClosed().subscribe((res) => {
       if (!res) return;
       this.payments.create(res).subscribe({
@@ -137,7 +145,14 @@ export class PaymentsComponent implements OnInit {
 @Component({
   selector: 'pz-create-payment-dialog',
   standalone: true,
-  imports: [MatDialogModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule],
+  imports: [
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+  ],
   template: `
     <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">Registrar pago</h2>
     <mat-dialog-content style="display:grid;gap:10px;padding:16px 24px;min-width:440px">
@@ -150,9 +165,14 @@ export class PaymentsComponent implements OnInit {
         </mat-select>
       </mat-form-field>
       <div class="row3">
-        <mat-form-field appearance="outline"><mat-label>Monto</mat-label><input matInput type="number" formControlName="amount" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Moneda</mat-label><input matInput formControlName="currency" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Método</mat-label>
+        <mat-form-field appearance="outline"
+          ><mat-label>Monto</mat-label><input matInput type="number" formControlName="amount"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Moneda</mat-label><input matInput formControlName="currency"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Método</mat-label>
           <mat-select formControlName="paymentMethod">
             @for (m of methods; track m.value) {
               <mat-option [value]="m.value">{{ m.label }}</mat-option>
@@ -171,10 +191,18 @@ export class PaymentsComponent implements OnInit {
     </mat-dialog-content>
     <mat-dialog-actions align="end" style="padding:8px 24px 20px">
       <button mat-button class="pz-btn-ghost" mat-dialog-close>Cancelar</button>
-      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">Registrar</button>
+      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">
+        Registrar
+      </button>
     </mat-dialog-actions>
   `,
-  styles: `.row3{display:grid;grid-template-columns:1fr 0.8fr 1fr;gap:10px}`,
+  styles: `
+    .row3 {
+      display: grid;
+      grid-template-columns: 1fr 0.8fr 1fr;
+      gap: 10px;
+    }
+  `,
 })
 export class CreatePaymentDialog {
   readonly form = new FormBuilder().nonNullable.group({

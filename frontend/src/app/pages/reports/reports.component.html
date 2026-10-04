@@ -2,16 +2,23 @@
   <pz-page-header
     eyebrow="Inteligencia de negocio"
     title="Reportes"
-    subtitle="Estadísticas financieras, operativas y de socios." />
+    subtitle="Estadísticas financieras, operativas y de socios."
+  />
 
   <mat-tab-group class="pz-tabs">
     <!-- Financiero -->
     <mat-tab label="Financiero">
       <div class="tab-body">
         <form [formGroup]="financialForm" class="filters" (ngSubmit)="loadFinancial()">
-          <mat-form-field appearance="outline"><mat-label>Desde</mat-label><input matInput type="date" formControlName="from" /></mat-form-field>
-          <mat-form-field appearance="outline"><mat-label>Hasta</mat-label><input matInput type="date" formControlName="to" /></mat-form-field>
-          <button mat-raised-button class="pz-btn-volt" type="submit"><mat-icon>refresh</mat-icon> Actualizar</button>
+          <mat-form-field appearance="outline"
+            ><mat-label>Desde</mat-label><input matInput type="date" formControlName="from"
+          /></mat-form-field>
+          <mat-form-field appearance="outline"
+            ><mat-label>Hasta</mat-label><input matInput type="date" formControlName="to"
+          /></mat-form-field>
+          <button mat-raised-button class="pz-btn-volt" type="submit">
+            <mat-icon>refresh</mat-icon> Actualizar
+          </button>
         </form>
         <pz-node-tree [nodes]="financial()" />
       </div>
@@ -35,9 +42,15 @@
     <mat-tab label="Asistencia">
       <div class="tab-body">
         <form [formGroup]="attendanceForm" class="filters" (ngSubmit)="loadAttendance()">
-          <mat-form-field appearance="outline"><mat-label>Desde</mat-label><input matInput type="date" formControlName="from" /></mat-form-field>
-          <mat-form-field appearance="outline"><mat-label>Hasta</mat-label><input matInput type="date" formControlName="to" /></mat-form-field>
-          <button mat-raised-button class="pz-btn-volt" type="submit"><mat-icon>refresh</mat-icon> Actualizar</button>
+          <mat-form-field appearance="outline"
+            ><mat-label>Desde</mat-label><input matInput type="date" formControlName="from"
+          /></mat-form-field>
+          <mat-form-field appearance="outline"
+            ><mat-label>Hasta</mat-label><input matInput type="date" formControlName="to"
+          /></mat-form-field>
+          <button mat-raised-button class="pz-btn-volt" type="submit">
+            <mat-icon>refresh</mat-icon> Actualizar
+          </button>
         </form>
         <pz-node-tree [nodes]="attendance()" />
       </div>
@@ -47,20 +60,25 @@
     <mat-tab label="Progreso de socios">
       <div class="tab-body">
         <form [formGroup]="progressForm" class="filters" (ngSubmit)="loadProgress()">
-          <mat-form-field appearance="outline" style="min-width:260px">
+          <mat-form-field appearance="outline" style="min-width: 260px">
             <mat-label>Socio</mat-label>
             <mat-select formControlName="userId">
               @for (m of members(); track m.id) {
                 <mat-option [value]="m.id">
                   <div class="opt">
                     <span class="mini-avatar">{{ initials(m.firstName, m.lastName) }}</span>
-                    {{ m.fullName || (m.firstName + ' ' + m.lastName) }}
+                    {{ m.fullName || m.firstName + ' ' + m.lastName }}
                   </div>
                 </mat-option>
               }
             </mat-select>
           </mat-form-field>
-          <button mat-raised-button class="pz-btn-volt" type="submit" [disabled]="!progressForm.valid">
+          <button
+            mat-raised-button
+            class="pz-btn-volt"
+            type="submit"
+            [disabled]="!progressForm.valid"
+          >
             <mat-icon>query_stats</mat-icon> Ver progreso
           </button>
         </form>

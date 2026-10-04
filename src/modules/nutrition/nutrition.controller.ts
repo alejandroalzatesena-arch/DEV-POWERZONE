@@ -69,7 +69,10 @@ export class NutritionController {
   @Post('logs')
   @ApiOperation({ summary: 'Registrar comida (cliente)' })
   @ApiResponse({ status: 201, description: 'Registro creado', type: NutritionLog })
-  createLog(@Body() dto: CreateNutritionLogDto, @CurrentUser() actor: JwtPayload): Promise<NutritionLog> {
+  createLog(
+    @Body() dto: CreateNutritionLogDto,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<NutritionLog> {
     return this.nutritionService.createLog(dto, actor);
   }
 
@@ -94,7 +97,8 @@ export class NutritionController {
     @Query('userId') userId: string | undefined,
     @CurrentUser() actor: JwtPayload,
   ): Promise<{ date: string; logs: NutritionLog[]; totals: MacroTotals }> {
-    const d = date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : new Date().toISOString().slice(0, 10);
+    const d =
+      date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : new Date().toISOString().slice(0, 10);
     return this.nutritionService.dailySummary(actor, d, userId);
   }
 
@@ -102,14 +106,20 @@ export class NutritionController {
   @Roles(UserRole.ADMIN, UserRole.TRAINER, UserRole.CLIENT)
   @ApiOperation({ summary: 'Obtener registro por ID' })
   @ApiResponse({ status: 200, description: 'Detalle del registro', type: NutritionLog })
-  findOne(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<NutritionLog> {
+  findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<NutritionLog> {
     return this.nutritionService.findById(id, actor);
   }
 
   @Delete('logs/:id')
   @ApiOperation({ summary: 'Eliminar registro de comida' })
   @ApiResponse({ status: 200, description: 'Registro eliminado' })
-  async removeLog(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() actor: JwtPayload): Promise<{ message: string }> {
+  async removeLog(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() actor: JwtPayload,
+  ): Promise<{ message: string }> {
     await this.nutritionService.removeLog(id, actor);
     return { message: 'Registro eliminado.' };
   }

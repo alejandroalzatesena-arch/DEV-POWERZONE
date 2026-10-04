@@ -16,7 +16,12 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import { PaginatedResult } from '../../common/dto/pagination.dto';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
 import { UserRole } from '../../common/enums';
-import { CheckInDto, CheckOutDto, QueryAttendanceDto, RecordClassAttendanceDto } from './dto/attendance.dto';
+import {
+  CheckInDto,
+  CheckOutDto,
+  QueryAttendanceDto,
+  RecordClassAttendanceDto,
+} from './dto/attendance.dto';
 import { AttendanceRecord } from './entities/attendance.entity';
 
 @ApiTags('attendance')
@@ -30,7 +35,8 @@ export class AttendanceController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Registrar entrada (check-in)',
-    description: 'Valida membresía activa y aforo. Emite actualización en tiempo real por WebSocket.',
+    description:
+      'Valida membresía activa y aforo. Emite actualización en tiempo real por WebSocket.',
   })
   @ApiResponse({ status: 201, description: 'Entrada registrada', type: AttendanceRecord })
   checkIn(

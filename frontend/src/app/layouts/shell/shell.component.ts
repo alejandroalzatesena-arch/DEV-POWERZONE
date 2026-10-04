@@ -1,4 +1,11 @@
-import { Component, computed, inject, OnDestroy, signal, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnDestroy,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -63,7 +70,12 @@ export class ShellComponent implements OnDestroy {
     {
       group: 'Mi cuenta',
       items: [
-        { label: 'Mi membresía', icon: 'card_membership', path: '/memberships/my', roles: ['client'] },
+        {
+          label: 'Mi membresía',
+          icon: 'card_membership',
+          path: '/memberships/my',
+          roles: ['client'],
+        },
         { label: 'Mis pagos', icon: 'receipt_long', path: '/payments/my', roles: ['client'] },
         { label: 'Mis reservas', icon: 'event_available', path: '/classes/my' },
       ],
@@ -71,15 +83,35 @@ export class ShellComponent implements OnDestroy {
     {
       group: 'Operación',
       items: [
-        { label: 'Membresías', icon: 'card_membership', path: '/memberships', roles: ['admin', 'receptionist', 'trainer'] },
-        { label: 'Pagos', icon: 'payments', path: '/payments', roles: ['admin', 'receptionist', 'trainer'] },
+        {
+          label: 'Membresías',
+          icon: 'card_membership',
+          path: '/memberships',
+          roles: ['admin', 'receptionist', 'trainer'],
+        },
+        {
+          label: 'Pagos',
+          icon: 'payments',
+          path: '/payments',
+          roles: ['admin', 'receptionist', 'trainer'],
+        },
         { label: 'Asistencia', icon: 'how_to_reg', path: '/attendance' },
         { label: 'Clases', icon: 'event', path: '/classes' },
         { label: 'Rutinas', icon: 'fitness_center', path: '/routines' },
         { label: 'Ejercicios', icon: 'sports_gymnastics', path: '/exercises' },
         { label: 'Nutrición', icon: 'restaurant', path: '/nutrition' },
-        { label: 'Inventario', icon: 'inventory_2', path: '/inventory', roles: ['admin', 'trainer', 'receptionist'] },
-        { label: 'Usuarios', icon: 'group', path: '/users', roles: ['admin', 'trainer', 'receptionist'] },
+        {
+          label: 'Inventario',
+          icon: 'inventory_2',
+          path: '/inventory',
+          roles: ['admin', 'trainer', 'receptionist'],
+        },
+        {
+          label: 'Usuarios',
+          icon: 'group',
+          path: '/users',
+          roles: ['admin', 'trainer', 'receptionist'],
+        },
       ],
     },
     {
@@ -100,7 +132,9 @@ export class ShellComponent implements OnDestroy {
 
     const me = this.auth.user();
     if (me) {
-      this.notificationsService.unreadCount().subscribe((c) => this.notificationsService.setUnread(c.unread));
+      this.notificationsService
+        .unreadCount()
+        .subscribe((c) => this.notificationsService.setUnread(c.unread));
       this.loadRecent();
       this.socket.connectNotifications(me.id, (data) => {
         const payload = data as AppNotification;
@@ -114,7 +148,8 @@ export class ShellComponent implements OnDestroy {
     if (!items) return [];
     const role = this.user()?.role;
     return items.filter(
-      (i) => !i.roles?.length || this.auth.isSuperAdmin() || (role ? i.roles.includes(role) : false),
+      (i) =>
+        !i.roles?.length || this.auth.isSuperAdmin() || (role ? i.roles.includes(role) : false),
     );
   }
 

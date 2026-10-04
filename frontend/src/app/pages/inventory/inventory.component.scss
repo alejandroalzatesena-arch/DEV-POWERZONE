@@ -6,7 +6,9 @@
 }
 
 .table-card {
-  mat-card-content { padding: 18px; }
+  mat-card-content {
+    padding: 18px;
+  }
 }
 
 .filters {
@@ -16,7 +18,9 @@
   align-items: flex-start;
   margin-bottom: 6px;
 
-  mat-form-field { min-width: 180px; }
+  mat-form-field {
+    min-width: 180px;
+  }
 }
 
 .table-wrap {
@@ -46,5 +50,7 @@
   justify-content: flex-end;
   gap: 2px;
 
-  .danger { color: var(--pz-danger); }
+  .danger {
+    color: var(--pz-danger);
+  }
 }

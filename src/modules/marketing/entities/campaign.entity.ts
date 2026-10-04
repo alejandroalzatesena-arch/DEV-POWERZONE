@@ -40,7 +40,10 @@ export class Campaign extends TenantBaseEntity {
   @Column({ length: 20 })
   type: CampaignType;
 
-  @ApiProperty({ description: 'Segmento de audiencia (filtros)', example: { roles: ['client'], activeMembership: true } })
+  @ApiProperty({
+    description: 'Segmento de audiencia (filtros)',
+    example: { roles: ['client'], activeMembership: true },
+  })
   @Column({ type: 'jsonb', nullable: true })
   audience: Record<string, any>;
 
@@ -56,7 +59,10 @@ export class Campaign extends TenantBaseEntity {
   @Column({ name: 'sent_at', type: 'timestamptz', nullable: true })
   sentAt: Date | null;
 
-  @ApiPropertyOptional({ description: 'Estadísticas del envío', example: { sent: 120, delivered: 115, failed: 5, opened: 40 } })
+  @ApiPropertyOptional({
+    description: 'Estadísticas del envío',
+    example: { sent: 120, delivered: 115, failed: 5, opened: 40 },
+  })
   @Column({ type: 'jsonb', nullable: true })
   stats: Record<string, any>;
 }

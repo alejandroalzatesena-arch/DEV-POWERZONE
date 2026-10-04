@@ -2,7 +2,8 @@
   <pz-page-header
     eyebrow="Tarifas y asignación"
     [title]="'Membresías'"
-    subtitle="Administrá los planes del gimnasio y las membresías activas de los socios.">
+    subtitle="Administrá los planes del gimnasio y las membresías activas de los socios."
+  >
     @if (canAct()) {
       <button mat-stroked-button class="pz-btn-ghost" (click)="assign()">
         <mat-icon>person_add</mat-icon> Asignar membresía
@@ -16,7 +17,7 @@
   <mat-tab-group animationDuration="300ms">
     <!-- Tipos de membresía -->
     <mat-tab label="Planes">
-      <div class="plans-grid pz-grid pz-grid-lg" style="margin-top:20px">
+      <div class="plans-grid pz-grid pz-grid-lg" style="margin-top: 20px">
         @for (t of types(); track t.id) {
           <mat-card class="plan-card" [class.inactive]="t.isActive === false">
             <mat-card-content>
@@ -30,8 +31,12 @@
                     <mat-icon>more_vert</mat-icon>
                   </button>
                   <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="editType(t)"><mat-icon>edit</mat-icon> Editar</button>
-                    <button mat-menu-item class="logout" (click)="deleteType(t)"><mat-icon>delete</mat-icon> Eliminar</button>
+                    <button mat-menu-item (click)="editType(t)">
+                      <mat-icon>edit</mat-icon> Editar
+                    </button>
+                    <button mat-menu-item class="logout" (click)="deleteType(t)">
+                      <mat-icon>delete</mat-icon> Eliminar
+                    </button>
                   </mat-menu>
                 }
               </div>
@@ -44,13 +49,15 @@
                   <li><mat-icon>check</mat-icon> {{ f }}</li>
                 }
                 @if (t.maxClassesPerWeek) {
-                  <li><mat-icon>event</mat-icon> Hasta {{ t.maxClassesPerWeek }} clases por semana</li>
+                  <li>
+                    <mat-icon>event</mat-icon> Hasta {{ t.maxClassesPerWeek }} clases por semana
+                  </li>
                 }
               </ul>
             </mat-card-content>
           </mat-card>
         } @empty {
-          <div class="pz-empty" style="width:100%">
+          <div class="pz-empty" style="width: 100%">
             <div class="pz-empty-icon"><mat-icon>card_membership</mat-icon></div>
             <h3>Sin planes cargados</h3>
             <p>Creá el primer tipo de membresía del gimnasio.</p>
@@ -61,7 +68,7 @@
 
     <!-- Membresías asignadas -->
     <mat-tab label="Asignadas">
-      <div class="toolbar" style="margin-top:20px">
+      <div class="toolbar" style="margin-top: 20px">
         <mat-form-field appearance="outline" class="filter">
           <mat-label>Filtrar por estado</mat-label>
           <mat-select [value]="statusFilter" (selectionChange)="onStatus($event.value)">
@@ -115,7 +122,7 @@
             <th mat-header-cell *matHeaderCellDef>Auto-renovación</th>
             <td mat-cell *matCellDef="let m">
               @if (m.autoRenew) {
-                <mat-icon style="color:var(--pz-volt)">autorenew</mat-icon>
+                <mat-icon style="color: var(--pz-volt)">autorenew</mat-icon>
               } @else {
                 <span class="cell-sub">No</span>
               }
@@ -129,7 +136,12 @@
                 <button mat-icon-button matTooltip="Renovar" (click)="renew(m)">
                   <mat-icon>refresh</mat-icon>
                 </button>
-                <button mat-icon-button matTooltip="Cancelar membresía" class="danger-icon" (click)="cancel(m)">
+                <button
+                  mat-icon-button
+                  matTooltip="Cancelar membresía"
+                  class="danger-icon"
+                  (click)="cancel(m)"
+                >
                   <mat-icon>block</mat-icon>
                 </button>
               }
@@ -141,7 +153,11 @@
         </table>
 
         @if (assigns().length === 0 && !loadingAssigns()) {
-          <pz-empty icon="card_membership" title="Sin membresías" message="Asigná una membresía a un cliente para verla acá." />
+          <pz-empty
+            icon="card_membership"
+            title="Sin membresías"
+            message="Asigná una membresía a un cliente para verla acá."
+          />
         }
 
         <mat-paginator
@@ -150,7 +166,8 @@
           [pageIndex]="page"
           [pageSizeOptions]="[10, 25, 50]"
           (page)="onPage($event)"
-          showFirstLastButtons>
+          showFirstLastButtons
+        >
         </mat-paginator>
       </div>
     </mat-tab>

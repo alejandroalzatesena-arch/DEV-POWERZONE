@@ -9,7 +9,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { StatCardComponent } from '../../shared/components/stat-card/stat-card.component';
 import { InventoryService } from '../../core/services/inventory.service';
@@ -71,7 +76,9 @@ export class InventoryComponent implements OnInit {
     this.inventory.list({ limit: 1000 }).subscribe({
       next: (r) => {
         this.totalUnits.set(r.items.reduce((acc, i) => acc + (i.quantity ?? 0), 0));
-        this.lowStockCount.set(r.items.filter((i) => (i.availableQuantity ?? i.quantity) <= 2).length);
+        this.lowStockCount.set(
+          r.items.filter((i) => (i.availableQuantity ?? i.quantity) <= 2).length,
+        );
         this.maintenanceCount.set(r.items.filter((i) => i.status === 'maintenance').length);
       },
       error: () => undefined,
@@ -110,9 +117,13 @@ export class InventoryComponent implements OnInit {
     ref.afterClosed().subscribe((res) => {
       if (!res) return;
       if (item) {
-        this.inventory.update(item.id, res).subscribe({ next: () => this.afterSave('Ítem actualizado'), error: () => undefined });
+        this.inventory
+          .update(item.id, res)
+          .subscribe({ next: () => this.afterSave('Ítem actualizado'), error: () => undefined });
       } else {
-        this.inventory.create(res).subscribe({ next: () => this.afterSave('Ítem creado'), error: () => undefined });
+        this.inventory
+          .create(res)
+          .subscribe({ next: () => this.afterSave('Ítem creado'), error: () => undefined });
       }
     });
   }
@@ -142,7 +153,10 @@ export class InventoryComponent implements OnInit {
   }
 
   viewMaintenance(item: InventoryItem): void {
-    this.dialog.open(MaintenanceHistoryDialog, { data: { item, service: this.inventory }, width: '640px' });
+    this.dialog.open(MaintenanceHistoryDialog, {
+      data: { item, service: this.inventory },
+      width: '640px',
+    });
   }
 
   isLow(item: InventoryItem): boolean {
@@ -163,39 +177,88 @@ export class InventoryComponent implements OnInit {
 @Component({
   selector: 'pz-item-dialog',
   standalone: true,
-  imports: [MatDialogModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule],
+  imports: [
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+  ],
   template: `
-    <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">{{ data?.id ? 'Editar ítem' : 'Nuevo ítem' }}</h2>
+    <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">
+      {{ data?.id ? 'Editar ítem' : 'Nuevo ítem' }}
+    </h2>
     <mat-dialog-content style="display:grid;gap:10px;padding:16px 24px;min-width:480px">
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Nombre</mat-label><input matInput formControlName="name" placeholder="Mancuernas 10kg" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Categoría</mat-label><mat-select formControlName="category">
-          @for (c of INVENTORY_CATEGORIES; track c.value) { <mat-option [value]="c.value">{{ c.label }}</mat-option> }
-        </mat-select></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Nombre</mat-label
+          ><input matInput formControlName="name" placeholder="Mancuernas 10kg"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Categoría</mat-label
+          ><mat-select formControlName="category">
+            @for (c of INVENTORY_CATEGORIES; track c.value) {
+              <mat-option [value]="c.value">{{ c.label }}</mat-option>
+            }
+          </mat-select></mat-form-field
+        >
       </div>
-      <mat-form-field appearance="outline"><mat-label>Descripción</mat-label><textarea matInput formControlName="description" rows="2"></textarea></mat-form-field>
+      <mat-form-field appearance="outline"
+        ><mat-label>Descripción</mat-label
+        ><textarea matInput formControlName="description" rows="2"></textarea>
+      </mat-form-field>
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Cantidad</mat-label><input matInput type="number" formControlName="quantity" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Disponibles</mat-label><input matInput type="number" formControlName="availableQuantity" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Cantidad</mat-label><input matInput type="number" formControlName="quantity"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Disponibles</mat-label
+          ><input matInput type="number" formControlName="availableQuantity"
+        /></mat-form-field>
       </div>
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Condición</mat-label><mat-select formControlName="condition">
-          @for (c of INVENTORY_CONDITIONS; track c.value) { <mat-option [value]="c.value">{{ c.label }}</mat-option> }
-        </mat-select></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Costo reposición</mat-label><input matInput type="number" formControlName="replacementCost" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Condición</mat-label
+          ><mat-select formControlName="condition">
+            @for (c of INVENTORY_CONDITIONS; track c.value) {
+              <mat-option [value]="c.value">{{ c.label }}</mat-option>
+            }
+          </mat-select></mat-form-field
+        >
+        <mat-form-field appearance="outline"
+          ><mat-label>Costo reposición</mat-label
+          ><input matInput type="number" formControlName="replacementCost"
+        /></mat-form-field>
       </div>
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Ubicación</mat-label><input matInput formControlName="location" placeholder="Sala A" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Proveedor</mat-label><input matInput formControlName="supplier" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Ubicación</mat-label
+          ><input matInput formControlName="location" placeholder="Sala A"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Proveedor</mat-label><input matInput formControlName="supplier"
+        /></mat-form-field>
       </div>
-      <mat-form-field appearance="outline"><mat-label>Fecha de compra</mat-label><input matInput type="date" formControlName="purchased" /></mat-form-field>
+      <mat-form-field appearance="outline"
+        ><mat-label>Fecha de compra</mat-label
+        ><input matInput type="date" formControlName="purchased"
+      /></mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end" style="padding:8px 24px 20px">
       <button mat-button class="pz-btn-ghost" mat-dialog-close>Cancelar</button>
-      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">Guardar</button>
+      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">
+        Guardar
+      </button>
     </mat-dialog-actions>
   `,
-  styles: `.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}`,
+  styles: `
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+  `,
 })
 export class ItemDialog {
   readonly INVENTORY_CATEGORIES = INVENTORY_CATEGORIES;
@@ -252,24 +315,50 @@ export class ItemDialog {
 @Component({
   selector: 'pz-maintenance-dialog',
   standalone: true,
-  imports: [MatDialogModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+  ],
   template: `
     <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">Programar mantenimiento</h2>
     <mat-dialog-content style="display:grid;gap:10px;padding:16px 24px;min-width:440px">
-      <p style="color:var(--pz-muted);margin:0">Ítem: <strong style="color:var(--pz-white)">{{ data?.name }}</strong></p>
-      <mat-form-field appearance="outline"><mat-label>Descripción</mat-label><textarea matInput formControlName="description" rows="2"></textarea></mat-form-field>
-      <mat-form-field appearance="outline"><mat-label>Fecha programada</mat-label><input matInput type="date" formControlName="scheduled" /></mat-form-field>
+      <p style="color:var(--pz-muted);margin:0">
+        Ítem: <strong style="color:var(--pz-white)">{{ data?.name }}</strong>
+      </p>
+      <mat-form-field appearance="outline"
+        ><mat-label>Descripción</mat-label
+        ><textarea matInput formControlName="description" rows="2"></textarea>
+      </mat-form-field>
+      <mat-form-field appearance="outline"
+        ><mat-label>Fecha programada</mat-label
+        ><input matInput type="date" formControlName="scheduled"
+      /></mat-form-field>
       <div class="row2">
-        <mat-form-field appearance="outline"><mat-label>Costo</mat-label><input matInput type="number" formControlName="cost" /></mat-form-field>
-        <mat-form-field appearance="outline"><mat-label>Técnico</mat-label><input matInput formControlName="technician" /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Costo</mat-label><input matInput type="number" formControlName="cost"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>Técnico</mat-label><input matInput formControlName="technician"
+        /></mat-form-field>
       </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end" style="padding:8px 24px 20px">
       <button mat-button class="pz-btn-ghost" mat-dialog-close>Cancelar</button>
-      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">Programar</button>
+      <button mat-raised-button class="pz-btn-volt" [disabled]="!form.valid" (click)="save()">
+        Programar
+      </button>
     </mat-dialog-actions>
   `,
-  styles: `.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}`,
+  styles: `
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+  `,
 })
 export class MaintenanceDialog {
   private readonly dialogRef = inject(MatDialogRef<MaintenanceDialog>);
@@ -303,15 +392,22 @@ export class MaintenanceDialog {
   standalone: true,
   imports: [MatDialogModule, MatButtonModule, MatIconModule],
   template: `
-    <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">Mantenimientos · {{ data?.item?.name }}</h2>
+    <h2 mat-dialog-title style="margin:0;padding:24px 24px 0">
+      Mantenimientos · {{ data?.item?.name }}
+    </h2>
     <mat-dialog-content style="padding:16px 24px;min-width:560px;max-height:60vh;overflow:auto">
       @for (m of history(); track m.id) {
         <div class="m-row">
-          <span class="pz-badge" [class]="'badge-' + status(m.status).color">{{ status(m.status).label }}</span>
+          <span class="pz-badge" [class]="'badge-' + status(m.status).color">{{
+            status(m.status).label
+          }}</span>
           <div style="flex:1">
-            <div style="color:var(--pz-white);font-size:13.5px;font-weight:600">{{ m.description }}</div>
+            <div style="color:var(--pz-white);font-size:13.5px;font-weight:600">
+              {{ m.description }}
+            </div>
             <div style="color:var(--pz-muted);font-size:12px">
-              {{ date(m.scheduledAt) }}{{ m.technician ? ' · ' + m.technician : '' }}{{ m.cost ? ' · ' + cost(m.cost) : '' }}
+              {{ date(m.scheduledAt) }}{{ m.technician ? ' · ' + m.technician : ''
+              }}{{ m.cost ? ' · ' + cost(m.cost) : '' }}
             </div>
           </div>
           @if (m.status !== 'completed') {
@@ -326,26 +422,45 @@ export class MaintenanceDialog {
       <button mat-button class="pz-btn-ghost" mat-dialog-close>Cerrar</button>
     </mat-dialog-actions>
   `,
-  styles: `.m-row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:var(--pz-surface-2);border:1px solid var(--pz-border);margin-bottom:8px}`,
+  styles: `
+    .m-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--pz-surface-2);
+      border: 1px solid var(--pz-border);
+      margin-bottom: 8px;
+    }
+  `,
 })
 export class MaintenanceHistoryDialog implements OnInit {
   private readonly dialogRef = inject(MatDialogRef<MaintenanceHistoryDialog>);
   readonly history = signal<InventoryMaintenance[]>([]);
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { item: InventoryItem; service: InventoryService }) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { item: InventoryItem; service: InventoryService },
+  ) {}
 
   ngOnInit(): void {
-    this.data.service.maintenanceHistory(this.data.item.id).subscribe((r) => this.history.set(r.items));
+    this.data.service
+      .maintenanceHistory(this.data.item.id)
+      .subscribe((r) => this.history.set(r.items));
   }
 
   complete(m: InventoryMaintenance): void {
-    this.data.service.updateMaintenance(m.id, { status: 'completed', completedAt: new Date().toISOString() }).subscribe({
-      next: () => {
-        this.history.update((h) => h.map((x) => (x.id === m.id ? { ...x, status: 'completed' as const } : x)));
-        this.dialogRef.close('changed');
-      },
-      error: () => undefined,
-    });
+    this.data.service
+      .updateMaintenance(m.id, { status: 'completed', completedAt: new Date().toISOString() })
+      .subscribe({
+        next: () => {
+          this.history.update((h) =>
+            h.map((x) => (x.id === m.id ? { ...x, status: 'completed' as const } : x)),
+          );
+          this.dialogRef.close('changed');
+        },
+        error: () => undefined,
+      });
   }
 
   protected readonly status = maintenanceStatus;

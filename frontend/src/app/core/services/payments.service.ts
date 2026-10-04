@@ -31,7 +31,12 @@ export class PaymentsService {
     return this.api.post<Payment>('/payments', payload);
   }
 
-  checkout(payload: { membershipTypeId: string; userId?: string; successUrl?: string; cancelUrl?: string }): Observable<{ url: string; paymentId: string }> {
+  checkout(payload: {
+    membershipTypeId: string;
+    userId?: string;
+    successUrl?: string;
+    cancelUrl?: string;
+  }): Observable<{ url: string; paymentId: string }> {
     return this.api.post<{ url: string; paymentId: string }>('/payments/checkout', payload);
   }
 

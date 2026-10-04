@@ -27,7 +27,10 @@ export class InventoryService {
     return this.api.delete(`/inventory/${id}`);
   }
 
-  scheduleMaintenance(id: string, payload: { description: string; scheduledAt: string; cost?: number; technician?: string }): Observable<InventoryMaintenance> {
+  scheduleMaintenance(
+    id: string,
+    payload: { description: string; scheduledAt: string; cost?: number; technician?: string },
+  ): Observable<InventoryMaintenance> {
     return this.api.post<InventoryMaintenance>(`/inventory/${id}/maintenance`, payload);
   }
 
@@ -35,7 +38,10 @@ export class InventoryService {
     return this.api.list<InventoryMaintenance>(`/inventory/${id}/maintenance`, { limit: 100 });
   }
 
-  updateMaintenance(maintenanceId: string, payload: Partial<InventoryMaintenance>): Observable<InventoryMaintenance> {
+  updateMaintenance(
+    maintenanceId: string,
+    payload: Partial<InventoryMaintenance>,
+  ): Observable<InventoryMaintenance> {
     return this.api.patch<InventoryMaintenance>(`/inventory/maintenance/${maintenanceId}`, payload);
   }
 

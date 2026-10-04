@@ -8,12 +8,24 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 import { NotificationsService } from '../../core/services/notifications.service';
 import { ToastService } from '../../core/services/toast.service';
 import { AppNotification } from '../../core/models/models';
-import { formatDateTime, notificationType, NOTIFICATION_TYPES, initials } from '../../shared/utils/labels';
+import {
+  formatDateTime,
+  notificationType,
+  NOTIFICATION_TYPES,
+  initials,
+} from '../../shared/utils/labels';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatCardModule, MatPaginatorModule, PageHeaderComponent, EmptyStateComponent],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatPaginatorModule,
+    PageHeaderComponent,
+    EmptyStateComponent,
+  ],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
 })

@@ -2,7 +2,8 @@
   <pz-page-header
     eyebrow="Sedes"
     title="Gimnasios"
-    subtitle="Administrá las sedes y sus datos de contacto.">
+    subtitle="Administrá las sedes y sus datos de contacto."
+  >
     <button mat-raised-button class="pz-btn-volt" (click)="open()">
       <mat-icon>add</mat-icon> Nuevo gimnasio
     </button>
@@ -16,7 +17,9 @@
             <div class="gym-logo">{{ g.name.charAt(0).toUpperCase() }}</div>
             <div class="gym-actions">
               <button mat-icon-button (click)="open(g)"><mat-icon>edit</mat-icon></button>
-              <button mat-icon-button class="danger" (click)="remove(g)"><mat-icon>delete</mat-icon></button>
+              <button mat-icon-button class="danger" (click)="remove(g)">
+                <mat-icon>delete</mat-icon>
+              </button>
             </div>
           </div>
           <div class="gym-name">{{ g.name }}</div>
@@ -37,7 +40,9 @@
               <div class="m-item"><mat-icon>groups</mat-icon> Capacidad: {{ g.maxCapacity }}</div>
             }
             @if (g.openingHour && g.closingHour) {
-              <div class="m-item"><mat-icon>schedule</mat-icon> {{ g.openingHour }} – {{ g.closingHour }}</div>
+              <div class="m-item">
+                <mat-icon>schedule</mat-icon> {{ g.openingHour }} – {{ g.closingHour }}
+              </div>
             }
           </div>
           @if (g.createdAt) {
@@ -47,8 +52,12 @@
       </mat-card>
     } @empty {
       @if (!loading()) {
-        <div style="grid-column:1/-1">
-          <pz-empty icon="fitness_center" title="Sin gimnasios" message="Creá tu primer gimnasio para comenzar." />
+        <div style="grid-column: 1/-1">
+          <pz-empty
+            icon="fitness_center"
+            title="Sin gimnasios"
+            message="Creá tu primer gimnasio para comenzar."
+          />
         </div>
       }
     }

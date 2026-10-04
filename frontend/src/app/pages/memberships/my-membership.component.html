@@ -2,7 +2,8 @@
   <pz-page-header
     eyebrow="Mi cuenta"
     title="Mi membresía"
-    subtitle="Estado de tu membresía y tus pagos realizados." />
+    subtitle="Estado de tu membresía y tus pagos realizados."
+  />
 
   @if (membership()) {
     <div class="grid">
@@ -14,13 +15,21 @@
               <div class="plan-name">{{ membership()?.membershipType?.name }}</div>
               <p class="plan-desc">{{ membership()?.membershipType?.description }}</p>
             </div>
-            <span class="pz-badge" [class]="'badge-' + membershipStatus(membership()?.status).color">
+            <span
+              class="pz-badge"
+              [class]="'badge-' + membershipStatus(membership()?.status).color"
+            >
               {{ membershipStatus(membership()?.status).label }}
             </span>
           </div>
 
           <div class="price-row">
-            <span class="pz-display price">{{ formatMoney(membership()?.price ?? membership()?.membershipType?.price, membership()?.membershipType?.currency ?? 'usd') }}</span>
+            <span class="pz-display price">{{
+              formatMoney(
+                membership()?.price ?? membership()?.membershipType?.price,
+                membership()?.membershipType?.currency ?? 'usd'
+              )
+            }}</span>
             <span class="per">/ {{ membership()?.membershipType?.durationDays }} días</span>
           </div>
 
@@ -36,13 +45,13 @@
               <div class="val">{{ formatDate(membership()?.startDate) }}</div>
             </div>
             <div class="pz-spacer"></div>
-            <div style="text-align:right">
+            <div style="text-align: right">
               <div class="label">Fin</div>
               <div class="val">{{ formatDate(membership()?.endDate) }}</div>
             </div>
           </div>
 
-          <div class="pz-olbar" style="margin-top:16px">
+          <div class="pz-olbar" style="margin-top: 16px">
             <span [style.width.%]="progress()"></span>
           </div>
           <div class="progress-labels">
@@ -63,7 +72,7 @@
           <mat-card-header>
             <mat-card-title>Mis pagos</mat-card-title>
           </mat-card-header>
-          <mat-card-content style="padding-top:12px">
+          <mat-card-content style="padding-top: 12px">
             @if (paymentsList().length === 0) {
               <pz-empty icon="receipt_long" title="Sin pagos" message="Tus pagos aparecerán acá." />
             } @else {
@@ -93,7 +102,8 @@
             title="Sin membresía activa"
             message="Parece que todavía no tenés una membresía activa. Acercate a recepción o escribinos y te ayudamos a comenzar."
             [actionText]="'Reservá una clase'"
-            [action]="goClasses" />
+            [action]="goClasses"
+          />
         </mat-card-content>
       </mat-card>
     }

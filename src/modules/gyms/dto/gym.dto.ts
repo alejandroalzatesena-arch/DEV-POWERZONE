@@ -1,5 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsOptional, IsString, Length, MaxLength, MinLength } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsOptional,
+  IsString,
+  Length,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreateGymDto {
   @ApiProperty({ description: 'Nombre del gimnasio', example: 'Power Zone Downtown' })
@@ -8,7 +16,10 @@ export class CreateGymDto {
   @MaxLength(120)
   name: string;
 
-  @ApiPropertyOptional({ description: 'Identificador corto (slug). Si no se envía se genera automáticamente.', example: 'power-zone-downtown' })
+  @ApiPropertyOptional({
+    description: 'Identificador corto (slug). Si no se envía se genera automáticamente.',
+    example: 'power-zone-downtown',
+  })
   @IsOptional()
   @IsString()
   @MaxLength(120)

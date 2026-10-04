@@ -29,7 +29,7 @@ export class UserMembership extends TenantBaseEntity {
   @Column({ name: 'membership_type_id', type: 'uuid' })
   membershipTypeId: string;
 
-  @ManyToOne(() => MembershipType, mt => mt.userMemberships, { onDelete: 'RESTRICT' })
+  @ManyToOne(() => MembershipType, (mt) => mt.userMemberships, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'membership_type_id' })
   membershipType: MembershipType;
 

@@ -19,13 +19,15 @@ mat-card {
     font-size: 15px;
     letter-spacing: 0.5px;
 
-    mat-icon { color: var(--pz-volt); }
+    mat-icon {
+      color: var(--pz-volt);
+    }
   }
 
   mat-card-content {
     padding-top: 8px;
 
-    button[type="submit"] {
+    button[type='submit'] {
       display: flex;
       align-items: center;
       gap: 6px;

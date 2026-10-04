@@ -32,7 +32,9 @@ export class AuthService {
     phone?: string;
     gymId: string;
   }): Observable<LoginResponse> {
-    return this.api.post<LoginResponse>('/auth/register', payload).pipe(tap((res) => this.setSession(res)));
+    return this.api
+      .post<LoginResponse>('/auth/register', payload)
+      .pipe(tap((res) => this.setSession(res)));
   }
 
   refreshTokens(): Observable<{ accessToken: string; refreshToken: string; expiresIn: number }> {
@@ -52,7 +54,10 @@ export class AuthService {
   }
 
   changePassword(currentPassword: string, newPassword: string): Observable<{ message: string }> {
-    return this.api.post<{ message: string }>('/auth/change-password', { currentPassword, newPassword });
+    return this.api.post<{ message: string }>('/auth/change-password', {
+      currentPassword,
+      newPassword,
+    });
   }
 
   updateProfile(payload: Partial<UserProfile>): Observable<UserProfile> {

@@ -2,7 +2,8 @@
   <pz-page-header
     eyebrow="Catálogo"
     title="Ejercicios"
-    subtitle="Base de datos de movimientos con instrucciones y grupo muscular.">
+    subtitle="Base de datos de movimientos con instrucciones y grupo muscular."
+  >
     @if (canEdit()) {
       <button mat-raised-button class="pz-btn-volt" (click)="create()">
         <mat-icon>add</mat-icon> Nuevo ejercicio
@@ -13,14 +14,31 @@
   <div class="toolbar">
     <mat-form-field appearance="outline" class="search">
       <mat-label>Buscar</mat-label>
-      <input matInput (input)="onSearch(searchInput.value)" #searchInput placeholder="Nombre o músculo…" />
+      <input
+        matInput
+        (input)="onSearch(searchInput.value)"
+        #searchInput
+        placeholder="Nombre o músculo…"
+      />
       <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
 
     <div class="chips">
-      <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="categoryFilter() === ''" (click)="setCategory('')">Todos</button>
+      <button
+        mat-stroked-button
+        class="pz-btn-ghost chip"
+        [class.on]="categoryFilter() === ''"
+        (click)="setCategory('')"
+      >
+        Todos
+      </button>
       @for (c of categories; track c.value) {
-        <button mat-stroked-button class="pz-btn-ghost chip" [class.on]="categoryFilter() === c.value" (click)="setCategory(c.value)">
+        <button
+          mat-stroked-button
+          class="pz-btn-ghost chip"
+          [class.on]="categoryFilter() === c.value"
+          (click)="setCategory(c.value)"
+        >
           {{ c.label }}
         </button>
       }
@@ -63,16 +81,24 @@
           }
           @if (canEdit()) {
             <div class="ex-actions">
-              <button mat-icon-button matTooltip="Editar" (click)="edit(e)"><mat-icon>edit</mat-icon></button>
-              <button mat-icon-button matTooltip="Eliminar" class="danger" (click)="remove(e)"><mat-icon>delete</mat-icon></button>
+              <button mat-icon-button matTooltip="Editar" (click)="edit(e)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Eliminar" class="danger" (click)="remove(e)">
+                <mat-icon>delete</mat-icon>
+              </button>
             </div>
           }
         </mat-card-content>
       </mat-card>
     } @empty {
       @if (!loading()) {
-        <div style="grid-column:1/-1">
-          <pz-empty icon="fitness_center" title="Sin ejercicios" message="No se encontraron ejercicios con esos filtros." />
+        <div style="grid-column: 1/-1">
+          <pz-empty
+            icon="fitness_center"
+            title="Sin ejercicios"
+            message="No se encontraron ejercicios con esos filtros."
+          />
         </div>
       }
     }
@@ -85,6 +111,7 @@
     [pageIndex]="page"
     [pageSizeOptions]="[12, 24, 48]"
     (page)="onPage($event)"
-    showFirstLastButtons>
+    showFirstLastButtons
+  >
   </mat-paginator>
 </div>

@@ -71,7 +71,13 @@ export class DashboardComponent implements OnInit {
 
   readonly user = this.auth.user;
   readonly isClient = computed(() => this.user()?.role === 'client');
-  readonly isStaff = computed(() => !this.auth.isSuperAdmin() ? (this.user()?.role === 'admin' || this.user()?.role === 'trainer' || this.user()?.role === 'receptionist') : true);
+  readonly isStaff = computed(() =>
+    !this.auth.isSuperAdmin()
+      ? this.user()?.role === 'admin' ||
+        this.user()?.role === 'trainer' ||
+        this.user()?.role === 'receptionist'
+      : true,
+  );
 
   readonly membership = signal<UserMembership | null>(null);
   readonly myRoutines = signal<Routine[]>([]);
@@ -85,7 +91,9 @@ export class DashboardComponent implements OnInit {
   readonly myAttendance = signal<AttendanceRecord[]>([]);
   readonly loading = signal(true);
 
-  readonly canSeePayments = computed(() => ['admin', 'receptionist'].includes(this.user()?.role ?? '') || this.auth.isSuperAdmin());
+  readonly canSeePayments = computed(
+    () => ['admin', 'receptionist'].includes(this.user()?.role ?? '') || this.auth.isSuperAdmin(),
+  );
 
   occupancyPct = computed(() => {
     const o = this.occupancy();
@@ -110,22 +118,33 @@ export class DashboardComponent implements OnInit {
     }
 
     if (this.isClient()) {
-      this.memberships.mine().subscribe({ next: (m) => this.membership.set(m), error: () => undefined });
-      this.routines.mine({ limit: 10 }).subscribe({ next: (r) => this.myRoutines.set(r.items), error: () => undefined });
-      this.nutrition.dailySummary().subscribe({ next: (s) => this.nutritionToday.set(s), error: () => undefined });
+      this.memberships
+        .mine()
+        .subscribe({ next: (m) => this.membership.set(m), error: () => undefined });
+      this.routines
+        .mine({ limit: 10 })
+        .subscribe({ next: (r) => this.myRoutines.set(r.items), error: () => undefined });
+      this.nutrition
+        .dailySummary()
+        .subscribe({ next: (s) => this.nutritionToday.set(s), error: () => undefined });
       this.classes.myBookings({ limit: 10 }).subscribe({
-        next: (r) => this.myBookings.set(
-          r.items
-            .filter((b) => b.status === 'confirmed' && new Date(b.class?.startTime ?? '') > new Date())
-            .map((b) => b.class!)
-            .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()),
-        ),
+        next: (r) =>
+          this.myBookings.set(
+            r.items
+              .filter(
+                (b) => b.status === 'confirmed' && new Date(b.class?.startTime ?? '') > new Date(),
+              )
+              .map((b) => b.class!)
+              .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()),
+          ),
         error: () => undefined,
       });
     }
 
     if (this.isStaff()) {
-      this.classes.upcoming().subscribe({ next: (r) => this.upcomingClasses.set(r.items), error: () => undefined });
+      this.classes
+        .upcoming()
+        .subscribe({ next: (r) => this.upcomingClasses.set(r.items), error: () => undefined });
       this.memberships.list({ limit: 1 }).subscribe({
         next: (r) => this.activeMemberships.set(r.meta.total),
         error: () => undefined,
@@ -133,7 +152,9 @@ export class DashboardComponent implements OnInit {
     }
 
     if (this.canSeePayments()) {
-      this.payments.list({ limit: 5 }).subscribe({ next: (r) => this.recentPayments.set(r.items), error: () => undefined });
+      this.payments
+        .list({ limit: 5 })
+        .subscribe({ next: (r) => this.recentPayments.set(r.items), error: () => undefined });
     }
 
     const today = new Date();
@@ -172,7 +193,13 @@ export class DashboardComponent implements OnInit {
 
   roleColor(): string {
     const r = this.user()?.role;
-    return r === 'admin' ? 'volt' : r === 'trainer' ? 'info' : r === 'receptionist' ? 'orange' : 'muted';
+    return r === 'admin'
+      ? 'volt'
+      : r === 'trainer'
+        ? 'info'
+        : r === 'receptionist'
+          ? 'orange'
+          : 'muted';
   }
 
   get daysLeft(): number {
@@ -195,10 +222,30 @@ export class DashboardComponent implements OnInit {
     if (!t) return [];
     const targets = { calories: 2000, protein: 120, carbs: 250, fats: 70 };
     const arr: Array<{ name: string; value: string; pct: number; icon: string }> = [
-      { name: 'Calorías', value: `${t.calories} kcal`, pct: Math.min(100, (t.calories / targets.calories) * 100), icon: '🔥' },
-      { name: 'Proteína', value: `${t.protein} g`, pct: Math.min(100, (t.protein / targets.protein) * 100), icon: '🥩' },
-      { name: 'Carbohidratos', value: `${t.carbs} g`, pct: Math.min(100, (t.carbs / targets.carbs) * 100), icon: '🍞' },
-      { name: 'Grasas', value: `${t.fats} g`, pct: Math.min(100, (t.fats / targets.fats) * 100), icon: '🥑' },
+      {
+        name: 'Calorías',
+        value: `${t.calories} kcal`,
+        pct: Math.min(100, (t.calories / targets.calories) * 100),
+        icon: '🔥',
+      },
+      {
+        name: 'Proteína',
+        value: `${t.protein} g`,
+        pct: Math.min(100, (t.protein / targets.protein) * 100),
+        icon: '🥩',
+      },
+      {
+        name: 'Carbohidratos',
+        value: `${t.carbs} g`,
+        pct: Math.min(100, (t.carbs / targets.carbs) * 100),
+        icon: '🍞',
+      },
+      {
+        name: 'Grasas',
+        value: `${t.fats} g`,
+        pct: Math.min(100, (t.fats / targets.fats) * 100),
+        icon: '🥑',
+      },
     ];
     return arr;
   }
