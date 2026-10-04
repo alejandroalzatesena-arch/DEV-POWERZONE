@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ForbiddenException,
+  Inject,
   Injectable,
   NotFoundException,
   Optional,
@@ -31,7 +32,7 @@ export class RoutinesService {
     private readonly routineExercisesRepo: Repository<RoutineExercise>,
     @InjectRepository(User) private readonly usersRepo: Repository<User>,
     @InjectRepository(Exercise) private readonly exercisesRepo: Repository<Exercise>,
-    @Optional() private readonly aiProxy: AiProxyService | null,
+    @Optional() @Inject(AiProxyService) private readonly aiProxy?: AiProxyService,
   ) {}
 
   private tenantWhere(actor: JwtPayload): Record<string, any> {
@@ -186,25 +187,12 @@ export class RoutinesService {
       });
       const saved = await this.routinesRepo.save(routine);
       if (Array.isArray(aiRoutine.exercises)) {
-        const mapped: any[] = aiRoutine.exercises.map(
-          (
-            ex: {
-              exerciseId: string;
-              dayOfWeek?: number;
-              sets?: number;
-              reps?: number;
-              restSeconds?: number;
-            },
-            i: number,
-          ) => ({
-            exerciseId: ex.exerciseId,
-            dayOfWeek: ex.dayOfWeek ?? (i % dto.daysPerWeek) + 1,
-            order: (i % dto.daysPerWeek) + 1,
-            sets: ex.sets ?? 3,
-            reps: ex.reps ?? 10,
-            restSeconds: ex.restSeconds ?? 60,
-          }),
-        );
+        const mapped = await this.mapAiExercises(aiRoutine.exercises, dto.daysPerWeek);
+        if (mapped.length === 0) {
+          throw new BadRequestException(
+            'Ninguno de los ejercicios generados por la IA existe en el catálogo.',
+          );
+        }
         await this.saveExercises(saved, mapped);
       }
       return this.findById(saved.id, actor);
@@ -314,6 +302,72 @@ export class RoutinesService {
     }
 
     return this.findById(saved.id, actor);
+  }
+
+  private async mapAiExercises(aiExercises: any[], daysPerWeek: number): Promise<any[]> {
+    const catalog = await this.exercisesRepo
+      .createQueryBuilder('e')
+      .where('e.is_active = true')
+      .getMany();
+
+    const rows: any[] = [];
+    aiExercises.forEach((ex, i) => {
+      const exerciseId = this.matchExerciseName(ex?.name, catalog);
+      if (!exerciseId) return;
+      rows.push({
+        exerciseId,
+        dayOfWeek: ex.dayOfWeek ?? (i % daysPerWeek) + 1,
+        order: ex.order ?? (i % daysPerWeek) + 1,
+        sets: Number.isFinite(ex.sets) ? ex.sets : 3,
+        reps: this.normalizeReps(ex.reps),
+        restSeconds: Number.isFinite(ex.restSeconds) ? ex.restSeconds : 60,
+        weight: ex.weight,
+        notes: ex.notes,
+      });
+    });
+
+    return rows;
+  }
+
+  private matchExerciseName(name: string, catalog: Exercise[]): string | undefined {
+    const target = this.normalizeName(name);
+    if (!target) return undefined;
+
+    const exact = catalog.find((e) => this.normalizeName(e.name) === target);
+    if (exact) return exact.id;
+
+    const containment = catalog.filter((e) => {
+      const key = this.normalizeName(e.name);
+      return key !== target && (target.includes(key) || key.includes(target));
+    });
+    if (containment.length === 1) return containment[0].id;
+    if (containment.length > 1) {
+      containment.sort(
+        (a, b) => this.normalizeName(b.name).length - this.normalizeName(a.name).length,
+      );
+      return containment[0].id;
+    }
+
+    const firstWord = target.split(' ')[0];
+    const byFirstWord = catalog.filter((e) => this.normalizeName(e.name).split(' ')[0] === firstWord);
+    if (byFirstWord.length === 1) return byFirstWord[0].id;
+
+    return undefined;
+  }
+
+  private normalizeName(name: string): string {
+    return String(name ?? '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  private normalizeReps(reps: any): number {
+    if (typeof reps === 'number' && Number.isFinite(reps)) return reps;
+    const parsed = Number.parseInt(String(reps ?? '').match(/\d+/)?.[0] ?? '', 10);
+    return Number.isFinite(parsed) ? parsed : 10;
   }
 
   private async saveExercises(routine: Routine, exercises: any[]): Promise<void> {
