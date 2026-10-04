@@ -25,6 +25,11 @@ export const routes: Routes = [
           import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
       {
+        path: 'assistant',
+        loadComponent: () =>
+          import('./pages/assistant/assistant.component').then((m) => m.AssistantComponent),
+      },
+      {
         path: 'memberships',
         loadComponent: () =>
           import('./pages/memberships/memberships.component').then((m) => m.MembershipsComponent),

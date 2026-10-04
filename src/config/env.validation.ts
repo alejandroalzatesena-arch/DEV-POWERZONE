@@ -4,6 +4,7 @@ import { IsIn, IsOptional, IsString, Matches, validateSync } from 'class-validat
 class EnvironmentVariables {
   @IsString()
   @IsOptional()
+  @IsIn(['development', 'production', 'test'])
   NODE_ENV: string;
 
   @IsString()
@@ -114,9 +115,19 @@ export function validateEnv(config: Record<string, unknown>): EnvironmentVariabl
         'Error de validación de variables de entorno:\nCambia JWT_ACCESS_SECRET y JWT_REFRESH_SECRET antes de ejecutar en producción.',
       );
     }
-    if (validated.DB_SYNCHRONIZE === 'true') {
+    if (validated.DB_SYNCHRONIZE !== 'false') {
       throw new Error(
         'Error de validación de variables de entorno:\nDB_SYNCHRONIZE debe estar en false en producción; usa migraciones para el esquema.',
+      );
+    }
+    if (!validated.CORS_ORIGINS) {
+      throw new Error(
+        'Error de validación de variables de entorno:\nCORS_ORIGINS es obligatorio en producción.',
+      );
+    }
+    if (!validated.AI_SERVICE_API_KEY) {
+      throw new Error(
+        'Error de validación de variables de entorno:\nAI_SERVICE_API_KEY es obligatoria en producción.',
       );
     }
   }

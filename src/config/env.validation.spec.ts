@@ -15,12 +15,18 @@ describe('validateEnv', () => {
     expect(() => validateEnv({ DB_SYNCHRONIZE: 'quizas' })).toThrow(/DB_SYNCHRONIZE/);
   });
 
+  it('rechaza un NODE_ENV inválido', () => {
+    expect(() => validateEnv({ NODE_ENV: 'staging' })).toThrow(/NODE_ENV/);
+  });
+
   describe('modo producción', () => {
     const secure = {
       NODE_ENV: 'production',
       JWT_ACCESS_SECRET: 'secreto-access-seguro',
       JWT_REFRESH_SECRET: 'secreto-refresh-seguro',
       DB_SYNCHRONIZE: 'false',
+      CORS_ORIGINS: 'https://app.example.com',
+      AI_SERVICE_API_KEY: 'clave-ia-segura',
     };
 
     it('rechaza secretos JWT por defecto', () => {
@@ -35,6 +41,30 @@ describe('validateEnv', () => {
 
     it('rechaza DB_SYNCHRONIZE en true', () => {
       expect(() => validateEnv({ ...secure, DB_SYNCHRONIZE: 'true' })).toThrow(/synchronize/i);
+    });
+
+    it('rechaza DB_SYNCHRONIZE sin definir', () => {
+      expect(() => {
+        const { DB_SYNCHRONIZE, ...sinSync } = secure;
+        void DB_SYNCHRONIZE;
+        validateEnv(sinSync);
+      }).toThrow(/synchronize/i);
+    });
+
+    it('rechaza CORS_ORIGINS sin definir', () => {
+      expect(() => {
+        const { CORS_ORIGINS, ...sinCors } = secure;
+        void CORS_ORIGINS;
+        validateEnv(sinCors);
+      }).toThrow(/CORS_ORIGINS/i);
+    });
+
+    it('rechaza AI_SERVICE_API_KEY sin definir', () => {
+      expect(() => {
+        const { AI_SERVICE_API_KEY, ...sinClave } = secure;
+        void AI_SERVICE_API_KEY;
+        validateEnv(sinClave);
+      }).toThrow(/AI_SERVICE_API_KEY/i);
     });
 
     it('acepta una configuración segura de producción', () => {
