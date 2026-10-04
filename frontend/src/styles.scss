@@ -198,8 +198,19 @@ a {
   font-weight: 700;
   letter-spacing: 0.3px;
   border-radius: 999px;
+  transition:
+    box-shadow var(--pz-dur-fast) var(--pz-ease),
+    background-color var(--pz-dur-fast) var(--pz-ease),
+    transform var(--pz-dur-fast) var(--pz-ease);
   &:hover {
     background: var(--pz-volt-dark);
+    box-shadow:
+      0 0 0 2px rgba(200, 255, 61, 0.25),
+      0 8px 28px rgba(200, 255, 61, 0.35);
+    transform: translateY(-1px);
+  }
+  &:active {
+    transform: translateY(0);
   }
 }
 
@@ -402,6 +413,19 @@ a {
 
 .pz-fade {
   animation: pzFadeUp 0.35s var(--pz-ease) both;
+}
+
+// ---------- Entrada escalonada ----------
+.pz-stagger {
+  > * {
+    opacity: 0;
+    animation: pzFadeUp 0.45s var(--pz-ease) forwards;
+  }
+  @for $i from 1 through 12 {
+    > *:nth-child(#{$i}) {
+      animation-delay: #{$i * 45}ms;
+    }
+  }
 }
 
 // ---------- Accesibilidad: mover reducido ----------

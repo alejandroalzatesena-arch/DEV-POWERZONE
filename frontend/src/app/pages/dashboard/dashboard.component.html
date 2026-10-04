@@ -19,7 +19,7 @@
 
   <!-- Stats -->
   @if (!loading()) {
-    <div class="pz-grid pz-grid-lg stat-grid">
+    <div class="pz-grid pz-grid-lg stat-grid pz-stagger">
       @if (isClient()) {
         <a [routerLink]="'/memberships/my'" class="stat-link">
           <pz-stat-card
@@ -117,7 +117,7 @@
     </div>
   }
 
-  <div class="dash-grid">
+  <div class="dash-grid pz-stagger">
     <!-- Columna principal -->
     <div class="col-main">
       @if (isClient()) {

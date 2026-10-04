@@ -33,20 +33,17 @@
 }
 
 .brand-mark {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  background: var(--pz-grad);
-  position: relative;
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 6px;
-    border-radius: 5px;
-    border: 2px solid #10130a;
-    clip-path: polygon(0 100%, 30% 30%, 50% 100%, 100% 20%);
-    transform: rotate(-15deg);
-  }
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background-image: url('/images/brand-logo.png');
+  background-size: cover;
+  background-position: center;
+  box-shadow:
+    0 0 0 1px rgba(200, 255, 61, 0.4),
+    0 4px 14px rgba(0, 0, 0, 0.45);
+  flex-shrink: 0;
+  transition: transform var(--pz-dur-fast) var(--pz-ease);
 }
 
 .brand-text {
@@ -141,7 +138,10 @@
   font-size: 13.5px;
   cursor: pointer;
   margin-bottom: 2px;
-  transition: all 0.15s ease;
+  transition:
+    background var(--pz-dur-fast) var(--pz-ease),
+    color var(--pz-dur-fast) var(--pz-ease),
+    box-shadow var(--pz-dur-fast) var(--pz-ease);
 
   mat-icon {
     font-size: 20px;
@@ -155,7 +155,7 @@
   }
 
   &.active {
-    background: rgba(200, 255, 61, 0.12);
+    background: linear-gradient(90deg, rgba(200, 255, 61, 0.14), rgba(200, 255, 61, 0.05));
     color: var(--pz-volt);
     font-weight: 600;
     box-shadow: inset 3px 0 0 var(--pz-volt);
@@ -169,6 +169,16 @@
 
   .brand {
     padding: 10px 18px 20px;
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+    }
+
+    .brand-text {
+      font-size: 24px;
+    }
   }
 }
 

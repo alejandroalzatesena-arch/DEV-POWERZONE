@@ -61,11 +61,13 @@
   .brand-mark {
     width: 44px;
     height: 44px;
-    border-radius: 12px;
-    background: var(--pz-grad);
+    border-radius: 11px;
+    background-image: url('/images/brand-logo.png');
+    background-size: cover;
+    background-position: center;
     box-shadow:
-      0 6px 20px rgba(0, 0, 0, 0.35),
-      0 0 0 1px rgba(255, 255, 255, 0.08);
+      0 0 0 1px rgba(200, 255, 61, 0.45),
+      0 6px 20px rgba(0, 0, 0, 0.4);
   }
 }
 
