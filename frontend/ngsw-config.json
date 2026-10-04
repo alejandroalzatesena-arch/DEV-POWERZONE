@@ -14,7 +14,16 @@
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
-        "files": ["/icons/**", "/**/*.png", "/**/*.ico", "/**/*.woff2", "/**/*.svg"]
+        "files": [
+          "/icons/**",
+          "/images/**",
+          "/**/*.png",
+          "/**/*.ico",
+          "/**/*.woff2",
+          "/**/*.svg",
+          "/**/*.jpg",
+          "/**/*.jpeg"
+        ]
       }
     }
   ]
