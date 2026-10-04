@@ -43,8 +43,8 @@ html {
   --pz-volt-glow: rgba(200, 255, 61, 0.35);
   --pz-orange: #ff8a2a;
   --pz-white: #f4f6f8;
-  --pz-muted: #9aa4b2;
-  --pz-muted-2: #6b7480;
+  --pz-muted: #a7b0bd;
+  --pz-muted-2: #7d8794;
   --pz-danger: #ff4d5e;
   --pz-info: #38c6ff;
   --pz-success: #35d07f;
@@ -52,6 +52,17 @@ html {
   --pz-radius: 14px;
   --pz-grad: linear-gradient(135deg, #c8ff3d 0%, #7cf92e 60%, #2ce58a 100%);
   --pz-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --pz-ease: cubic-bezier(0.33, 0, 0.1, 1);
+  --pz-dur-fast: 120ms;
+  --pz-dur: 250ms;
+  --pz-focus: 2px solid var(--pz-volt);
+}
+
+// ---------- Accesibilidad: foco visible en teclado ----------
+:focus-visible {
+  outline: var(--pz-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 // ---------- Reset ----------
@@ -237,6 +248,14 @@ a {
   background: var(--pz-surface) !important;
   border: 1px solid var(--pz-border);
   border-radius: var(--pz-radius) !important;
+  box-shadow: var(--pz-shadow) !important;
+  transition:
+    transform var(--pz-dur-fast) var(--pz-ease),
+    border-color var(--pz-dur-fast) var(--pz-ease);
+
+  &:hover {
+    border-color: #37415a;
+  }
 }
 
 .mat-mdc-card.mdc-card--outlined {
@@ -382,5 +401,17 @@ a {
 }
 
 .pz-fade {
-  animation: pzFadeUp 0.35s ease both;
+  animation: pzFadeUp 0.35s var(--pz-ease) both;
+}
+
+// ---------- Accesibilidad: mover reducido ----------
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
