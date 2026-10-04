@@ -1,0 +1,82 @@
+<div class="assistant-page">
+  <pz-page-header
+    title="Asistente IA"
+    subtitle="Chatbot inteligente de Power Zone: clases, membresías, rutinas y nutrición."
+  >
+    <span
+      class="pz-badge"
+      [class.badge-success]="aiStatus() === 'ok'"
+      [class.badge-danger]="aiStatus() === 'unavailable'"
+      [class.badge-muted]="aiStatus() === 'checking'"
+    >
+      <span
+        class="dot"
+        [class.on]="aiStatus() === 'ok'"
+        [class.off]="aiStatus() === 'unavailable'"
+      ></span>
+      {{
+        aiStatus() === 'ok'
+          ? 'IA en línea'
+          : aiStatus() === 'unavailable'
+            ? 'IA no disponible'
+            : 'Verificando estado…'
+      }}
+    </span>
+  </pz-page-header>
+
+  <mat-card class="chat-card">
+    <div class="chat-scroll" #scroller>
+      @for (msg of messages(); track $index) {
+        <div class="bubble-row" [class.user]="msg.role === 'user'">
+          <div class="bubble" [class.user]="msg.role === 'user'">
+            <div class="bubble-role">
+              <mat-icon>{{ msg.role === 'user' ? 'person' : 'smart_toy' }}</mat-icon>
+              <span>{{ msg.role === 'user' ? 'Tú' : 'Asistente IA' }}</span>
+            </div>
+            <p>{{ msg.content }}</p>
+          </div>
+        </div>
+      }
+      @if (sending()) {
+        <div class="bubble-row">
+          <div class="bubble typing">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="chat-input">
+      @if (!sending()) {
+        <div class="chips">
+          @for (s of suggestions; track s) {
+            <button mat-stroked-button class="chip" (click)="send(s)">{{ s }}</button>
+          }
+        </div>
+      }
+      <div class="input-row">
+        <mat-form-field class="chat-field" appearance="outline">
+          <input
+            matInput
+            placeholder="Escribe tu consulta…"
+            [ngModel]="draft()"
+            (ngModelChange)="draft.set($event)"
+            (keydown.enter)="send(); $event.preventDefault()"
+            [disabled]="sending()"
+          />
+        </mat-form-field>
+        <button
+          mat-icon-button
+          class="send-btn"
+          (click)="send()"
+          [disabled]="sending() || !draft().trim()"
+          aria-label="Enviar"
+        >
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</div>
