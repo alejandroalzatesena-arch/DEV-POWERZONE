@@ -47,6 +47,7 @@ Sistema de gestión integral para gimnasios **"Power Zone"**. Backend desarrolla
 ```
 powerzone-backend/
 ├── ai-service/               # Servicio de IA (FastAPI): /chat, rutinas, recomendaciones
+├── frontend/                 # Aplicación Angular (cliente web del sistema)
 ├── src/
 │   ├── common/               # Enums, entidades base, guards, filtros, interceptores, Redis
 │   ├── config/               # Configuración por factor y validación de variables de entorno
@@ -56,7 +57,9 @@ powerzone-backend/
 │   │   └── data-source.ts    # DataSource para la CLI de TypeORM
 │   ├── modules/              # Módulos de dominio (ver tabla de abajo)
 │   ├── app.module.ts         # Módulo raíz
+│   ├── app.controller.ts     # Health check público (GET /api/health)
 │   └── main.ts               # Bootstrap: helmet, CORS, prefijo /api, Swagger
+├── test/                     # Smoke e2e (health + OpenAPI)
 ├── docker-compose.yml        # PostgreSQL 16 + Redis 7
 ├── eslint.config.mjs
 ├── tsconfig.json / tsconfig.build.json
@@ -96,19 +99,30 @@ powerzone-backend/
 
 ## 5. Puesta en marcha rápida
 
-1. **Instalar dependencias**
+> **Nota de puertos**: el archivo `docker-compose.run.yml` sobrescribe los puertos locales a **5433** (PostgreSQL) y **6380** (Redis), que son los que usa el `.env` de desarrollo. Usa el comando de abajo con ambos archivos.
+
+1. **Instalar dependencias del backend**
 
    ```bash
    npm install
    ```
 
-2. **Levantar PostgreSQL y Redis**
+2. **Instalar dependencias del frontend**
 
    ```bash
-   docker compose up -d
+   cd frontend
+   npm install
+   cd ..
    ```
 
-3. **Configurar variables de entorno**
+3. **Levantar PostgreSQL y Redis** (puertos 5433/6380)
+
+   ```bash
+   docker compose -f docker-compose.yml -f docker-compose.run.yml up -d
+   ```
+   *(Si prefieres los puertos por defecto 5432/6379, omite `docker-compose.run.yml` y ajusta `DB_PORT`/`REDIS_PORT` en `.env`.)*
+
+4. **Configurar variables de entorno**
 
    ```bash
    cp .env.example .env
@@ -116,19 +130,28 @@ powerzone-backend/
 
    En desarrollo, `DB_SYNCHRONIZE=true` crea el esquema automáticamente. Para usar migraciones, cambia el valor y ejecuta `npm run migration:run`.
 
-4. **Cargar datos de demostración** (opcional)
+5. **Cargar datos de demostración** (opcional)
 
    ```bash
    npm run seed
    ```
 
-5. **Arrancar el servidor**
+6. **Arrancar el backend**
 
    ```bash
    npm run start:dev
    ```
 
-La API quedará disponible en `http://localhost:3000/api` y la documentación en `http://localhost:3000/api/docs`.
+7. **Arrancar el frontend** (terminal aparte)
+
+   ```bash
+   cd frontend
+   npm start        # ng serve → http://localhost:4200
+   ```
+
+   El frontend usa un proxy (`proxy.conf.json`) que redirige `/api` al backend en `http://localhost:3000`.
+
+La API quedará disponible en `http://localhost:3000/api`, la documentación en `http://localhost:3000/api/docs` y el frontend en `http://localhost:4200`.
 
 ---
 
@@ -264,6 +287,10 @@ Endpoints del servicio: `GET /health`, `POST /chat`, `POST /routines/generate`, 
 | `npm run seed`        | Datos de demostración            |
 | `npm run seed:clear`  | Limpia datos                     |
 | `npm run migration:run` | Aplica migraciones             |
+| `npm test`            | Tests unitarios (Jest, sin infraestructura) |
+| `npm run test:watch`  | Tests unitarios en watch         |
+| `npm run test:cov`    | Cobertura de tests               |
+| `npm run test:e2e`    | Tests end-to-end (requieren PostgreSQL y Redis arriba) |
 
 ---
 
@@ -299,8 +326,8 @@ feat/reports  feat/ai-proxy
 - **Build**: `npm run build` → exit 0.
 - **Lint**: `npm run lint` → exit 0 (0 errores; avisos de `no-explicit-any` heredados).
 - **Typecheck**: `npm run typecheck` → exit 0.
-
-> Pendiente del roadmap: carga inicial del proyecto a `main` (historias por módulo) y validación de arranque en runtime con PostgreSQL/Redis mediante Docker.
+- **Tests unitarios**: `npm test` → exit 0 (validación de entorno y health check).
+- **Smoke e2e**: `npm run test:e2e` → exit 0 con PostgreSQL/Redis levantados (`GET /api/health` y `GET /api/docs-json`).
 
 ---
 

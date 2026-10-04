@@ -12,6 +12,7 @@ import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-prox
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
+import { AppController } from './app.controller';
 import { AuthModule } from './modules/auth/auth.module';
 import { GymsModule } from './modules/gyms/gyms.module';
 import { UsersModule } from './modules/users/users.module';
@@ -81,6 +82,7 @@ import { AiProxyModule } from './modules/ai-proxy/ai-proxy.module';
     ReportsModule,
     AiProxyModule,
   ],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
