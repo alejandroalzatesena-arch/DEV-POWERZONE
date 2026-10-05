@@ -60,6 +60,8 @@ public class TableStore {
         return snake;
     }
 
+    private String identifier(String column) { return "\"" + column + "\""; }
+
     private Object sqlValue(String table, String col, Object value) {
         if (value == null) return null;
         String type = columns(table).get(col);
@@ -100,7 +102,7 @@ public class TableStore {
         String sql = "SELECT * FROM " + table + " WHERE id=:id AND deleted_at IS NULL";
         var params = new MapSqlParameterSource("id", id);
         if (tenantColumn != null && actor != null && !actor.superAdmin()) {
-            sql += " AND " + column(table, tenantColumn) + "=:tenant";
+            sql += " AND " + identifier(column(table, tenantColumn)) + "=:tenant";
             params.addValue("tenant", actor.requiredGym());
         }
         var result = named.queryForList(sql, params);
@@ -123,7 +125,7 @@ public class TableStore {
             String sortBy, String sortOrder, int page, int limit) {
         var params = new MapSqlParameterSource();
         String where = where(table, filters, actor, tenantColumn, params);
-        String order = column(table, sortBy == null ? "createdAt" : sortBy);
+        String order = identifier(column(table, sortBy == null ? "createdAt" : sortBy));
         String direction = "ASC".equalsIgnoreCase(sortOrder) ? "ASC" : "DESC";
         params.addValue("limit", Math.clamp(limit, 1, 100));
         params.addValue("offset", (Math.max(page, 1) - 1) * Math.clamp(limit, 1, 100));
@@ -150,7 +152,7 @@ public class TableStore {
         StringBuilder where = new StringBuilder(" WHERE deleted_at IS NULL");
         if (tenantColumn != null && actor != null && !actor.superAdmin()) {
             String col = column(table, tenantColumn);
-            where.append(" AND ").append(col).append("=:tenant");
+            where.append(" AND ").append(identifier(col)).append("=:tenant");
             params.addValue("tenant", actor.requiredGym());
         }
         if (filters != null) filters.forEach((key, value) -> {
@@ -158,7 +160,7 @@ public class TableStore {
             String col = column(table, key);
             if ("deleted_at".equals(col) || "password".equals(col))
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Filtro no permitido");
-            where.append(" AND ").append(col).append("=:").append(col);
+            where.append(" AND ").append(identifier(col)).append("=:").append(col);
             params.addValue(col, sqlValue(table, col, value));
         });
         return where.toString();
@@ -175,7 +177,7 @@ public class TableStore {
         if (data.isEmpty()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Faltan datos.");
         var params = new MapSqlParameterSource();
         data.forEach(params::addValue);
-        String cols = String.join(",", data.keySet());
+        String cols = String.join(",", data.keySet().stream().map(this::identifier).toList());
         String placeholders = ":" + String.join(",:", data.keySet());
         return normalize(named.queryForMap("INSERT INTO " + table + " (" + cols + ") VALUES (" +
                 placeholders + ") RETURNING *", params));
@@ -194,7 +196,7 @@ public class TableStore {
         var params = new MapSqlParameterSource("id", id);
         data.forEach(params::addValue);
         var assignments = new ArrayList<String>();
-        data.keySet().forEach(col -> assignments.add(col + "=:" + col));
+        data.keySet().forEach(col -> assignments.add(identifier(col) + "=:" + col));
         return normalize(named.queryForMap("UPDATE " + table + " SET " + String.join(",", assignments) +
                 ",updated_at=now() WHERE id=:id RETURNING *", params));
     }
