@@ -1,46 +1,62 @@
 import { Injectable } from '@angular/core';
-import { io, Socket } from 'socket.io-client';
 import { TokenService } from './token.service';
+
+type RealtimeEvent = { event: string; data: unknown };
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
-  private notifications?: Socket;
-  private occupancy?: Socket;
+  private notifications?: WebSocket;
+  private occupancy?: WebSocket;
+  private notificationGeneration = 0;
+  private occupancyGeneration = 0;
 
   constructor(private token: TokenService) {}
 
-  connectNotifications(userId: string, onNotification: (data: unknown) => void): void {
+  private connect(topic: string, onEvent: (data: unknown) => void, generation: number,
+    currentGeneration: () => number, assign: (socket: WebSocket) => void): void {
+    const access = this.token.access;
+    if (!access) return;
+    const scheme = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const socket = new WebSocket(`${scheme}//${location.host}/api/ws?${topic}`, ['pz', `jwt.${access}`]);
+    assign(socket);
+    socket.onmessage = (message) => {
+      try {
+        const event = JSON.parse(message.data) as RealtimeEvent;
+        if (event.event === 'notification' || event.event === 'occupancy') onEvent(event.data);
+      } catch { /* ignore malformed realtime event */ }
+    };
+    socket.onclose = () => {
+      if (currentGeneration() === generation) {
+        window.setTimeout(() => {
+          if (currentGeneration() === generation) this.connect(topic, onEvent, generation, currentGeneration, assign);
+        }, 3000);
+      }
+    };
+  }
+
+  connectNotifications(_userId: string, onNotification: (data: unknown) => void): void {
     this.disconnectNotifications();
-    this.notifications = io('http://localhost:3000/notifications', {
-      auth: { userId },
-      transports: ['websocket', 'polling'],
-    });
-    this.notifications.on('connect', () => {
-      this.notifications?.emit('subscribe:user', { userId });
-    });
-    this.notifications.on('notification', onNotification);
+    const generation = this.notificationGeneration;
+    this.connect('topic=notifications', onNotification, generation,
+      () => this.notificationGeneration, socket => { this.notifications = socket; });
   }
 
   disconnectNotifications(): void {
-    this.notifications?.disconnect();
+    this.notificationGeneration++;
+    this.notifications?.close();
     this.notifications = undefined;
   }
 
   connectOccupancy(gymId: string, onOccupancy: (data: unknown) => void): void {
     this.disconnectOccupancy();
-    this.occupancy = io('http://localhost:3000/attendance', {
-      query: { gymId },
-      transports: ['websocket', 'polling'],
-    });
-    this.occupancy.on('connect', () => {
-      this.occupancy?.emit('subscribe:gym', { gymId });
-    });
-    this.occupancy.on('occupancy', onOccupancy);
-    this.occupancy.on('ping', () => this.occupancy?.emit('ping', { pong: true }));
+    const generation = this.occupancyGeneration;
+    this.connect(`topic=occupancy&gymId=${encodeURIComponent(gymId)}`, onOccupancy, generation,
+      () => this.occupancyGeneration, socket => { this.occupancy = socket; });
   }
 
   disconnectOccupancy(): void {
-    this.occupancy?.disconnect();
+    this.occupancyGeneration++;
+    this.occupancy?.close();
     this.occupancy = undefined;
   }
 }

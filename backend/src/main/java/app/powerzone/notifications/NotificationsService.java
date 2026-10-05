@@ -4,6 +4,7 @@ import app.powerzone.auth.AuthService;
 import app.powerzone.common.Actor;
 import app.powerzone.common.CrudService;
 import app.powerzone.common.TableStore;
+import app.powerzone.realtime.RealtimeHub;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,7 +18,10 @@ import org.springframework.web.server.ResponseStatusException;
 public class NotificationsService {
     private final TableStore db;
     private final CrudService crud;
-    public NotificationsService(TableStore db, CrudService crud) { this.db = db; this.crud = crud; }
+    private final RealtimeHub hub;
+    public NotificationsService(TableStore db, CrudService crud, RealtimeHub hub) {
+        this.db = db; this.crud = crud; this.hub = hub;
+    }
 
     public Map<String, Object> create(Actor actor, Map<String, Object> body, boolean message) {
         if (!message) actor.require("admin", "trainer", "receptionist");
@@ -30,7 +34,9 @@ public class NotificationsService {
         input.put("type", message ? "message" : body.getOrDefault("type", "info"));
         input.put("channel", message ? "in_app" : body.getOrDefault("channel", "in_app"));
         input.put("data", message ? Map.of("messageType", "internal") : body.get("data"));
-        return db.insert("notifications", input);
+        var saved = db.insert("notifications", input);
+        hub.publishUser(AuthService.uuid(saved.get("userId")), saved);
+        return saved;
     }
     public Map<String, Object> systemNotify(UUID userId, UUID gymId, String type, String title,
             String body, Map<String, Object> data) {
@@ -38,7 +44,9 @@ public class NotificationsService {
         input.put("userId", userId); input.put("gymId", gymId); input.put("type", type);
         input.put("channel", "in_app"); input.put("title", title); input.put("body", body);
         input.put("data", data); input.put("isRead", false);
-        return db.insert("notifications", input);
+        var saved = db.insert("notifications", input);
+        hub.publishUser(userId, saved);
+        return saved;
     }
     public Map<String, Object> mine(Actor actor, Map<String, String> q) {
         var filters = new LinkedHashMap<String, Object>();

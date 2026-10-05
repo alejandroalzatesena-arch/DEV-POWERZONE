@@ -33,12 +33,14 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(a -> a
-                        .requestMatchers("/api/health", "/actuator/health", "/api/docs", "/api/docs/**",
-                                "/api/docs-json", "/api/docs-json/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/error", "/api/health", "/actuator/health", "/api/docs", "/api/docs/**",
+                                "/api/docs-json", "/api/docs-json/**", "/api/swagger-ui/**",
+                                "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/gyms").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/ai-proxy/health").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register", "/api/auth/refresh").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/payments/stripe/webhook").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/payments/webhook/stripe").permitAll()
+                        .requestMatchers("/api/ws").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()))
                 .build();

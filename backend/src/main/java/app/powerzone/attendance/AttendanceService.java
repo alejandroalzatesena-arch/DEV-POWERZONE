@@ -4,6 +4,7 @@ import app.powerzone.auth.AuthService;
 import app.powerzone.common.Actor;
 import app.powerzone.common.CrudService;
 import app.powerzone.common.TableStore;
+import app.powerzone.realtime.RealtimeHub;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
@@ -20,7 +21,10 @@ import org.springframework.web.server.ResponseStatusException;
 public class AttendanceService {
     private final TableStore db;
     private final CrudService crud;
-    public AttendanceService(TableStore db, CrudService crud) { this.db = db; this.crud = crud; }
+    private final RealtimeHub hub;
+    public AttendanceService(TableStore db, CrudService crud, RealtimeHub hub) {
+        this.db = db; this.crud = crud; this.hub = hub;
+    }
 
     @Transactional
     public Map<String, Object> checkIn(Actor actor, UUID userId, String method) {
@@ -35,18 +39,26 @@ public class AttendanceService {
         if (inside(userId)) throw new ResponseStatusException(HttpStatus.CONFLICT, "El cliente ya está dentro del gimnasio.");
         if ((long) occupancyCount(gymId) >= ((Number) gym.get("maxCapacity")).longValue())
             throw new ResponseStatusException(HttpStatus.CONFLICT, "El gimnasio alcanzó su aforo máximo.");
-        return db.insert("attendance_records", Map.of("gymId", gymId, "userId", userId,
+        var saved = db.insert("attendance_records", Map.of("gymId", gymId, "userId", userId,
                 "type", "check_in", "method", method, "timestamp", java.sql.Timestamp.from(Instant.now())));
+        int current = occupancyCount(gymId);
+        int max = ((Number) gym.get("maxCapacity")).intValue();
+        hub.publishGym(gymId, Map.of("current", current, "maxCapacity", max, "isFull", current >= max));
+        return saved;
     }
     @Transactional
     public Map<String, Object> checkOut(Actor actor, UUID userId, String method) {
         actor.require("admin", "receptionist", "client"); actor.requireSelfOrStaff(userId);
         var user = db.read("users", userId, actor, "gymId");
         UUID gymId = AuthService.uuid(user.get("gymId"));
-        lockedGym(gymId);
+        var gym = lockedGym(gymId);
         if (!inside(userId)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El cliente no está dentro del gimnasio.");
-        return db.insert("attendance_records", Map.of("gymId", gymId, "userId", userId,
+        var saved = db.insert("attendance_records", Map.of("gymId", gymId, "userId", userId,
                 "type", "check_out", "method", method, "timestamp", java.sql.Timestamp.from(Instant.now())));
+        int current = occupancyCount(gymId);
+        int max = ((Number) gym.get("maxCapacity")).intValue();
+        hub.publishGym(gymId, Map.of("current", current, "maxCapacity", max, "isFull", current >= max));
+        return saved;
     }
     public Map<String, Object> recordClass(Actor actor, UUID classId, String method) {
         var gymClass = db.read("gym_classes", classId, actor, "gymId");
