@@ -27,6 +27,7 @@ springdoc:
   swagger-ui:
     path: /api/docs
 powerzone:
+  seed-demo: ${SEED_DEMO:false}
   jwt:
     access-secret: ${JWT_ACCESS_SECRET:powerzone-access-secret-development-only-change-me}
     refresh-secret: ${JWT_REFRESH_SECRET:powerzone-refresh-secret-development-only-change-me}

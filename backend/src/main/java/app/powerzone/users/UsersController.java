@@ -13,6 +13,7 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -52,12 +53,27 @@ public class UsersController {
     }
 
     @PostMapping
+    @Transactional
     public Map<String, Object> create(@RequestBody Map<String, Object> body, Authentication auth) {
         Actor actor = actor(auth); actor.require("admin");
-        var input = new LinkedHashMap<>(body);
+        if (body.containsKey("isSuperAdmin")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        var input = new LinkedHashMap<String, Object>();
+        for (String field : List.of("email", "firstName", "lastName", "role", "phone", "gender", "birthDate", "isActive", "gymId"))
+            if (body.containsKey(field)) input.put(field, body.get(field));
+        input.put("email", AuthService.required(body, "email").toLowerCase());
+        input.put("firstName", AuthService.required(body, "firstName"));
+        input.put("lastName", AuthService.required(body, "lastName"));
         input.put("password", passwords.encode(AuthService.required(body, "password")));
         input.putIfAbsent("role", "client");
-        return AuthService.publicUser(crud.create("users", actor, "gymId", input));
+        var created = crud.create("users", actor, "gymId", input);
+        var profile = new LinkedHashMap<String, Object>();
+        for (String field : List.of("heightCm", "weightKg", "goal", "activityLevel"))
+            if (body.get(field) != null) profile.put(field, body.get(field));
+        if (!profile.isEmpty()) {
+            profile.put("userId", created.get("id"));
+            db.insert("user_profiles", profile);
+        }
+        return AuthService.publicUser(created);
     }
 
     @PatchMapping("/{id}")
@@ -65,7 +81,10 @@ public class UsersController {
         Actor actor = actor(auth); actor.require("admin");
         if (body.containsKey("isSuperAdmin") && !actor.superAdmin())
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        return AuthService.publicUser(crud.update("users", id(id), actor, "gymId", body));
+        var input = new LinkedHashMap<String, Object>();
+        for (String field : List.of("firstName", "lastName", "phone", "gender", "birthDate", "avatarUrl", "role", "isActive"))
+            if (body.containsKey(field)) input.put(field, body.get(field));
+        return AuthService.publicUser(crud.update("users", id(id), actor, "gymId", input));
     }
 
     @DeleteMapping("/{id}")
@@ -94,11 +113,14 @@ public class UsersController {
         actor.requireSelfOrStaff(userId);
         db.read("users", userId, actor, "gymId");
         var found = db.findOne("user_profiles", Map.of("userId", userId), null, null);
-        if (found == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Perfil no encontrado.");
-        return found;
+        return found == null ? db.insert("user_profiles", Map.of("userId", userId)) : found;
     }
     private Map<String, Object> updateProfile(UUID userId, Map<String, Object> body, Actor actor) {
         var existing = profile(userId, actor);
-        return db.update("user_profiles", id(String.valueOf(existing.get("id"))), body, null, null);
+        var input = new LinkedHashMap<String, Object>();
+        for (String field : List.of("heightCm", "weightKg", "bodyFatPct", "goal", "activityLevel",
+                "medicalConditions", "emergencyContactName", "emergencyContactPhone"))
+            if (body.containsKey(field)) input.put(field, body.get(field));
+        return db.update("user_profiles", id(String.valueOf(existing.get("id"))), input, null, null);
     }
 }

@@ -101,7 +101,9 @@ public class AuthService {
         if (stored == null || stored.get("revokedAt") != null || !userId.toString().equals(stored.get("userId"))
                 || !hash(token).equals(stored.get("tokenHash")))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token inválido o revocado.");
-        db.execute("UPDATE refresh_tokens SET revoked_at=now() WHERE id=:id AND revoked_at IS NULL", Map.of("id", tokenId));
+        int revoked = db.execute("UPDATE refresh_tokens SET revoked_at=now() " +
+                "WHERE id=:id AND revoked_at IS NULL", Map.of("id", tokenId));
+        if (revoked != 1) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token ya utilizado.");
         var user = db.read("users", userId, null, null);
         return issue(user);
     }
@@ -134,10 +136,12 @@ public class AuthService {
 
     private Map<String, Object> issue(Map<String, Object> user) {
         Instant now = Instant.now();
-        var claims = JwtClaimsSet.builder().issuedAt(now).expiresAt(now.plusSeconds(accessSeconds))
+        var claimsBuilder = JwtClaimsSet.builder().issuedAt(now).expiresAt(now.plusSeconds(accessSeconds))
                 .subject(String.valueOf(user.get("id"))).claim("email", user.get("email"))
-                .claim("role", user.get("role")).claim("gymId", user.get("gymId"))
-                .claim("isSuperAdmin", user.get("isSuperAdmin")).build();
+                .claim("role", user.get("role"))
+                .claim("isSuperAdmin", user.get("isSuperAdmin"));
+        if (user.get("gymId") != null) claimsBuilder.claim("gymId", user.get("gymId"));
+        var claims = claimsBuilder.build();
         String access = accessEncoder.encode(JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims))
                 .getTokenValue();
         UUID tokenId = UUID.randomUUID();

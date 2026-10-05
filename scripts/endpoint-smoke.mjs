@@ -1,4 +1,6 @@
-const BASE = 'http://localhost:3000';
+import { readFileSync } from 'node:fs';
+
+const BASE = process.env.API_BASE_URL || 'http://localhost:3000';
 const PASSWORD = 'PowerZone2024!';
 const runId = Date.now();
 const results = [];
@@ -57,7 +59,8 @@ async function login(email, cover = false) {
 }
 
 async function main() {
-  const spec = await (await fetch(`${BASE}/api/docs-json`)).json();
+  const spec = JSON.parse(readFileSync(new URL('../postman/powerzone-openapi.json', import.meta.url), 'utf8').replace(/^\uFEFF/, ''));
+  const live = await (await fetch(`${BASE}/api/docs-json`)).json();
   const expectedKeys = [];
   for (const [path, definition] of Object.entries(spec.paths)) {
     for (const method of ['get', 'post', 'patch', 'put', 'delete']) {
@@ -182,7 +185,7 @@ async function main() {
   });
   await request('GET /api/payments/{id}', `/api/payments/${idOf(manualPayment)}`, { token: A });
   await request('POST /api/payments/webhook/stripe', '/api/payments/webhook/stripe', {
-    method: 'POST', body: {}, expected: [500], note: 'Stripe no configurado: fallo esperado' },
+    method: 'POST', body: {}, expected: [503], note: 'Stripe no configurado: fallo esperado' },
   );
 
   // Exercises and routines.
@@ -230,7 +233,7 @@ async function main() {
     method: 'POST', token: T, body: { userId: registeredId, context: { goal: 'general_fitness' } },
   });
   await request('POST /api/ai-proxy/recommendations/nutrition', '/api/ai-proxy/recommendations/nutrition', {
-    method: 'POST', token: C, body: { userId: registeredId, context: { goal: 'maintain' } },
+    method: 'POST', token: C, body: { userId: client.user.id, context: { goal: 'maintain' } },
   });
 
   // Classes and bookings.
@@ -372,22 +375,28 @@ async function main() {
 
   const covered = new Set(results.map(r => r.key));
   const missing = expectedKeys.filter(key => !covered.has(key));
+  const undocumented = expectedKeys.filter(key => {
+    const [method, path] = key.split(' ');
+    return !live.paths?.[path]?.[method.toLowerCase()];
+  });
   const failed = results.filter(r => !r.ok);
   const passed = results.filter(r => r.ok);
   console.log(JSON.stringify({
     summary: {
       openApiOperations: expectedKeys.length,
       coveredOpenApiOperations: expectedKeys.length - missing.length,
-      additionalOperations: 1,
+      additionalOperations: Object.values(live.paths).reduce((count, path) =>
+        count + ['get', 'post', 'patch', 'put', 'delete'].filter(method => path[method]).length, 0) - expectedKeys.length,
       passed: passed.length,
       failed: failed.length,
       missing: missing.length,
     },
     missing,
+    undocumented,
     failed,
-    results,
+    ...(process.env.SMOKE_VERBOSE === '1' ? { results } : {}),
   }, null, 2));
-  process.exitCode = failed.length || missing.length ? 1 : 0;
+  process.exitCode = failed.length || missing.length || undocumented.length ? 1 : 0;
 }
 
 main().catch(error => {

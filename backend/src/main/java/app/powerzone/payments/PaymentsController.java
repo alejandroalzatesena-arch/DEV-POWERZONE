@@ -45,9 +45,9 @@ public class PaymentsController {
     public Map<String, Object> mockConfirm(@PathVariable String id, Authentication auth) {
         return payments.mockConfirm(actor(auth), AuthService.uuid(id));
     }
-    @PostMapping("/stripe/webhook")
+    @PostMapping("/webhook/stripe")
     public Map<String, Boolean> webhook(@RequestBody String payload,
-            @RequestHeader("Stripe-Signature") String signature) {
+            @RequestHeader(value = "Stripe-Signature", required = false) String signature) {
         payments.webhook(payload, signature); return Map.of("received", true);
     }
 }

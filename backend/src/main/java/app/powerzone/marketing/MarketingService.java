@@ -14,7 +14,8 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -22,8 +23,11 @@ public class MarketingService {
     private final TableStore db;
     private final CrudService crud;
     private final NotificationsService notifications;
-    public MarketingService(TableStore db, CrudService crud, NotificationsService notifications) {
+    private final TransactionTemplate transaction;
+    public MarketingService(TableStore db, CrudService crud, NotificationsService notifications,
+            PlatformTransactionManager manager) {
         this.db = db; this.crud = crud; this.notifications = notifications;
+        this.transaction = new TransactionTemplate(manager);
     }
     public Map<String, Object> create(Actor actor, Map<String, Object> body) {
         actor.require("admin");
@@ -33,7 +37,10 @@ public class MarketingService {
         input.put("subject", body.get("subject")); input.put("content", body.get("content"));
         input.put("type", AuthService.required(body, "type"));
         input.put("audience", body.getOrDefault("audience", Map.of("roles", List.of("client"))));
-        input.put("status", "draft"); input.put("scheduledAt", body.get("scheduledAt"));
+        Object scheduledAt = body.get("scheduledAt");
+        input.put("status", scheduledAt != null && Instant.parse(scheduledAt.toString()).isAfter(Instant.now())
+                ? "scheduled" : "draft");
+        input.put("scheduledAt", scheduledAt);
         return db.insert("campaigns", input);
     }
     public Map<String, Object> list(Actor actor, Map<String, String> q) {
@@ -59,8 +66,10 @@ public class MarketingService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La campaña ya fue enviada.");
         return db.update("campaigns", id, Map.of("status", "cancelled"), actor, "gymId");
     }
-    @Transactional
     public Map<String, Object> send(Actor actor, UUID id) {
+        return transaction.execute(status -> sendInTransaction(actor, id));
+    }
+    private Map<String, Object> sendInTransaction(Actor actor, UUID id) {
         actor.require("admin");
         var rows = db.query("SELECT * FROM campaigns WHERE id=:id AND deleted_at IS NULL FOR UPDATE", Map.of("id", id));
         if (rows.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaña no encontrada.");
@@ -68,6 +77,8 @@ public class MarketingService {
         actor.requireGym(AuthService.uuid(campaign.get("gymId")));
         if ("sent".equals(campaign.get("status")) || "cancelled".equals(campaign.get("status")))
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Esta campaña no puede enviarse.");
+        if (campaign.get("scheduledAt") != null && Instant.parse(campaign.get("scheduledAt").toString()).isAfter(Instant.now()))
+            return db.update("campaigns", id, Map.of("status", "scheduled"), actor, "gymId");
         @SuppressWarnings("unchecked") var audience = campaign.get("audience") instanceof Map<?, ?> map
                 ? (Map<String, Object>) map : Map.<String, Object>of();
         var users = resolveAudience(AuthService.uuid(campaign.get("gymId")), audience);
