@@ -37,6 +37,7 @@ public class SecurityConfig {
                                 "/api/docs-json", "/api/docs-json/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/gyms").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register", "/api/auth/refresh").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/payments/stripe/webhook").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()))
                 .build();

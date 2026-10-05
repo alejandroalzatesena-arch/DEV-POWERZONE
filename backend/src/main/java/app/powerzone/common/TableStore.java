@@ -64,6 +64,16 @@ public class TableStore {
         if (value == null) return null;
         String type = columns(table).get(col);
         if ("uuid".equals(type)) return value instanceof UUID ? value : UUID.fromString(value.toString());
+        if ("date".equals(type)) return value instanceof java.time.LocalDate date
+                ? Date.valueOf(date) : Date.valueOf(value.toString());
+        if ("timestamptz".equals(type)) {
+            if (value instanceof Timestamp timestamp) return timestamp;
+            return Timestamp.from(java.time.OffsetDateTime.parse(value.toString()).toInstant());
+        }
+        if ("bool".equals(type)) return value instanceof Boolean ? value : Boolean.parseBoolean(value.toString());
+        if ("int4".equals(type)) return value instanceof Number n ? n.intValue() : Integer.parseInt(value.toString());
+        if ("numeric".equals(type)) return value instanceof java.math.BigDecimal ? value :
+                new java.math.BigDecimal(value.toString());
         if ("jsonb".equals(type)) {
             var pg = new PGobject();
             pg.setType("jsonb");
