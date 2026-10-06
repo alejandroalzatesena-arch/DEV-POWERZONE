@@ -2,32 +2,45 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, 'codex/**']
   pull_request:
 
 jobs:
-  quality:
-    name: Lint + Typecheck + Build + Unit tests
+  backend:
+    name: Spring Boot + contrato OpenAPI
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/verify-api-contract.py
+      - run: mvn -B -f backend/pom.xml verify
+
+  frontend:
+    name: Angular 22
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '24'
           cache: npm
-      - name: Install dependencies
-        run: npm ci
-      - name: Lint
-        run: npm run lint
-      - name: Typecheck
-        run: npm run typecheck
-      - name: Build
-        run: npm run build
-      - name: Unit tests
-        run: npm test
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
 
   e2e:
-    name: Smoke e2e (Postgres + Redis)
+    name: API + PostgreSQL + FastAPI
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -43,42 +56,45 @@ jobs:
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
-      redis:
-        image: redis:7-alpine
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
-      - name: Install dependencies
-        run: npm ci
-      - name: Typecheck
-        run: npm run typecheck
-      - name: E2E tests
-        run: npm run test:e2e
-
-  frontend:
-    name: Frontend build (Angular)
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+          node-version: '24'
+      - uses: actions/setup-python@v5
         with:
-          node-version: 20
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
-      - name: Install dependencies
-        run: npm ci
-      - name: Build
-        run: npm run build
+          python-version: '3.12'
+      - run: python -m pip install -r ai-service/requirements.txt
+      - run: mvn -B -f backend/pom.xml -DskipTests package
+      - name: Smoke de contrato completo
+        env:
+          DB_HOST: localhost
+          DB_PORT: '5432'
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: powerzone
+          SEED_DEMO: 'true'
+          AI_SERVICE_URL: http://localhost:8000
+          AI_SERVICE_API_KEY: internal-ai-key
+        run: |
+          python -m uvicorn app.main:app --app-dir ai-service --port 8000 > ai.log 2>&1 &
+          ai_pid=$!
+          java -jar backend/target/powerzone-api-2.0.0.jar > backend.log 2>&1 &
+          api_pid=$!
+          trap 'kill "$api_pid" "$ai_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://localhost:3000/api/health >/dev/null && \
+               curl -fsS -H 'Content-Type: application/json' \
+                 -d '{"email":"admin@powerzone.app","password":"PowerZone2024!"}' \
+                 http://localhost:3000/api/auth/login >/dev/null; then break; fi
+            sleep 2
+          done
+          curl -fsS http://localhost:3000/api/docs-json >/dev/null
+          node scripts/endpoint-smoke.mjs || { cat backend.log; cat ai.log; exit 1; }
+          node scripts/realtime-smoke.mjs || { cat backend.log; exit 1; }

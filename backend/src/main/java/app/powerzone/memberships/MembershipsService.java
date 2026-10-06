@@ -87,7 +87,8 @@ public class MembershipsService {
         db.execute("UPDATE user_memberships SET start_date=:start,end_date=:end,status='active',auto_renew=true," +
                 "updated_at=now() WHERE id=:id", Map.of("start", start, "end", end, "id", id));
         db.insert("payments", Map.of("gymId", membership.get("gymId"), "userId", membership.get("userId"),
-                "membershipTypeId", membership.get("membershipTypeId"), "amount", membership.get("price"),
+                "membershipTypeId", membership.get("membershipTypeId"), "amount",
+                membership.get("price") == null ? type.get("price") : membership.get("price"),
                 "currency", type.get("currency"), "status", "succeeded", "paymentMethod", "cash",
                 "paidAt", java.sql.Timestamp.from(java.time.Instant.now())));
         return enrich(db.read("user_memberships", id, actor, "gymId"));

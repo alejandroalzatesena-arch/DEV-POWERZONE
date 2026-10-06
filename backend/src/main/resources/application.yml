@@ -4,7 +4,7 @@ spring:
   application:
     name: powerzone-api
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:powerzone}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:powerzone}
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:postgres}
   flyway:
@@ -28,6 +28,9 @@ springdoc:
     path: /api/docs
 powerzone:
   seed-demo: ${SEED_DEMO:false}
+  throttle:
+    limit: ${THROTTLE_LIMIT:100}
+    window-seconds: ${THROTTLE_WINDOW_SECONDS:60}
   jwt:
     access-secret: ${JWT_ACCESS_SECRET:powerzone-access-secret-development-only-change-me}
     refresh-secret: ${JWT_REFRESH_SECRET:powerzone-refresh-secret-development-only-change-me}

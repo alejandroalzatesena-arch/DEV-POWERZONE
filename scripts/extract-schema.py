@@ -9,7 +9,7 @@ from pathlib import Path
 import re
 
 root = Path(__file__).resolve().parents[1]
-source = (root / "src/database/migrations/1770000000000-InitialSchema.ts").read_text(encoding="utf-8")
+source = (root / "legacy/nestjs/src/database/migrations/1770000000000-InitialSchema.ts").read_text(encoding="utf-8")
 statements = re.findall(r"await queryRunner\.query\(\s*`(.*?)`\s*,?\s*\);", source.split("public async down")[0], re.S)
 if len(statements) < 60:
     raise SystemExit(f"Expected full initial migration; found only {len(statements)} statements")
