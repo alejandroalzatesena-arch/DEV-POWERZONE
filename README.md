@@ -72,4 +72,4 @@ Con PostgreSQL, FastAPI y Spring Boot activos, ejecuta `node scripts/endpoint-sm
 
 ## Convenciones de Git
 
-La migración está en la rama `codex/spring-boot-migration`. Los cambios se registran con **Conventional Commits** (`feat:`, `fix:`, `docs:`, `chore:`). El código NestJS histórico permanece en `legacy/nestjs` para consulta; el runtime activo está en `backend`, `frontend` y `ai-service`.
+La migración está en la rama `codex/feat-spring-boot-fastapi`. Los cambios se registran con **Conventional Commits** (`feat:`, `fix:`, `docs:`, `chore:`). El código NestJS histórico permanece en `legacy/nestjs` para consulta; el runtime activo está en `backend`, `frontend` y `ai-service`.
