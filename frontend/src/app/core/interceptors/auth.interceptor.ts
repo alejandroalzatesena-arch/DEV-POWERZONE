@@ -20,16 +20,16 @@ export function authInterceptor(
 ): Observable<HttpEvent<unknown>> {
   const tokenService = inject(TokenService);
 
-  const isAuthEndpoint = req.url.includes('/auth/refresh');
+  const isPublicAuthEndpoint = /\/auth\/(?:login|register|refresh)(?:\?|$)/.test(req.url);
+  if (isPublicAuthEndpoint) {
+    return next(req);
+  }
+
   let outReq = req;
-  if (tokenService.access && !isAuthEndpoint) {
+  if (tokenService.access) {
     outReq = req.clone({
       setHeaders: { Authorization: `Bearer ${tokenService.access}` },
     });
-  }
-
-  if (isAuthEndpoint) {
-    return next(outReq);
   }
 
   return next(outReq).pipe(
