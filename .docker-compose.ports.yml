@@ -1,0 +1,10 @@
+services:
+  db:
+    ports: !override
+      - "5434:5432"
+  ai:
+    ports: !override
+      - "8001:8000"
+  backend:
+    environment:
+      SEED_DEMO: "true"
